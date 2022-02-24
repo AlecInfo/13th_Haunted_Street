@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/Ghost.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft01.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft02.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft03.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft04.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft05.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft06.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight01.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight02.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight03.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight04.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight05.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight06.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
