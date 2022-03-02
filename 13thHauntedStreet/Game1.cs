@@ -14,6 +14,10 @@ namespace _13thHauntedStreet
 
         private Screen screen;
 
+        private Ghost ghost;
+        private GhostAnimationManager ghostAM = new GhostAnimationManager();
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -27,8 +31,6 @@ namespace _13thHauntedStreet
         {
             screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
 
-            //screen.EditSize = new Vector2(1000, 800);
-
             base.Initialize();
         }
 
@@ -37,6 +39,35 @@ namespace _13thHauntedStreet
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             screen.LoadContent(GraphicsDevice);
+
+            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 6);
+            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 6);
+
+
+            // Ghost
+            ghost = new Ghost(
+                new Input()
+                {
+                    Left = Keys.A,
+                    Right = Keys.D,
+                    Up = Keys.W,
+                    Down = Keys.S
+                },
+                new Vector2(500, 500),
+                ghostAM
+                );
+
+            // method that loads every texture of an animation
+            List<Texture2D> multipleTextureLoader(string filePrefix, int size)
+            {
+                List<Texture2D> result = new List<Texture2D>();
+                for (int x = 0; x < size; x++)
+                {
+                    result.Add(Content.Load<Texture2D>($"{filePrefix}{x+1:D2}"));
+                }
+
+                return result;
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -45,6 +76,8 @@ namespace _13thHauntedStreet
                 Exit();
 
             screen.Update(gameTime, Window, graphics);
+
+            ghost.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -56,7 +89,7 @@ namespace _13thHauntedStreet
 
             _spriteBatch.Begin();
 
-
+            ghost.Draw(_spriteBatch);
 
             _spriteBatch.End();
 

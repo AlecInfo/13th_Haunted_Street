@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace _13thHauntedStreet
+{
+    class GhostAnimationManager
+    {
+        public List<Texture2D> animationLeft = new List<Texture2D>();
+        public List<Texture2D> animationRight = new List<Texture2D>();
+        public List<Texture2D> animationUp = new List<Texture2D>();
+        public List<Texture2D> animationDown = new List<Texture2D>();
+    }
+}

@@ -5,9 +5,39 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace _13thHauntedStreet.Classes
+namespace _13thHauntedStreet
 {
     class Ghost : Player
     {
+        // Properties
+        private const float MOVEMENTSPEED = 0.35f;
+
+        private GhostAnimationManager _animationManager;
+        private Texture2D currentTexture;
+
+
+        // Ctor
+        public Ghost(Input input, Vector2 initialPos, GhostAnimationManager animationManager)
+        {
+            this._input = input;
+            this._position = initialPos;
+
+            this._animationManager = animationManager;
+            this.currentTexture = this._animationManager.animationRight[0];
+        }
+
+
+        // Method
+        public override void Update(GameTime gameTime)
+        {
+            this.readInput();
+
+            this._position += this._movement * MOVEMENTSPEED * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(this.currentTexture, this._position, null, Color.White, 0f, this.currentTexture.Bounds.Center.ToVector2(), 1f, SpriteEffects.None, 0f);
+        }
     }
 }
