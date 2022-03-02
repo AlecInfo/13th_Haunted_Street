@@ -11,7 +11,7 @@ namespace _13thHauntedStreet
     {
         public List<Texture2D> animationLeft = new List<Texture2D>();
         public List<Texture2D> animationRight = new List<Texture2D>();
-        public List<Texture2D> animationUp = new List<Texture2D>();
-        public List<Texture2D> animationDown = new List<Texture2D>();
+
+        public List<Texture2D> currentAnim = new List<Texture2D>();
     }
 }

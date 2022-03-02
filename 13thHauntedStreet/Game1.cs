@@ -15,6 +15,9 @@ namespace _13thHauntedStreet
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
 
+        private Hunter hunter;
+        private HunterAnimationManager hunterAM = new HunterAnimationManager();
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -38,11 +41,10 @@ namespace _13thHauntedStreet
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 6);
-            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 6);
-
-
             // Ghost
+            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
+            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
+
             ghost = new Ghost(
                 new Input()
                 {
@@ -54,6 +56,9 @@ namespace _13thHauntedStreet
                 new Vector2(500, 500),
                 ghostAM
                 );
+
+            // Hunter
+            //hunterAM.walkingLeft = multipleTextureLoader("TempFiles");
 
             // method that loads every texture of an animation
             List<Texture2D> multipleTextureLoader(string filePrefix, int size)
@@ -80,9 +85,9 @@ namespace _13thHauntedStreet
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             ghost.Draw(_spriteBatch);
             _spriteBatch.End();
 

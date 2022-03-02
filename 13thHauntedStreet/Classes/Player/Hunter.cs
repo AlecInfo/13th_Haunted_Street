@@ -8,7 +8,13 @@ using Microsoft.Xna.Framework.Input;
 namespace _13thHauntedStreet
 {
     class Hunter : Player
-    {
+    {        
+        // Properties
+        private const float MOVEMENTSPEED = 0.5f;
+
+        private GhostAnimationManager _animManager;
+        private Texture2D currentTexture;
+
 
         // Ctor
         public Hunter()
