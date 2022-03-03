@@ -83,37 +83,37 @@ namespace _13thHauntedStreet
 
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
-                WindowedScreen();
+                this.WindowedScreen();
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.H))
             {
-                FullScreen();
+                this.FullScreen();
             }
 
             // Get the scale of the screen
             this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width); ;
 
             // Put in windowed
-            if (!this._windowsIsChanged && !WindowsSizeIsEqualScreenSize())
+            if (!this._windowsIsChanged && !this.WindowsSizeIsEqualScreenSize())
             {
                 // Update Windows position and Update the size
-                _window.Position = new Point((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) - ((int)EditSize.X / 2), (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) - ((int)EditSize.Y / 2));
+                this._window.Position = new Point((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) - ((int)this.EditSize.X / 2), (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) - ((int)this.EditSize.Y / 2));
                 // Add border on the window
-                _window.IsBorderless = false;
+                this._window.IsBorderless = false;
                 // Add the possibility to the user to modify the window
-                _window.AllowUserResizing = true;
-                _window.ClientSizeChanged += ChangeScreenSize;
+                this._window.AllowUserResizing = true;
+                this._window.ClientSizeChanged += this.ChangeScreenSize;
 
                 this._windowsIsChanged = true;
 
                 // Change the size
-                Game1.graphics.PreferredBackBufferWidth = (int)EditSize.X;
-                Game1.graphics.PreferredBackBufferHeight = (int)EditSize.Y;
+                Game1.graphics.PreferredBackBufferWidth = (int)this.EditSize.X;
+                Game1.graphics.PreferredBackBufferHeight = (int)this.EditSize.Y;
             }
 
             // Put in full screen
-            if (WindowsSizeIsEqualScreenSize())
+            if (this.WindowsSizeIsEqualScreenSize())
             {
                 _window.Position = Point.Zero;
                 _window.IsBorderless = true;
@@ -151,7 +151,7 @@ namespace _13thHauntedStreet
         public void WindowedScreen()
         {
             this._windowsIsChanged = false;
-            EditSize = WindowedSize;
+            this.EditSize = this.WindowedSize;
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace _13thHauntedStreet
         public void FullScreen()
         {
             this._windowsIsChanged = false;
-            EditSize = FullScreenSize;
+            this.EditSize = this.FullScreenSize;
         }
 
         /// <summary>
@@ -171,13 +171,13 @@ namespace _13thHauntedStreet
         private void ChangeScreenSize(Object sender, EventArgs e)
         {
             // if the screen is to small
-            if (_window.ClientBounds.Width <= _MINSCREENSIZE)
+            if (this._window.ClientBounds.Width <= _MINSCREENSIZE)
                 Game1.graphics.PreferredBackBufferWidth = _MINSCREENSIZE;
             else
-                Game1.graphics.PreferredBackBufferWidth = _window.ClientBounds.Width;
+                Game1.graphics.PreferredBackBufferWidth = this._window.ClientBounds.Width;
 
             // Set the window height according the window width
-            Game1.graphics.PreferredBackBufferHeight = (_window.ClientBounds.Width * _ORIGINALSIZE_Y) / _ORIGINALSIZE_X;
+            Game1.graphics.PreferredBackBufferHeight = (this._window.ClientBounds.Width * _ORIGINALSIZE_Y) / _ORIGINALSIZE_X;
             // Apply the change size of the window
             Game1.graphics.ApplyChanges();
         }

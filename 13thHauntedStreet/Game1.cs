@@ -84,7 +84,7 @@ namespace _13thHauntedStreet
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(screen.RenderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
 
