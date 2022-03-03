@@ -9,25 +9,30 @@ namespace _13thHauntedStreet
 {
     class Screen
     {
+        // Varriables
         private static Screen instance;
+
+        private GameWindow _window;
 
         private RenderTarget2D _renderTarget;
         public RenderTarget2D RenderTarget { 
             get => _renderTarget;
         }
 
-        private const int ORIGINALSIZE_X = 1920;
-        private const int ORIGINALSIZE_Y = 1080;
+        private const float _SCREENDIFFERENCE = 1.5f;
+        private const int _ORIGINALSIZE_X = 1920;
+        private const int _ORIGINALSIZE_Y = 1080;
+        private const int _MINSCREENSIZE = 640;
 
         private Vector2 _fullScreenSize;
         public Vector2 FullScreenSize { 
             get => _fullScreenSize;
         }
 
-        private Vector2 _smallScreenSize;
-        public Vector2 SmallScreenSize
+        private Vector2 _windowedSize;
+        public Vector2 WindowedSize
         {
-            get => _smallScreenSize;
+            get => _windowedSize;
         }
 
         private float _scale;
@@ -45,34 +50,40 @@ namespace _13thHauntedStreet
 
         private bool _windowsIsChanged = false;
 
-        public Screen(Vector2 newSize)
+
+        // Ctor
+        public Screen(Vector2 newSize, GameWindow window)
         {
             this._editSize = newSize;
+            this._window = window;
         }
 
-        public static Screen Instance(float x, float y)
+        public static Screen Instance(float x, float y, GameWindow window)
         {
             // Create a Singleton to avoid duplicates
             if (instance == null)
             {
-                instance = new Screen(new Vector2(x, y));
+                instance = new Screen(new Vector2(x, y), window);
             }
             return instance;
         }
 
-        public void LoadContent(GraphicsDevice graphicsDevice)
+        // Methods
+        public void LoadContent()
         {
-            this._renderTarget = new RenderTarget2D(graphicsDevice, ORIGINALSIZE_X, ORIGINALSIZE_Y);
-
+            // Get the render target size according to the original size
+            this._renderTarget = new RenderTarget2D(Game1.graphics.GraphicsDevice, _ORIGINALSIZE_X, _ORIGINALSIZE_Y);
+            // Get the windowed and full screen size according to screen size
             this._fullScreenSize = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-            this._smallScreenSize = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 1.5f, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 1.5f);
+            this._windowedSize = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / _SCREENDIFFERENCE, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / _SCREENDIFFERENCE);
         }
 
-        public void Update(GameTime gameTime, GameWindow window, GraphicsDeviceManager graphics)
+        public void Update(GameTime gameTime)
         {
+
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
-                SmallScreen();
+                WindowedScreen();
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.H))
@@ -80,49 +91,52 @@ namespace _13thHauntedStreet
                 FullScreen();
             }
 
+            // Get the scale of the screen
+            this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width); ;
 
-            // Set Windows in center screen one time
+            // Put in windowed
             if (!this._windowsIsChanged && !WindowsSizeIsEqualScreenSize())
             {
                 // Update Windows position and Update the size
-                window.Position = new Point((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) - ((int)EditSize.X / 2), (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) - ((int)EditSize.Y / 2));
-                
-                window.IsBorderless = false;
-
-                window.AllowUserResizing = true;
+                _window.Position = new Point((GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) - ((int)EditSize.X / 2), (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) - ((int)EditSize.Y / 2));
+                // Add border on the window
+                _window.IsBorderless = false;
+                // Add the possibility to the user to modify the window
+                _window.AllowUserResizing = true;
+                _window.ClientSizeChanged += ChangeScreenSize;
 
                 this._windowsIsChanged = true;
-            }
 
-            if (WindowsSizeIsEqualScreenSize())
-            {
-                window.Position = Point.Zero;
-                window.IsBorderless = true;
-                window.AllowUserResizing = false;
-            }
-
-
-
-            if (window.AllowUserResizing)
-            {
-                window.ClientSizeChanged += OnResize;
-            }
-            else
-            {
+                // Change the size
                 Game1.graphics.PreferredBackBufferWidth = (int)EditSize.X;
                 Game1.graphics.PreferredBackBufferHeight = (int)EditSize.Y;
             }
 
+            // Put in full screen
+            if (WindowsSizeIsEqualScreenSize())
+            {
+                _window.Position = Point.Zero;
+                _window.IsBorderless = true;
+                _window.AllowUserResizing = false;
+                this._windowsIsChanged = true;
+            }
+
+            // When the user can't modify the window
+            if (!_window.AllowUserResizing)
+            {
+                // Change de window size
+                Game1.graphics.PreferredBackBufferWidth = (int)EditSize.X;
+                Game1.graphics.PreferredBackBufferHeight = (int)EditSize.Y;               
+            }
+
+            // Apply the change size of the window
             Game1.graphics.ApplyChanges();
-
         }
 
-        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, GameTime gameTime)
-        {
-            // Get the scale of the screen
-            this._scale = 1f / ((float)this.RenderTarget.Height / graphicsDevice.Viewport.Height);
-        }
-
+        /// <summary>
+        /// Check if the window size is full screen or not
+        /// </summary>
+        /// <returns></returns>
         private bool WindowsSizeIsEqualScreenSize()
         {
             if (EditSize.X == GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width && EditSize.Y == GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
@@ -131,29 +145,41 @@ namespace _13thHauntedStreet
                 return false;
         }
 
-        public void SmallScreen()
+        /// <summary>
+        /// Set the window to screen windowed
+        /// </summary>
+        public void WindowedScreen()
         {
             this._windowsIsChanged = false;
-            EditSize = SmallScreenSize;
+            EditSize = WindowedSize;
         }
 
+        /// <summary>
+        /// Set the window to full screen
+        /// </summary>
         public void FullScreen()
         {
             this._windowsIsChanged = false;
             EditSize = FullScreenSize;
-
         }
 
-        public void OnResize(Object sender, EventArgs e)
+        /// <summary>
+        /// This method is an event that allows to change the window size according to the user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangeScreenSize(Object sender, EventArgs e)
         {
-            Game1.graphics.PreferredBackBufferWidth = (int)EditSize.X;
-            Game1.graphics.PreferredBackBufferHeight = (int)EditSize.Y;
+            // if the screen is to small
+            if (_window.ClientBounds.Width <= _MINSCREENSIZE)
+                Game1.graphics.PreferredBackBufferWidth = _MINSCREENSIZE;
+            else
+                Game1.graphics.PreferredBackBufferWidth = _window.ClientBounds.Width;
 
-            if ((EditSize.X != Game1.graphics.GraphicsDevice.Viewport.Width) || (EditSize.Y != Game1.graphics.GraphicsDevice.Viewport.Height))
-            {
-                _editSize.X = Game1.graphics.GraphicsDevice.Viewport.Width;
-                _editSize.Y = Game1.graphics.GraphicsDevice.Viewport.Height;
-            }
+            // Set the window height according the window width
+            Game1.graphics.PreferredBackBufferHeight = (_window.ClientBounds.Width * _ORIGINALSIZE_Y) / _ORIGINALSIZE_X;
+            // Apply the change size of the window
+            Game1.graphics.ApplyChanges();
         }
     }
 }

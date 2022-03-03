@@ -17,7 +17,6 @@ namespace _13thHauntedStreet
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
 
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -29,7 +28,7 @@ namespace _13thHauntedStreet
 
         protected override void Initialize()
         {
-            screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
         }
@@ -37,8 +36,8 @@ namespace _13thHauntedStreet
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            screen.LoadContent(GraphicsDevice);
+            
+            screen.LoadContent();
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 6);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 6);
@@ -75,7 +74,7 @@ namespace _13thHauntedStreet
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            screen.Update(gameTime, Window, graphics);
+            screen.Update(gameTime);
 
             ghost.Update(gameTime);
 
@@ -85,15 +84,14 @@ namespace _13thHauntedStreet
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(screen.RenderTarget);
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
 
             ghost.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
-            // For draw the render target
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
 

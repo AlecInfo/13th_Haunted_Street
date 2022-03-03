@@ -14,11 +14,19 @@ namespace _13thHauntedStreet
         protected Vector2 _position;
         protected Vector2 _movement;
 
+        private int timeSinceLastFrame = 0;
+        private int millisecondsPerFrame = 100;
+
+
+
         // Methods
         public abstract void Update(GameTime gameTime);
 
         public abstract void Draw(SpriteBatch spriteBatch);
 
+        /// <summary>
+        /// Updates movement 
+        /// </summary>
         protected void readInput()
         {
             KeyboardState kbdState = Keyboard.GetState();
@@ -51,6 +59,36 @@ namespace _13thHauntedStreet
             {
                 _movement /= 1.4f;
             }
+        }
+
+        /// <summary>
+        /// Updates the animation to the next frame
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="animation">animation that is currently playing</param>
+        /// <param name="currentTexture">texture that is currently beeing drawn</param>
+        /// <returns>next frame</returns>
+        protected Texture2D playAnim(GameTime gameTime, List<Texture2D> animation, Texture2D currentTexture)
+        {
+            this.timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+            if (this.timeSinceLastFrame > this.millisecondsPerFrame)
+            {
+                this.timeSinceLastFrame -= this.millisecondsPerFrame;
+                
+                // find current frame id
+                int nextTextureId = animation.FindIndex(item => item == currentTexture);
+
+                if (nextTextureId < animation.Count - 1)
+                {
+                    return animation[nextTextureId + 1];
+                }
+
+                // else
+                return animation[0];
+            }
+
+            // else
+            return currentTexture;
         }
     }
 }
