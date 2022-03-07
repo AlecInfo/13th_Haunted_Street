@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * Author  : Marco Rodrigues
+ * Project : 13th Haunted Street
+ * Details : Player abstract class
+ * Date    : 03.03.2022
+ */
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -16,7 +22,6 @@ namespace _13thHauntedStreet
 
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 100;
-
 
 
         // Methods
@@ -62,7 +67,7 @@ namespace _13thHauntedStreet
         }
 
         /// <summary>
-        /// Updates the animation to the next frame
+        /// plays the animation
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="animation">animation that is currently playing</param>
