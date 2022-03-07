@@ -9,33 +9,35 @@ namespace _13thHauntedStreet
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
+        public static GraphicsDeviceManager graphics;
         private SpriteBatch _spriteBatch;
+
+        private Screen screen;
 
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
 
+<<<<<<< HEAD
         private Hunter hunter;
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
 
         private Texture2D bg;
 
 
+=======
+>>>>>>> ad9a2b2343f20ca8c674763def37eadcd58b371f
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
             IsMouseVisible = true;
+            Window.IsBorderless = true;
         }
 
         protected override void Initialize()
         {
-            Window.Position = new Point(0, 0);
-            Window.IsBorderless = true;
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            IsMouseVisible = false;
-            _graphics.ApplyChanges();
+            screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
         }
@@ -43,11 +45,14 @@ namespace _13thHauntedStreet
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            screen.LoadContent();
+
+            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 6);
+            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 6);
+
 
             // Ghost
-            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
-            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
-
             ghost = new Ghost(
                 new Input()
                 {
@@ -103,6 +108,8 @@ namespace _13thHauntedStreet
                 Exit();
 
             hunter.Update(gameTime);
+            screen.Update(gameTime);
+
             ghost.Update(gameTime);
 
             base.Update(gameTime);
@@ -110,12 +117,22 @@ namespace _13thHauntedStreet
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.SetRenderTarget(screen.RenderTarget);
+            GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.Draw(bg, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 10f, SpriteEffects.None, 1f);
-            hunter.Draw(_spriteBatch);
+            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+
             ghost.Draw(_spriteBatch);
+
+            _spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Black);
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, screen.Scale, SpriteEffects.None, 0f);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
