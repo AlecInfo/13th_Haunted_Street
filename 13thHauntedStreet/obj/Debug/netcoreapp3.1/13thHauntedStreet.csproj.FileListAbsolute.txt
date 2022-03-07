@@ -76,3 +76,4 @@ C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\HunterSprites\walking_up\walking_up05.xnb
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\HunterSprites\walking_up\walking_up06.xnb
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\bg.xnb
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.csproj.CopyComplete
