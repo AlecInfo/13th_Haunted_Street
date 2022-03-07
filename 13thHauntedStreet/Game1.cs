@@ -17,15 +17,12 @@ namespace _13thHauntedStreet
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
 
-<<<<<<< HEAD
         private Hunter hunter;
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
 
         private Texture2D bg;
 
 
-=======
->>>>>>> ad9a2b2343f20ca8c674763def37eadcd58b371f
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -48,8 +45,8 @@ namespace _13thHauntedStreet
             
             screen.LoadContent();
 
-            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 6);
-            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 6);
+            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
+            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
 
 
             // Ghost
@@ -89,6 +86,7 @@ namespace _13thHauntedStreet
 
             bg = Content.Load<Texture2D>("TempFiles/bg");
 
+
             // method that loads every texture of an animation
             List<Texture2D> multipleTextureLoader(string filePrefix, int size)
             {
@@ -122,6 +120,8 @@ namespace _13thHauntedStreet
 
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
 
+            _spriteBatch.Draw(bg, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 10f, SpriteEffects.None, 1f);
+            hunter.Draw(_spriteBatch);
             ghost.Draw(_spriteBatch);
 
             _spriteBatch.End();
