@@ -12,7 +12,10 @@ namespace _13thHauntedStreet
         public static GraphicsDeviceManager graphics;
         private SpriteBatch _spriteBatch;
 
-        private Screen screen;
+        private Screen _screen;
+
+        private MainMenu _mainMenu;
+        private Texture2D _backgroundMainMenu;
 
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
@@ -34,7 +37,7 @@ namespace _13thHauntedStreet
 
         protected override void Initialize()
         {
-            screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
+            _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
         }
@@ -43,7 +46,11 @@ namespace _13thHauntedStreet
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            screen.LoadContent();
+            _screen.LoadContent();
+
+            _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
+            _mainMenu = new MainMenu(_backgroundMainMenu);
+            _mainMenu.LoadContent();
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
@@ -105,9 +112,10 @@ namespace _13thHauntedStreet
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            hunter.Update(gameTime);
-            screen.Update(gameTime);
+            _screen.Update(gameTime);
+            _mainMenu.Update(gameTime, _screen);
 
+            hunter.Update(gameTime);
             ghost.Update(gameTime);
 
             base.Update(gameTime);
@@ -115,14 +123,16 @@ namespace _13thHauntedStreet
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(screen.RenderTarget);
+            GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
 
-            _spriteBatch.Draw(bg, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 10f, SpriteEffects.None, 1f);
-            hunter.Draw(_spriteBatch);
-            ghost.Draw(_spriteBatch);
+
+            _mainMenu.Draw(_spriteBatch);
+            //_spriteBatch.Draw(bg, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 10f, SpriteEffects.None, 1f);
+            //hunter.Draw(_spriteBatch);
+            //ghost.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -131,7 +141,7 @@ namespace _13thHauntedStreet
 
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, screen.Scale, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, _screen.Scale, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
 
