@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class Screen
+    public class Screen
     {
         // Varriables
         private static Screen instance;

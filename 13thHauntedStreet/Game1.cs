@@ -16,6 +16,7 @@ namespace _13thHauntedStreet
 
         private MainMenu _mainMenu;
         private Texture2D _backgroundMainMenu;
+        private SpriteFont _font;
 
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
@@ -31,8 +32,12 @@ namespace _13thHauntedStreet
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+
             IsMouseVisible = true;
             Window.IsBorderless = true;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.ApplyChanges();
         }
 
         protected override void Initialize()
@@ -49,8 +54,9 @@ namespace _13thHauntedStreet
             _screen.LoadContent();
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
-            _mainMenu = new MainMenu(_backgroundMainMenu);
-            _mainMenu.LoadContent();
+            _font = Content.Load<SpriteFont>("TempFiles/theFont");
+            _mainMenu = new MainMenu(_backgroundMainMenu, _font);
+            _mainMenu.LoadContent(_screen);
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
@@ -130,6 +136,7 @@ namespace _13thHauntedStreet
 
 
             _mainMenu.Draw(_spriteBatch);
+
             //_spriteBatch.Draw(bg, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 10f, SpriteEffects.None, 1f);
             //hunter.Draw(_spriteBatch);
             //ghost.Draw(_spriteBatch);

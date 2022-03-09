@@ -445,3 +445,10 @@
 /processorParam:TextureFormat=Color
 /build:TempFiles/HunterSprites/walking_up/walking_up06.png
 
+#begin TempFiles/theFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:TempFiles/theFont.spritefont
+
