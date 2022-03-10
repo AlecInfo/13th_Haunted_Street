@@ -70,3 +70,7 @@ C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.pdb
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.genruntimeconfig.cache
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.csproj.AssemblyReference.cache
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\Furniture\bed.xnb
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\Furniture\big_bed.xnb
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\Furniture\drawer.xnb
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\Furniture\small_table.xnb

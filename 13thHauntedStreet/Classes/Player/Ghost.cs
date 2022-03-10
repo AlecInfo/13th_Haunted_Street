@@ -2,7 +2,7 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Ghost class (inherits from player abstract class)
- * Date    : 03.03.2022
+ * Date    : 09.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -19,11 +19,10 @@ namespace _13thHauntedStreet
         private const float MOVEMENTSPEED = 0.4f;
 
         private GhostAnimationManager _animManager;
-        private Texture2D _currentTexture;
 
         private float _floatTimer;
         private const int FLOATSPEED = 4;
-        private const int FLOATSIZE = 3;
+        private const float FLOATSIZE = 0.1f;
 
 
         // Ctor
@@ -35,28 +34,43 @@ namespace _13thHauntedStreet
             this._animManager = animationManager;
             this._animManager.currentAnim = this._animManager.animationRight;
             this._currentTexture = this._animManager.currentAnim[0];
+
+            this._collisionPos = new Vector2(this._position.X, this._position.Y + this._currentTexture.Height / 2);
+            this._collisionSize = new Vector2(this._currentTexture.Width, this._currentTexture.Height / 2);
+
+            this._scale = 1.5f;
         }
 
 
         // Method
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, List<Furniture> furnitureList)
         {
             this.readInput();
 
-            // float
-            if (this._movement.Y == 0)
-            {
-                this._floatTimer += (float)gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
-                this._position.Y = this._position.Y + (float)Math.Sin(_floatTimer) * FLOATSIZE;
-            }
-
-            this._position += this._movement * MOVEMENTSPEED * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            this.updatePosition(gameTime, furnitureList);
 
             this.updateAnim(gameTime);
         }
 
         /// <summary>
-        /// Updates the animation that is playing
+        /// Updates the player position
+        /// </summary>
+        private void updatePosition(GameTime gameTime, List<Furniture> furnitureList)
+        {
+            if (this._movement.Y == 0)
+            {
+                this._floatTimer += (float)gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
+                this._movement.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
+            }
+
+            this._position += this._movement * MOVEMENTSPEED * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            this._collisionPos = new Vector2(this._position.X, this._position.Y + this._currentTexture.Height / 2);
+            this._collisionSize = new Vector2(this._currentTexture.Width, this._currentTexture.Height / 2);
+        }
+
+        /// <summary>
+        /// Updates the animation that is playing 
         /// </summary>
         /// <param name="gameTime"></param>
         private void updateAnim(GameTime gameTime)
@@ -74,7 +88,8 @@ namespace _13thHauntedStreet
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this._currentTexture, this._position, null, Color.White, 0f, this._currentTexture.Bounds.Center.ToVector2(), 1.5f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(this._currentTexture, this._position, null, Color.White, 0f, this._currentTexture.Bounds.Center.ToVector2(), this._scale, SpriteEffects.None, 0f);
+            //this.drawCollisionBox(spriteBatch);
         }
     }
 }

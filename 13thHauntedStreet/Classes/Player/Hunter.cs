@@ -2,7 +2,7 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Hunter class (inherits from player abstract class)
- * Date    : 03.03.2022
+ * Date    : 10.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,6 @@ namespace _13thHauntedStreet
         private const float MOVEMENTSPEED = 0.45f;
 
         private HunterAnimationManager _animManager;
-        private Texture2D _currentTexture;
 
         private enum direction
         {
@@ -42,17 +41,37 @@ namespace _13thHauntedStreet
             this._animManager = animationManager;
             this._animManager.currentAnim = this._animManager.walkingDown;
             this._currentTexture = this._animManager.currentAnim[0];
+
+            this._collisionPos = new Vector2(this._position.X, this._position.Y + this._currentTexture.Height / 1.25f);
+            this._collisionSize = new Vector2(this._currentTexture.Width / 3, this._currentTexture.Height / 4) * this._scale;
+
+            this._scale = 3f;
         }
 
 
         // Methods
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, List<Furniture> furnitureList)
         {
             this.readInput();
 
-            this._position += this._movement * MOVEMENTSPEED * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            this.updatePosition(gameTime, furnitureList);
 
             this.updateAnim(gameTime);
+        }
+
+        /// <summary>
+        /// Updates the player position
+        /// </summary>
+        private void updatePosition(GameTime gameTime, List<Furniture> furnitureList)
+        {
+            Vector2 distance = this._movement * MOVEMENTSPEED * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            distance = this.objectCollision(furnitureList, distance);
+
+            this._position += distance;
+
+            this._collisionPos = new Vector2(this._position.X, this._position.Y + this._currentTexture.Height / 1.25f);
+            this._collisionSize = new Vector2(this._currentTexture.Width / 3, this._currentTexture.Height / 4) * this._scale;
         }
 
         /// <summary>
@@ -115,7 +134,8 @@ namespace _13thHauntedStreet
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this._currentTexture, this._position, null, Color.White, 0f, this._currentTexture.Bounds.Center.ToVector2(), 3f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(this._currentTexture, this._position, null, Color.White, 0f, this._currentTexture.Bounds.Center.ToVector2(), this._scale, SpriteEffects.None, 0f);
+            //this.drawCollisionBox(spriteBatch);
         }
     }
 }
