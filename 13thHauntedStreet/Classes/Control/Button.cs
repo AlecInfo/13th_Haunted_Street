@@ -44,6 +44,8 @@ namespace _13thHauntedStreet
 
         public string Text { get; set; }
 
+        public SpriteEffects Effect { get; set; }
+
         #endregion
 
         #region Methods
@@ -55,6 +57,8 @@ namespace _13thHauntedStreet
             this._font = font;
 
             this.PenColour = Color.Black;
+
+            this.Effect = SpriteEffects.None;
         }
 
 
@@ -84,18 +88,16 @@ namespace _13thHauntedStreet
                 this.PenColour = Color.LightGray;
         }
 
-        public void Draw(SpriteBatch sprintBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
-
-
-            sprintBatch.Draw(this._texture, this.Rectangle, Color.White * 0f);
+            spriteBatch.Draw(this._texture, new Vector2(this.Rectangle.X, this.Rectangle.Y), null, Color.White * 0f, 0f, Vector2.Zero, new Vector2(this.Rectangle.Width, this.Rectangle.Height), this.Effect, 0f);
 
             if (!string.IsNullOrEmpty(this.Text))
             {
                 float x = (this.Rectangle.X + (this.Rectangle.Width / 2)) - (this._font.MeasureString(Text).X / 2);
                 float y = (this.Rectangle.Y + (this.Rectangle.Height / 2)) - (this._font.MeasureString(Text).Y / 2);
 
-                sprintBatch.DrawString(this._font, this.Text, new Vector2(x, y), this.PenColour);
+                spriteBatch.DrawString(this._font, this.Text, new Vector2(x, y), this.PenColour);
             }
         }
 

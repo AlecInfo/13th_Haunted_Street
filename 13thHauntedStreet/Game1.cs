@@ -16,6 +16,7 @@ namespace _13thHauntedStreet
 
         private MainMenu _mainMenu;
         private Texture2D _backgroundMainMenu;
+        private Texture2D _arrowButton;
         private SpriteFont _font;
 
         private Ghost ghost;
@@ -54,6 +55,7 @@ namespace _13thHauntedStreet
             _screen.LoadContent();
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
+            _arrowButton = Content.Load<Texture2D>("TempFiles/arrowButton");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
             _mainMenu = new MainMenu(_backgroundMainMenu, _font);
             _mainMenu.LoadContent(_screen);
@@ -115,7 +117,7 @@ namespace _13thHauntedStreet
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (_mainMenu.quitedTheGame)
                 Exit();
 
             _screen.Update(gameTime);
