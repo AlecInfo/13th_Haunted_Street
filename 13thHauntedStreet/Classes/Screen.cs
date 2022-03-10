@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class Screen
+    public class Screen
     {
         // Varriables
         private static Screen instance;
@@ -20,9 +20,14 @@ namespace _13thHauntedStreet
         }
 
         private const float _SCREENDIFFERENCE = 1.5f;
+        private const int _MINSCREENSIZE = 640;
         private const int _ORIGINALSIZE_X = 1920;
         private const int _ORIGINALSIZE_Y = 1080;
-        private const int _MINSCREENSIZE = 640;
+
+        public Vector2 OriginalScreenSize
+        {
+            get => new Vector2(_ORIGINALSIZE_X, _ORIGINALSIZE_Y);
+        }
 
         private Vector2 _fullScreenSize;
         public Vector2 FullScreenSize { 

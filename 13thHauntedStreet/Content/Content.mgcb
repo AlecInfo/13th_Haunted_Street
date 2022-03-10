@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin TempFiles/BackgroundMenu.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/BackgroundMenu.png
+
 #begin TempFiles/bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -492,4 +504,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TempFiles/HunterSprites/walking_up/walking_up06.png
+
+#begin TempFiles/theFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:TempFiles/theFont.spritefont
 

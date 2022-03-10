@@ -12,7 +12,11 @@ namespace _13thHauntedStreet
         public static GraphicsDeviceManager graphics;
         private SpriteBatch _spriteBatch;
 
-        private Screen screen;
+        private Screen _screen;
+
+        private MainMenu _mainMenu;
+        private Texture2D _backgroundMainMenu;
+        private SpriteFont _font;
 
         private Ghost ghost;
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
@@ -33,13 +37,17 @@ namespace _13thHauntedStreet
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+
             IsMouseVisible = true;
             Window.IsBorderless = true;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.ApplyChanges();
         }
 
         protected override void Initialize()
         {
-            screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
+            _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
         }
@@ -48,7 +56,12 @@ namespace _13thHauntedStreet
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            screen.LoadContent();
+            _screen.LoadContent();
+
+            _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
+            _font = Content.Load<SpriteFont>("TempFiles/theFont");
+            _mainMenu = new MainMenu(_backgroundMainMenu, _font);
+            _mainMenu.LoadContent(_screen);
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
@@ -115,9 +128,10 @@ namespace _13thHauntedStreet
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            hunter.Update(gameTime, furnitureList);
-            screen.Update(gameTime);
+            _screen.Update(gameTime);
+            //_mainMenu.Update(gameTime, _screen);
 
+            hunter.Update(gameTime, furnitureList);
             ghost.Update(gameTime, furnitureList);
 
             base.Update(gameTime);
@@ -125,7 +139,7 @@ namespace _13thHauntedStreet
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(screen.RenderTarget);
+            GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
@@ -139,6 +153,8 @@ namespace _13thHauntedStreet
             hunter.Draw(_spriteBatch);
             ghost.Draw(_spriteBatch);
 
+            //_mainMenu.Draw(_spriteBatch);
+
             _spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
@@ -146,8 +162,8 @@ namespace _13thHauntedStreet
 
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, screen.Scale, SpriteEffects.None, 0f);
-            
+            _spriteBatch.Draw(_screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, _screen.Scale, SpriteEffects.None, 0f);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
