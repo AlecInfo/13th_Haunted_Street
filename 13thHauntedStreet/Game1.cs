@@ -17,6 +17,7 @@ namespace _13thHauntedStreet
 
         private MainMenu _mainMenu;
         private Texture2D _backgroundMainMenu;
+        private Texture2D _arrowButton;
         private SpriteFont _font;
 
         private Ghost ghost;
@@ -60,6 +61,7 @@ namespace _13thHauntedStreet
             _screen.LoadContent();
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
+            //_arrowButton = Content.Load<Texture2D>("TempFiles/arrowButton");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
             _mainMenu = new MainMenu(_backgroundMainMenu, _font);
             _mainMenu.LoadContent(_screen);
@@ -126,11 +128,11 @@ namespace _13thHauntedStreet
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (_mainMenu.quitedTheGame)
                 Exit();
 
             _screen.Update(gameTime);
-            //_mainMenu.Update(gameTime, _screen);
+            _mainMenu.Update(gameTime, _screen);
 
             hunter.Update(gameTime, furnitureList);
             ghost.Update(gameTime, furnitureList);
@@ -144,22 +146,27 @@ namespace _13thHauntedStreet
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
-            _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
 
 
-            List<GameObject> gameObjectList = new List<GameObject>();
-            gameObjectList.AddRange(furnitureList);
-            gameObjectList.Add(hunter);
-
-            foreach (GameObject gameObject in gameObjectList.OrderBy(o => o.position.Y))
+            if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
             {
-                gameObject.Draw(_spriteBatch);
+                _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
+
+                List<GameObject> gameObjectList = new List<GameObject>();
+                gameObjectList.AddRange(furnitureList);
+                gameObjectList.Add(hunter);
+
+                foreach (GameObject gameObject in gameObjectList.OrderBy(o => o.position.Y))
+                {
+                    gameObject.Draw(_spriteBatch);
+                }
+                ghost.Draw(_spriteBatch);
+            }
+            else
+            {
+                _mainMenu.Draw(_spriteBatch);
             }
 
-            ghost.Draw(_spriteBatch);
-
-
-            //_mainMenu.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
