@@ -2,7 +2,7 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Player abstract class
- * Date    : 03.03.2022
+ * Date    : 10.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -17,15 +17,21 @@ namespace _13thHauntedStreet
     {
         // Properties
         protected Input _input;
+
         protected Vector2 _position;
         protected Vector2 _movement;
+        protected Texture2D _currentTexture;
+        protected float _scale;
+
+        protected Vector2 _collisionPos;
+        protected Vector2 _collisionSize;
 
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 100;
 
 
         // Methods
-        public abstract void Update(GameTime gameTime);
+        public abstract void Update(GameTime gameTime, List<Furniture> furnitureList);
 
         public abstract void Draw(SpriteBatch spriteBatch);
 
@@ -94,6 +100,59 @@ namespace _13thHauntedStreet
 
             // else
             return currentTexture;
+        }
+
+        /// <summary>
+        /// draw the player collision box to help debug
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        protected void drawCollisionBox(SpriteBatch spriteBatch)
+        {
+            Texture2D defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
+            defaultTexture.SetData(new Color[] { Color.White });
+
+            spriteBatch.Draw(defaultTexture, new Rectangle(this._collisionPos.ToPoint(), (this._collisionSize).ToPoint()), null, Color.White * 0.5f, 0f, new Vector2(0.5f), SpriteEffects.None, 1f);
+            spriteBatch.Draw(defaultTexture, new Rectangle(this._collisionPos.ToPoint(), new Vector2(5).ToPoint()), null, Color.Red, 0f, new Vector2(0.5f), SpriteEffects.None, 1f);
+        }
+
+        protected Vector2 objectCollision(List<Furniture> furnitureList, Vector2 distance)
+        {
+            foreach (Furniture item in furnitureList)
+            {
+                if (this._collisionPos.X + this._collisionSize.X / 2 + distance.X > item.collisionBox.Left &&
+                    this._collisionPos.X - this._collisionSize.X / 2 < item.collisionBox.Left &&
+                    this._collisionPos.Y + this._collisionSize.Y / 2 > item.collisionBox.Top &&
+                    this._collisionPos.Y - this._collisionSize.Y / 2 < item.collisionBox.Bottom) // Left
+                {
+                    distance.X = 0;
+                }
+
+                if (this._collisionPos.X - this._collisionSize.X / 2 + distance.X < item.collisionBox.Right &&
+                    this._collisionPos.X + this._collisionSize.X / 2 > item.collisionBox.Right &&
+                    this._collisionPos.Y + this._collisionSize.Y / 2 > item.collisionBox.Top &&
+                    this._collisionPos.Y - this._collisionSize.Y / 2 < item.collisionBox.Bottom) // Right
+                {
+                    distance.X = 0;
+                }
+
+                if (this._collisionPos.Y + this._collisionSize.Y / 2 + distance.Y > item.collisionBox.Top &&
+                    this._collisionPos.Y - this._collisionSize.Y / 2 < item.collisionBox.Top &&
+                    this._collisionPos.X + this._collisionSize.X / 2 > item.collisionBox.Left &&
+                    this._collisionPos.X - this._collisionSize.X / 2 < item.collisionBox.Right) // Top
+                {
+                    distance.Y = 0;
+                }
+
+                if (this._collisionPos.Y - this._collisionSize.Y / 2 + distance.Y < item.collisionBox.Bottom &&
+                    this._collisionPos.Y + this._collisionSize.Y / 2 > item.collisionBox.Bottom &&
+                    this._collisionPos.X + this._collisionSize.X / 2 > item.collisionBox.Left &&
+                    this._collisionPos.X - this._collisionSize.X / 2 < item.collisionBox.Right) // Bottom
+                {
+                    distance.Y = 0;
+                }
+            }
+
+            return distance;
         }
     }
 }

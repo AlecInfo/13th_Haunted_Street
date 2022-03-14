@@ -25,6 +25,11 @@ namespace _13thHauntedStreet
         private Hunter hunter;
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
 
+        private Texture2D bedTexture;
+        private Texture2D drawerTexture;
+        private List<Furniture> furnitureList = new List<Furniture>();
+
+        // remove later
         private Texture2D bg;
 
 
@@ -55,7 +60,7 @@ namespace _13thHauntedStreet
             _screen.LoadContent();
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
-            _arrowButton = Content.Load<Texture2D>("TempFiles/arrowButton");
+            //_arrowButton = Content.Load<Texture2D>("TempFiles/arrowButton");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
             _mainMenu = new MainMenu(_backgroundMainMenu, _font);
             _mainMenu.LoadContent(_screen);
@@ -99,6 +104,11 @@ namespace _13thHauntedStreet
                 hunterAM
             );
 
+            bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
+            drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
+            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
+            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
+
             bg = Content.Load<Texture2D>("TempFiles/bg");
 
 
@@ -123,8 +133,8 @@ namespace _13thHauntedStreet
             _screen.Update(gameTime);
             _mainMenu.Update(gameTime, _screen);
 
-            hunter.Update(gameTime);
-            ghost.Update(gameTime);
+            hunter.Update(gameTime, furnitureList);
+            ghost.Update(gameTime, furnitureList);
 
             base.Update(gameTime);
         }
@@ -137,11 +147,23 @@ namespace _13thHauntedStreet
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
 
 
-            _mainMenu.Draw(_spriteBatch);
+            if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
+            {
+                _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
 
-            //_spriteBatch.Draw(bg, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 10f, SpriteEffects.None, 1f);
-            //hunter.Draw(_spriteBatch);
-            //ghost.Draw(_spriteBatch);
+                foreach (Furniture item in furnitureList)
+                {
+                    item.Draw(_spriteBatch);
+                }
+            
+                hunter.Draw(_spriteBatch);
+                ghost.Draw(_spriteBatch);
+            }
+            else
+            {
+                _mainMenu.Draw(_spriteBatch);
+            }
+
 
             _spriteBatch.End();
 

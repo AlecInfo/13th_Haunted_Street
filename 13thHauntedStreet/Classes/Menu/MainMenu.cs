@@ -35,7 +35,7 @@ namespace _13thHauntedStreet
 
         public bool quitedTheGame = false;
 
-        private enum _RightMenuSelected
+        public enum _RightMenuSelected
         {
             None,
             NewGame,
@@ -43,7 +43,7 @@ namespace _13thHauntedStreet
             Settings,
             Quit
         }
-        private _RightMenuSelected Option { get; set; }
+        public _RightMenuSelected Option { get; set; }
 
         #endregion
 
@@ -138,6 +138,8 @@ namespace _13thHauntedStreet
             if (Keyboard.GetState().IsKeyDown(Keys.J))
             {
                 this._animationStarted = true;
+                this.Option = _RightMenuSelected.None;
+                
             }
 
             // Updates all buttons that are in the list 
