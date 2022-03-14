@@ -36,14 +36,14 @@ namespace _13thHauntedStreet
         public Hunter(Input input, Vector2 initialPos, HunterAnimationManager animationManager)
         {
             this._input = input;
-            this._position = initialPos;
+            this.position = initialPos;
 
             this._animManager = animationManager;
             this._animManager.currentAnim = this._animManager.walkingDown;
-            this._currentTexture = this._animManager.currentAnim[0];
+            this.texture = this._animManager.currentAnim[0];
 
-            this._collisionPos = new Vector2(this._position.X, this._position.Y + this._currentTexture.Height / 1.25f);
-            this._collisionSize = new Vector2(this._currentTexture.Width / 3, this._currentTexture.Height / 4) * this._scale;
+            this._collisionPos = new Vector2(this.position.X, this.position.Y + this.texture.Height / 1.25f);
+            this._collisionSize = new Vector2(this.texture.Width / 3, this.texture.Height / 4) * this._scale;
 
             this._scale = 3f;
         }
@@ -68,10 +68,10 @@ namespace _13thHauntedStreet
 
             distance = this.objectCollision(furnitureList, distance);
 
-            this._position += distance;
+            this.position += distance;
 
-            this._collisionPos = new Vector2(this._position.X, this._position.Y + this._currentTexture.Height / 1.25f);
-            this._collisionSize = new Vector2(this._currentTexture.Width / 3, this._currentTexture.Height / 4) * this._scale;
+            this._collisionPos = new Vector2(this.position.X, this.position.Y + this.texture.Height / 1.25f);
+            this._collisionSize = new Vector2(this.texture.Width / 3, this.texture.Height / 4) * this._scale;
         }
 
         /// <summary>
@@ -129,12 +129,12 @@ namespace _13thHauntedStreet
                 }
             }
 
-            this._currentTexture = this.playAnim(gameTime, _animManager.currentAnim, this._currentTexture);
+            this.texture = this.playAnim(gameTime, _animManager.currentAnim, this.texture);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this._currentTexture, this._position, null, Color.White, 0f, this._currentTexture.Bounds.Center.ToVector2(), this._scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this._scale, SpriteEffects.None, 0f);
             //this.drawCollisionBox(spriteBatch);
         }
     }

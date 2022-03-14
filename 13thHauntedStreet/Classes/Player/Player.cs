@@ -2,7 +2,7 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Player abstract class
- * Date    : 10.03.2022
+ * Date    : 14.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -13,14 +13,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    abstract class Player
+    abstract class Player : GameObject
     {
         // Properties
         protected Input _input;
 
-        protected Vector2 _position;
         protected Vector2 _movement;
-        protected Texture2D _currentTexture;
         protected float _scale;
 
         protected Vector2 _collisionPos;
@@ -33,7 +31,7 @@ namespace _13thHauntedStreet
         // Methods
         public abstract void Update(GameTime gameTime, List<Furniture> furnitureList);
 
-        public abstract void Draw(SpriteBatch spriteBatch);
+        //public abstract void Draw(SpriteBatch spriteBatch);
 
         /// <summary>
         /// Updates movement 

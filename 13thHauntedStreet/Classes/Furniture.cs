@@ -1,8 +1,8 @@
 ﻿/*
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
- * Details : Furniture classs
- * Date    : 10.03.2022
+ * Details : Furniture class
+ * Date    : 14.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -13,12 +13,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class Furniture
+    class Furniture : GameObject
     {
         // Properties
-        public Vector2 position;
-        public Texture2D texture;
-
         public Rectangle collisionBox;
 
 
@@ -35,9 +32,9 @@ namespace _13thHauntedStreet
 
 
         // Methods
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, Vector2.Zero, 1f, 0, 1f);
+            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
 
             Texture2D defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             defaultTexture.SetData(new Color[] { Color.White });
