@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Penumbra;
 
 namespace _13thHauntedStreet
 {
@@ -13,6 +14,9 @@ namespace _13thHauntedStreet
         private SpriteBatch _spriteBatch;
 
         private Screen _screen;
+
+        private FrameCounter _frameCounter = new FrameCounter();
+        public static bool showFps = false;
 
         private MainMenu _mainMenu;
         private Texture2D _backgroundMainMenu;
@@ -32,11 +36,15 @@ namespace _13thHauntedStreet
         // remove later
         private Texture2D bg;
 
+        private PenumbraComponent _penumbra;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            _penumbra = new PenumbraComponent(this);
 
 
             IsMouseVisible = true;
@@ -48,6 +56,8 @@ namespace _13thHauntedStreet
 
         protected override void Initialize()
         {
+            _penumbra.Initialize();
+
             _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
@@ -60,10 +70,10 @@ namespace _13thHauntedStreet
             _screen.LoadContent();
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
-            //_arrowButton = Content.Load<Texture2D>("TempFiles/arrowButton");
+            _arrowButton = Content.Load<Texture2D>("TempFiles/arrow");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
             _mainMenu = new MainMenu(_backgroundMainMenu, _font);
-            _mainMenu.LoadContent(_screen);
+            _mainMenu.LoadContent(_screen, _arrowButton);
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
@@ -141,10 +151,11 @@ namespace _13thHauntedStreet
 
         protected override void Draw(GameTime gameTime)
         {
+            _penumbra.BeginDraw();
             GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);           
 
 
             if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
@@ -164,6 +175,14 @@ namespace _13thHauntedStreet
                 _mainMenu.Draw(_spriteBatch);
             }
 
+            if (showFps)
+            {
+                _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+                var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
+
+                _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            }
 
             _spriteBatch.End();
 

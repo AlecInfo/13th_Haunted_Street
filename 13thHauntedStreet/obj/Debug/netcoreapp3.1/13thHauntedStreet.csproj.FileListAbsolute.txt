@@ -154,3 +154,5 @@ C:\Users\alec.ptt\Desktop\CoursCFPT\3eme\attEntreprise\13th Haunted Street\13th_
 C:\Users\alec.ptt\Desktop\CoursCFPT\3eme\attEntreprise\13th Haunted Street\13th_Haunted_Street\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.dll
 C:\Users\alec.ptt\Desktop\CoursCFPT\3eme\attEntreprise\13th Haunted Street\13th_Haunted_Street\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.pdb
 C:\Users\alec.ptt\Desktop\CoursCFPT\3eme\attEntreprise\13th Haunted Street\13th_Haunted_Street\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.genruntimeconfig.cache
+C:\Users\alec.ptt\Desktop\CoursCFPT\3eme\attEntreprise\13th Haunted Street\13th_Haunted_Street\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\arrow.xnb
+C:\Users\alec.ptt\Desktop\CoursCFPT\3eme\attEntreprise\13th Haunted Street\13th_Haunted_Street\13thHauntedStreet\bin\Debug\netcoreapp3.1\MonoGame.Penumbra.WindowsDX.dll

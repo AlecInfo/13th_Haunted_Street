@@ -27,13 +27,15 @@ namespace _13thHauntedStreet
         private float _backgroudScale = 4.32f;
         private Vector2 _titlePosition = new Vector2(Game1.graphics.PreferredBackBufferWidth / 7.5f, Game1.graphics.PreferredBackBufferHeight / 2.6f);
 
-        private bool _animationStarted = false;
+        public bool animationStarted = false;
         private bool _isOnTheLeftWall = true;
 
         private float _currentTime;
         private const float _TIMERTICK = 1f;
 
         public bool quitedTheGame = false;
+
+        private bool _isAlreadyBack = false;
 
         public enum _RightMenuSelected
         {
@@ -69,7 +71,7 @@ namespace _13thHauntedStreet
         }
 
         // Methods
-        public void LoadContent(Screen screen)
+        public void LoadContent(Screen screen, Texture2D arrowButton)
         {
             // Create a rectangle texture
             _buttonTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
@@ -82,7 +84,7 @@ namespace _13thHauntedStreet
             {
                 Text = "New Game",
                 Position = new Vector2(screen.OriginalScreenSize.X / 7, screen.OriginalScreenSize.Y / 1.8f),
-                PenColour = Color.White
+                PenColor = Color.White
             };
             // Assign the event
             btnNewGame.Click += BtnNewGame_Click;
@@ -95,7 +97,7 @@ namespace _13thHauntedStreet
             {
                 Text = "Settings",
                 Position = GetButtonPosition(),
-                PenColour = Color.White
+                PenColor = Color.White
             };
             // Assign the event
             btnSettings.Click += BtnSettings_Click;
@@ -108,7 +110,7 @@ namespace _13thHauntedStreet
             {
                 Text = "Quit",
                 Position = GetButtonPosition(),
-                PenColour = Color.White
+                PenColor = Color.White
             };
             // Assign the event
             btnQuit.Click += BtnQuit_Click;
@@ -120,7 +122,7 @@ namespace _13thHauntedStreet
             {
                 Text = "Join",
                 Position = new Vector2(screen.OriginalScreenSize.X / 3.05f, screen.OriginalScreenSize.Y / 1.46f),
-                PenColour = Color.White
+                PenColor = Color.White
             };
             // Assign the event
             btnJoinGame.Click += BtnJoinGame_Click;
@@ -129,7 +131,7 @@ namespace _13thHauntedStreet
 
             #endregion
 
-            this._mainMenuSettings.Load(screen);
+            this._mainMenuSettings.Load(screen, this._font, arrowButton);
         }
 
 
@@ -137,9 +139,7 @@ namespace _13thHauntedStreet
         {
             if (Keyboard.GetState().IsKeyDown(Keys.J))
             {
-                this._animationStarted = true;
-                this.Option = _RightMenuSelected.None;
-                
+                this.animationStarted = true;
             }
 
             // Updates all buttons that are in the list 
@@ -148,8 +148,16 @@ namespace _13thHauntedStreet
                 item.Update(gameTime, screen);
             }
 
+            this._mainMenuSettings.Update(gameTime, screen);
+
+            if (this._mainMenuSettings.Back)
+            {
+                this.animationStarted = this._mainMenuSettings.Back;
+                this._mainMenuSettings.Back = false;
+            }
+
             // Start the animation 
-            if (_animationStarted)
+            if (animationStarted)
             {
                 this.PlayLateralAnimation(gameTime, screen);
             }
@@ -167,6 +175,11 @@ namespace _13thHauntedStreet
             foreach (Button item in _leftMenuButtonList)
             {
                 item.Draw(spriteBatch);
+            }
+
+            if (this.Option == _RightMenuSelected.Settings)
+            {
+                _mainMenuSettings.Draw(spriteBatch);
             }
         }
 
@@ -202,6 +215,8 @@ namespace _13thHauntedStreet
                             item.Position = new Vector2(item.Position.X - (1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds), item.Position.Y);
                         }
 
+                        this._mainMenuSettings.ChangePosition = -1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
                         // To make sure the menu position doesn't move too far
                         if (this._backgroundPosition.X <= finalPosition)
                             this._backgroundPosition.X = finalPosition;
@@ -209,8 +224,9 @@ namespace _13thHauntedStreet
                     else
                     {
                         // Reset the value 
-                        this._animationStarted = false;
+                        this.animationStarted = false;
                         this._isOnTheLeftWall = false;
+                        this._mainMenuSettings.ChangePosition = 0;
                     }
                 }
                 else
@@ -228,6 +244,8 @@ namespace _13thHauntedStreet
                             item.Position = new Vector2(item.Position.X + (1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds), item.Position.Y);
                         }
 
+                        this._mainMenuSettings.ChangePosition = 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
                         // To make sure the menu position doesn't move too far
                         if (this._backgroundPosition.X >= 0)
                             this._backgroundPosition.X = 0;
@@ -235,8 +253,10 @@ namespace _13thHauntedStreet
                     else
                     {
                         // Reset the value
-                        this._animationStarted = false;
+                        this.animationStarted = false;
                         this._isOnTheLeftWall = true;
+                        this._mainMenuSettings.ChangePosition = 0;
+                        this.Option = _RightMenuSelected.None;
                     }
                 }
 
@@ -269,7 +289,7 @@ namespace _13thHauntedStreet
         /// <param name="e"></param>
         private void BtnNewGame_Click(object sender, EventArgs e)
         {
-            this._animationStarted = true;
+            this.animationStarted = true;
             this.Option = _RightMenuSelected.NewGame;
         }
 
@@ -280,7 +300,7 @@ namespace _13thHauntedStreet
         /// <param name="e"></param>
         private void BtnSettings_Click(object sender, EventArgs e)
         {
-            this._animationStarted = true;
+            this.animationStarted = true;
             this.Option = _RightMenuSelected.Settings;
         }
 
@@ -291,7 +311,7 @@ namespace _13thHauntedStreet
         /// <param name="e"></param>
         private void BtnJoinGame_Click(object sender, EventArgs e)
         {
-            this._animationStarted = true;
+            this.animationStarted = true;
             this.Option = _RightMenuSelected.JoinGame;
         }
 
