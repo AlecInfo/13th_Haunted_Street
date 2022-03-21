@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -162,12 +163,14 @@ namespace _13thHauntedStreet
             {
                 _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
 
-                foreach (Furniture item in furnitureList)
+                List<GameObject> gameObjectList = new List<GameObject>();
+                gameObjectList.AddRange(furnitureList);
+                gameObjectList.Add(hunter);
+
+                foreach (GameObject gameObject in gameObjectList.OrderBy(o => o.position.Y))
                 {
-                    item.Draw(_spriteBatch);
+                    gameObject.Draw(_spriteBatch);
                 }
-            
-                hunter.Draw(_spriteBatch);
                 ghost.Draw(_spriteBatch);
             }
             else
