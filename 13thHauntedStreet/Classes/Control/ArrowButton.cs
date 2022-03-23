@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class ArrowButton
+    class ArrowButton 
     {
         private SpriteFont _font;
 
@@ -38,7 +38,7 @@ namespace _13thHauntedStreet
 
         public bool State { get; set; }
 
-        public Color PenColour { get; set; }
+        public Color PenColor { get; set; }
 
         public Vector2 Position { get; set; }
 
@@ -52,11 +52,11 @@ namespace _13thHauntedStreet
 
             this._font = font;
 
-            this.PenColour = Color.Black;
+            this.PenColor = Color.Black;
         }
+        /*
 
-
-        public void Update(GameTime gameTime, Screen screen, float changePosition)
+        public override void Update(GameTime gameTime, Screen screen, float changePosition)
         {
             this.Clicked = false;
 
@@ -113,15 +113,15 @@ namespace _13thHauntedStreet
         public void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.DrawString(this._font, this.Text, new Vector2(this.Position.X - (this._font.MeasureString(this.Text).X + TEXTSPACING), this.Position.Y), this.PenColour, 0f, Vector2.Zero, 0.60f, SpriteEffects.None, 1f);
-            spriteBatch.DrawString(this._font, this.Text, new Vector2(this.Position.X - (this._font.MeasureString(this.Text).X * this.Scale) - TEXTSPACING, this.Position.Y), this.PenColour, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
+            spriteBatch.DrawString(this._font, this.Text, new Vector2(this.Position.X - (this._font.MeasureString(this.Text).X * this.Scale) - TEXTSPACING, this.Position.Y), this.PenColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
 
             if (EnableMode)
             {
-                spriteBatch.DrawString(this._font, this._state, new Vector2(this.Position.X + (ARROWSPACING + this._buttonList[1].Rectangle.Width) / 2 - this._font.MeasureString(this._state).X * this.Scale / 2, this.Position.Y), this.PenColour, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(this._font, this._state, new Vector2(this.Position.X + (ARROWSPACING + this._buttonList[1].Rectangle.Width) / 2 - this._font.MeasureString(this._state).X * this.Scale / 2, this.Position.Y), this.PenColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
             }
             else
             {
-                spriteBatch.DrawString(this._font, this.Value.ToString(), new Vector2(this.Position.X + (ARROWSPACING + this._buttonList[1].Rectangle.Width) / 2 - this._font.MeasureString(this.Value.ToString()).X * this.Scale / 2, this.Position.Y), this.PenColour, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(this._font, this.Value.ToString(), new Vector2(this.Position.X + (ARROWSPACING + this._buttonList[1].Rectangle.Width) / 2 - this._font.MeasureString(this.Value.ToString()).X * this.Scale / 2, this.Position.Y), this.PenColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
             }
 
             foreach (var item in this._buttonList)
@@ -205,6 +205,6 @@ namespace _13thHauntedStreet
             this.Clicked = true;
 
             this.ChangeTheFieldValue(1, this.State);
-        }
+        }*/
     }
 }

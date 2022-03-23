@@ -11,33 +11,60 @@ namespace _13thHauntedStreet
 {
     public class Game1 : Game
     {
+        // Graphics, spriteBatch and Penumbra
         public static GraphicsDeviceManager graphics;
+
+        public static Game1 self;
+
         private SpriteBatch _spriteBatch;
+        
+        private PenumbraComponent _penumbra;
 
+        // Screen
         private Screen _screen;
-
+        
+        // Refresh rate limited and display 
         private FrameCounter _frameCounter = new FrameCounter();
-        public static bool showFps = false;
 
+        public static bool showFps = true;
+
+        public static float limitedFps = 60f;
+
+        public static float previusLimitedFps;
+
+        // Sound Volume
+        public static float sfxVolume = 8f;
+
+        public static float musicVolume = 8f;
+
+        // Menu
         private MainMenu _mainMenu;
+
         private Texture2D _backgroundMainMenu;
+
         private Texture2D _arrowButton;
+
         private SpriteFont _font;
 
+        // Players
         private Ghost ghost;
+
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
 
         private Hunter hunter;
+
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
 
+        // Furnitures
         private Texture2D bedTexture;
+
         private Texture2D drawerTexture;
+
         private List<Furniture> furnitureList = new List<Furniture>();
 
         // remove later
         private Texture2D bg;
 
-        private PenumbraComponent _penumbra;
 
 
         public Game1()
@@ -45,20 +72,35 @@ namespace _13thHauntedStreet
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            self = this;
+
+            // Create penumbra
             _penumbra = new PenumbraComponent(this);
+            
+            // Set the fps to 60
+            IsFixedTimeStep = true;
 
+            TargetElapsedTime = TimeSpan.FromSeconds(1f / limitedFps);
 
+            previusLimitedFps = limitedFps;
+
+            // Set the windows
             IsMouseVisible = true;
+
             Window.IsBorderless = true;
+
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
             graphics.ApplyChanges();
         }
 
         protected override void Initialize()
         {
+            // Initialize penumbra
             _penumbra.Initialize();
 
+            // Initialize Screen
             _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
@@ -73,8 +115,8 @@ namespace _13thHauntedStreet
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
             _arrowButton = Content.Load<Texture2D>("TempFiles/arrow");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
-            _mainMenu = new MainMenu(_backgroundMainMenu, _font);
-            _mainMenu.LoadContent(_screen, _arrowButton);
+            _mainMenu = new MainMenu(Vector2.Zero,_backgroundMainMenu, _font);
+            //_mainMenu.LoadContent(_screen, _arrowButton);
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
@@ -138,11 +180,20 @@ namespace _13thHauntedStreet
 
         protected override void Update(GameTime gameTime)
         {
-            if (_mainMenu.quitedTheGame)
+            /*if (_mainMenu.quitedTheGame)
                 Exit();
+            */
+            // if the fps limit has changed
+            if (previusLimitedFps != limitedFps)
+            {
+                TargetElapsedTime = TimeSpan.FromSeconds(1f / limitedFps);
+                previusLimitedFps = limitedFps;
+            }
 
             _screen.Update(gameTime);
-            _mainMenu.Update(gameTime, _screen);
+
+            Vector2 posOri = Vector2.Zero;
+            _mainMenu.Update(gameTime, _screen, ref posOri);
 
             hunter.Update(gameTime, furnitureList);
             ghost.Update(gameTime, furnitureList);
@@ -156,9 +207,9 @@ namespace _13thHauntedStreet
             GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);           
-
-
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _mainMenu.Draw(gameTime, _spriteBatch);
+            /*
             if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
             {
                 _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
@@ -177,16 +228,18 @@ namespace _13thHauntedStreet
             {
                 _mainMenu.Draw(_spriteBatch);
             }
-
+            
             if (showFps)
             {
+                
+
                 _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
 
                 _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }
-
+            */
             _spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

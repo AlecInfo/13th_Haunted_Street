@@ -9,6 +9,8 @@ namespace _13thHauntedStreet
 {
     class MainMenuSetting
     {
+        #region Fields
+
         private Texture2D _buttonTexture;
 
         private SpriteFont _font;
@@ -17,145 +19,173 @@ namespace _13thHauntedStreet
 
         private string _tmpTitle = "";
 
+        private float _changePosition = 0;
+
+        private List<Button> _tabList = new List<Button>();
+
+        private List<ArrowButton> _settingsList = new List<ArrowButton>();
+
+        private List<object> _controlsList = new List<object>();
+
+        private List<object> _displayedList = new List<object>();
+
+        #endregion
+
+        #region Proporties
         public Vector2 TitlePosition { get; set; }
 
         public bool Back { get; set; }
 
-        private float _changePosition = 0;
         public float ChangePosition { get => _changePosition; set => _changePosition = value; }
 
-        private List<Button> _buttonList = new List<Button>();
-        public List<Button> ButtonList { get => _buttonList; set => _buttonList = value; }
+        public List<Button> TabList { get => _tabList; set => _tabList = value; }
 
+        public List<ArrowButton> SettingsList { get => _settingsList; set => _settingsList = value; }
 
-        private List<ArrowButton> _arrowButtonList = new List<ArrowButton>();
-        public List<ArrowButton> ArrowButtonList { get => _arrowButtonList; set => _arrowButtonList = value; }
+        public List<object> ControlsList { get => _controlsList; set => _controlsList = value; }
+
+        public List<object> DisplayedList { get => _displayedList; set => _displayedList = value; }
+
+        #endregion
 
         public void Load(Screen screen, SpriteFont font, Texture2D arrowButton)
         {
+            // Get the font
             this._font = font;
 
-            // Create a rectangle texture
+            // Get arrow texture and create a rectangle with it
             this._buttonTexture = arrowButton;
 
+            // Initialize the back variable
             this.Back = false;
 
-            this.TitlePosition = new Vector2(screen.OriginalScreenSize.X / 0.98f, screen.OriginalScreenSize.Y / 3.3f);
+            // Initialize the title position
+            this.TitlePosition = new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f);
 
-            
-
-            ArrowButtonList.Add(
+            // Add Full screen arrow button to the list
+            SettingsList.Add(
                 new ArrowButton(this._buttonTexture, font)
                 {
                     Text = "Full screen",
-                    Position = new Vector2(screen.OriginalScreenSize.X / 0.78f, screen.OriginalScreenSize.Y / 1.80f),
+                    Position = new Vector2(Screen.OriginalScreenSize.X / 0.78f, Screen.OriginalScreenSize.Y / 1.80f),
                     EnableMode = true,
-                    State = true,
+                    State = screen.WindowsSizeIsEqualScreenSize(),
                     Scale = 0.7f
                 }
                 );
 
-            ArrowButtonList.Add(
+            // Add Refresh rate arrow button to the list
+            SettingsList.Add(
                 new ArrowButton(this._buttonTexture, font)
                 {
                     Text = "Refresh rate",
-                    Position = new Vector2(this.ArrowButtonList[0].Position.X, GetArrowButtonPosition()),
-                    Value = 60,
+                    Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
+                    Value = Game1.limitedFps,
                     MinValue = 10,
-                    MaxValue = 140,
+                    MaxValue = 144,
                     Scale = 0.7f
                 }
-                ); ;
+                );
 
-            ArrowButtonList.Add(
+            // Add Refresh rate display arrow button to the list
+            SettingsList.Add(
                 new ArrowButton(this._buttonTexture, font)
                 {
                     Text = "Refresh rate display",
-                    Position = new Vector2(this.ArrowButtonList[0].Position.X, GetArrowButtonPosition()),
+                    Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
                     EnableMode = true,
-                    State = false,
+                    State = Game1.showFps,
                     Scale = 0.7f
                 }
                 );
 
-            ArrowButtonList.Add(
+            // Add SFX volume arrow button to the list
+            SettingsList.Add(
                 new ArrowButton(this._buttonTexture, font)
                 {
                     Text = "SFX volume",
-                    Position = new Vector2(this.ArrowButtonList[0].Position.X, GetArrowButtonPosition()),
-                    Value = 10,
+                    Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
+                    Value = Game1.sfxVolume,
                     MinValue = 0,
-                    MaxValue = 15,
+                    MaxValue = 10,
                     Scale = 0.7f
                 }
                 );
 
-            ArrowButtonList.Add(
+            // Add Music volume arrow button to the list
+            SettingsList.Add(
                 new ArrowButton(this._buttonTexture, font)
                 {
                     Text = "Music volume",
-                    Position = new Vector2(this.ArrowButtonList[0].Position.X, GetArrowButtonPosition()),
-                    Value = 10,
+                    Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
+                    Value = Game1.musicVolume,
                     MinValue = 0,
-                    MaxValue = 15,
+                    MaxValue = 10,
                     Scale = 0.7f
                 }
                 );
 
-            // Create a rectangle texture
+
+            // Create a rectangle texture to one per one pixel
             _buttonTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             _buttonTexture.SetData(new Color[] { Color.White });
 
-
+            // Create the settings button
             Button btnSettings = new Button(_buttonTexture, font)
             {
                 Text = "Settings",
-                Position = new Vector2(screen.OriginalScreenSize.X / 0.98f, screen.OriginalScreenSize.Y / 1.6f),
+                Position = new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.6f),
                 IsSelected = true,
                 Scale = 0.65f
             };
             // Assign the event
             btnSettings.Click += BtnSettings_Click;
             // Add the button in the list
-            this._buttonList.Add(btnSettings);
+            this._tabList.Add(btnSettings);
 
+            // Create the controls button
             Button btnControls = new Button(_buttonTexture, font)
             {
                 Text = "Controls",
-                Position = new Vector2(this.ButtonList[0].Position.X, GetButtonPosition()),
+                Position = new Vector2(this.TabList[0].Position.X, GetButtonPosition()),
                 Scale = 0.65f
             };
             // Assign the event
             btnControls.Click += BtnControls_Click;
             // Add the button in the list
-            this.ButtonList.Add(btnControls);
+            this.TabList.Add(btnControls);
 
-
+            // Create the back button
             Button btnBack = new Button(_buttonTexture, font)
             {
                 Text = "Back",
-                Position = new Vector2(this.ButtonList[0].Position.X, GetButtonPosition()),
+                Position = new Vector2(this.TabList[0].Position.X, GetButtonPosition()),
                 Scale = 0.65f
             };
             // Assign the event
             btnBack.Click += BtnBack_Click;
             // Add the button in the list
-            this.ButtonList.Add(btnBack);
+            this.TabList.Add(btnBack);
 
-
+            // Change the title text according to the button selected like Settings or Controls
             GetTitle();
-        }
 
+            // Define which tab to display
+            //this.DisplayedList = (objecthis.SettingsList;
+        }
+        /*
         public void Update(GameTime gameTime, Screen screen)
         {
+            // Update the title position 
             this.TitlePosition = new Vector2(this.TitlePosition.X + this.ChangePosition, this.TitlePosition.Y);
 
             // Scroll through the arrow button list
             int cpt = 0;
-            foreach (var item in this.ArrowButtonList)
+            foreach (var item in this.SettingsList)
             {
+                // Update the arrow button 
                 item.Update(gameTime, screen, this.ChangePosition);
-
+                // Update the position
                 item.Position = new Vector2(item.Position.X + this.ChangePosition, item.Position.Y);
 
                 if (item.Clicked)
@@ -172,6 +202,7 @@ namespace _13thHauntedStreet
 
                         // Limit the refresh rate
                         case 1:
+                            Game1.limitedFps = item.Value;
                             break;
 
                         // The refresh rate display
@@ -184,10 +215,12 @@ namespace _13thHauntedStreet
 
                         // SFX volume
                         case 3:
+                            Game1.sfxVolume = item.Value;
                             break;
 
                         // Music volume
                         case 4:
+                            Game1.musicVolume = item.Value;
                             break;
 
                         default:
@@ -200,7 +233,7 @@ namespace _13thHauntedStreet
 
             // Scroll through the button list
             cpt = 0;
-            foreach (var item in this.ButtonList)
+            foreach (var item in this.TabList)
             {
                 item.Update(gameTime, screen);
 
@@ -218,7 +251,7 @@ namespace _13thHauntedStreet
 
                         case 2:
                             this.Back = true;
-                            this.ButtonList[cpt].Clicked = false;
+                            this.TabList[cpt].Clicked = false;
                             break;
 
                         default:
@@ -234,31 +267,31 @@ namespace _13thHauntedStreet
         {
             spriteBatch.DrawString(this._font, this._tmpTitle, this.TitlePosition, Color.White);
 
-            foreach (var item in this.ArrowButtonList)
+            foreach (var item in this.SettingsList)
             {
                 item.Draw(spriteBatch);
             }
 
-            foreach (var item in this.ButtonList)
+            foreach (var item in this.TabList)
             {
                 item.Draw(spriteBatch);
             }
         }
-
+        */
 
         private float GetArrowButtonPosition()
         {
-            return this.ArrowButtonList[this.ArrowButtonList.Count -1].Position.Y + 50;
+            return this.SettingsList[this.SettingsList.Count -1].Position.Y + 50;
         }
 
         private float GetButtonPosition()
         {
-            return this.ButtonList[this.ButtonList.Count - 1].Position.Y + 35;
+            return this.TabList[this.TabList.Count - 1].Position.Y + 35;
         }
 
         private string GetTitle()
         {
-            foreach (var item in this.ButtonList)
+            foreach (var item in this.TabList)
             {
                 if (item.IsSelected)
                 {
@@ -273,7 +306,7 @@ namespace _13thHauntedStreet
         {
             Button btn = (Button)sender;
 
-            foreach (var item in ButtonList)
+            foreach (var item in TabList)
             {
                 item.IsSelected = false;
             }
@@ -287,7 +320,7 @@ namespace _13thHauntedStreet
         {
             Button btn = (Button)sender;
 
-            foreach (var item in ButtonList)
+            foreach (var item in TabList)
             {
                 item.IsSelected = false;
             }
