@@ -9,6 +9,16 @@ namespace _13thHauntedStreet
 {
     class ItemVertical : ItemsMenu
     {
+        //List<ItemsMenu> children = new List<ItemsMenu>();
 
+        //public override void Add(ItemsMenu item)
+        //{
+        //    children.Add(item);
+        //}
+
+        //public override void Remove(ItemsMenu item)
+        //{
+        //    children.Remove(item);
+        //}
     }
 }

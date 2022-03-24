@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class ItemsMenu : FormItem
+    abstract class ItemsMenu : FormItem
     {
         public List<FormItem> listItems = new List<FormItem>();
 
@@ -26,7 +26,6 @@ namespace _13thHauntedStreet
                 item.Draw(gameTime, spriteBatch);
             }
         }
-
         public void Add(FormItem newItem)
         {
             listItems.Add(newItem);
@@ -42,5 +41,10 @@ namespace _13thHauntedStreet
                 }
             }
         }
+
+
+        //public abstract void Add(ItemsMenu newItem);
+        //public abstract void Remove(ItemsMenu removeItem);
+
     }
 }

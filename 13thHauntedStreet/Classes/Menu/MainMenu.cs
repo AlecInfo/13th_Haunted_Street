@@ -15,9 +15,13 @@ namespace _13thHauntedStreet
 
         private Vector2 _backgroundPosition = Vector2.Zero;
 
-        private const float _BACKGROUNDSCALE = 4.32f;
+        private float _backgroudScale;
 
         private bool _isOnTheLeftWall = true;
+
+        Action callback;
+
+        //public List<FormItem> listItems = new List<FormItem>();
 
         static ItemButton NewButton(string text, SpriteFont font, Vector2 position, Action callback)
         {
@@ -44,15 +48,19 @@ namespace _13thHauntedStreet
             this.Position = position; //A vérifier pour la suite
             this._background = background;
             this._font = font;
+            this._backgroudScale = Screen.OriginalScreenSize.Y / background.Height;
 
             //zzz Vérifier problème de taille écran plus cours != 1920
             //Titre de l'app
             Add(MainMenu.NewText("13th Haunted Street", _font, new Vector2(Screen.OriginalScreenSize.X / 3.15f, Screen.OriginalScreenSize.Y/ 2.6f)));
             //Menu des boutons
-            Action callback = () => { this.animationStarted = true; };
+            callback = () => { this.animationStarted = true; };
             Add(MainMenu.NewButton("New game", _font, new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f), callback));
+            callback = () => { this.animationStarted = true; };
             Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback));
+            callback = () => { Game1.self.Exit();  };
             Add(MainMenu.NewButton("Quit", _font, GetButtonPosition(), callback));
+            callback = () => { this.animationStarted = true; };
             Add(MainMenu.NewButton("Join", _font, new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f), callback));
         }
 
@@ -62,21 +70,6 @@ namespace _13thHauntedStreet
             if (Keyboard.GetState().IsKeyDown(Keys.J))
             {
                 animationStarted = true;
-            }
-
-            foreach (var item in listItems)
-            {
-                //if (item == listItems[0])
-                //    this.animationStarted = true;
-                //else if (item == listItems[1])
-                //    this.animationStarted = true;
-                //else if (item == listItems[2])
-                //    Game1.self.Exit();
-                //else if (item == listItems[3])
-                //    this.animationStarted = true;
-
-                if (item == listItems[3])
-                    Game1.self.Exit();
             }
 
             // Start the animation 
@@ -97,12 +90,26 @@ namespace _13thHauntedStreet
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this._background, this._backgroundPosition, null, Color.White, 0f, Vector2.Zero, _BACKGROUNDSCALE, SpriteEffects.None, 0f);
+            spriteBatch.Draw(this._background, this._backgroundPosition, null, Color.White, 0f, Vector2.Zero, _backgroudScale, SpriteEffects.None, 0f);
 
             base.Draw(gameTime, spriteBatch);
         }
 
+        //public override void Add(ItemsMenu newItem)
+        //{
+        //    listItems.Add(newItem);
+        //}
 
+        //public override void Remove(ItemsMenu removeItem)
+        //{
+        //    for (int i = listItems.Count - 1; i >= 0; i--)
+        //    {
+        //        if (listItems[i] == removeItem)
+        //        {
+        //            listItems.RemoveAt(i);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Move the position of the background to create an animation between the two walls
@@ -119,7 +126,7 @@ namespace _13thHauntedStreet
             // When the game time has reached timer tick
             if (this._currentTime >= _TIMERTICK)
             {
-                float finalPosition = Screen.OriginalScreenSize.X - (this._background.Width * _BACKGROUNDSCALE);
+                float finalPosition = Screen.OriginalScreenSize.X - (this._background.Width * _backgroudScale);
 
                 // Move the menu to the left
                 if (this._backgroundPosition.X > finalPosition || this._backgroundPosition.X < 0)
@@ -149,7 +156,6 @@ namespace _13thHauntedStreet
                 this._currentTime -= _TIMERTICK;
             }
         }
-
 
         private Vector2 GetButtonPosition()
         {
