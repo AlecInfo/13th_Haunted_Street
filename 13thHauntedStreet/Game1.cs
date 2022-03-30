@@ -104,7 +104,7 @@ namespace _13thHauntedStreet
         protected override void Initialize()
         {
             // Initialize penumbra
-            _penumbra.Initialize();
+            penumbra.Initialize();
 
             // Initialize Screen
             _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
@@ -209,20 +209,12 @@ namespace _13thHauntedStreet
             penumbra.Lights.Clear();
 
             // make penumbra visible if in the game
-            penumbra.Visible = (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
+            //penumbra.Visible = (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
             
-            if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
-            {
-                testScene.Update(gameTime, penumbra);
-            }
-            else
-            {
-                _mainMenu.Update(gameTime, _screen);
-            }
-            _screen.Update(gameTime);
+            testScene.Update(gameTime, penumbra);
 
-            Vector2 posOri = Vector2.Zero;
-            _mainMenu.Update(gameTime, _screen, ref posOri);
+            //Vector2 posOri = Vector2.Zero;
+            //_mainMenu.Update(gameTime, _screen, ref posOri);
 
             _screen.Update(gameTime);
 
@@ -232,8 +224,8 @@ namespace _13thHauntedStreet
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
-            if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
-            {
+            /*if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
+            {*/
                 penumbra.BeginDraw();
                 GraphicsDevice.Clear(Color.Black);
             
@@ -247,7 +239,7 @@ namespace _13thHauntedStreet
                 // Draw infront of shadow
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _spriteBatch.End();
-            }
+            /*}
             else
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -264,7 +256,7 @@ namespace _13thHauntedStreet
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
 
                 _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-            }
+            }*/
             
 
             GraphicsDevice.SetRenderTarget(null);
