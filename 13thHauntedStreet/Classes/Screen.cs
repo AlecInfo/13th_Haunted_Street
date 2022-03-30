@@ -142,7 +142,7 @@ namespace _13thHauntedStreet
         /// Check if the window size is full screen or not
         /// </summary>
         /// <returns></returns>
-        private bool WindowsSizeIsEqualScreenSize()
+        public bool WindowsSizeIsEqualScreenSize()
         {
             if (EditSize.X == GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width && EditSize.Y == GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
                 return true;

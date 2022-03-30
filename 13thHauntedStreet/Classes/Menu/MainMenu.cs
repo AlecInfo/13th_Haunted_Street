@@ -6,237 +6,150 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
-{ 
-    class MainMenu
+{
+    class MainMenu : ItemsMenu
     {
-        #region Fields
-
-        private static MainMenu _instance;
-
-        private MainMenuSetting _mainMenuSettings = new MainMenuSetting();
-
-        private SpriteFont _font;
-
         private Texture2D _background;
 
-        private List<Button> _leftMenuButtonList = new List<Button>();
-        private List<Button> _rightMenuButtonList = new List<Button>();
-        private Texture2D _buttonTexture;
+        private bool animationStarted = false;
 
         private Vector2 _backgroundPosition = Vector2.Zero;
-        private float _backgroudScale = 4.32f;
-        private Vector2 _titlePosition = new Vector2(Game1.graphics.PreferredBackBufferWidth / 7.5f, Game1.graphics.PreferredBackBufferHeight / 2.6f);
 
-        private bool _animationStarted = false;
+        private float _backgroudScale;
+
         private bool _isOnTheLeftWall = true;
 
-        private float _currentTime;
-        private const float _TIMERTICK = 1f;
+        Action callback;
 
-        public bool quitedTheGame = false;
+        //public List<FormItem> listItems = new List<FormItem>();
 
-        public enum _RightMenuSelected
+        static ItemButton NewButton(string text, SpriteFont font, Vector2 position, Action callback)
         {
-            None,
-            NewGame,
-            JoinGame,
-            Settings,
-            Quit
+            Texture2D buttonTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
+
+            return new ItemButton(buttonTexture, font, callback)
+            {
+                Text = text,
+                Position = position,
+                FontColor = Color.White
+            };
         }
-        public _RightMenuSelected Option { get; set; }
 
-        #endregion
-
-
-
-        #region Methods
-
-        // Ctor
-        public MainMenu(Texture2D background, SpriteFont font)
+        static ItemText NewText(string text, SpriteFont font, Vector2 position)
         {
+            return new ItemText(font, text)
+            {
+                Position = position,
+            };
+        }
+
+        public MainMenu(Vector2 position, Texture2D background, SpriteFont font)
+        {
+            this.Position = position; //A vérifier pour la suite
             this._background = background;
             this._font = font;
+            this._backgroudScale = Screen.OriginalScreenSize.Y / background.Height;
+
+            //zzz Vérifier problème de taille écran plus cours != 1920
+            //Titre de l'app
+            Add(MainMenu.NewText("13th Haunted Street", _font, new Vector2(Screen.OriginalScreenSize.X / 3.15f, Screen.OriginalScreenSize.Y/ 2.6f)));
+            //Menu des boutons
+            callback = () => { this.animationStarted = true; };
+            Add(MainMenu.NewButton("New game", _font, new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f), callback));
+            callback = () => { this.animationStarted = true; };
+            Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback));
+            callback = () => { Game1.self.Exit();  };
+            Add(MainMenu.NewButton("Quit", _font, GetButtonPosition(), callback));
+            callback = () => { this.animationStarted = true; };
+            Add(MainMenu.NewButton("Join", _font, new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f), callback));
         }
 
-        // singleton
-        public static MainMenu Instence(Texture2D background, SpriteFont font)
+        public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
         {
-            if (_instance == null)
-            {
-                _instance = new MainMenu(background, font);
-            }
-            return _instance;
-        }
-
-        // Methods
-        public void LoadContent(Screen screen)
-        {
-            // Create a rectangle texture
-            _buttonTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
-            _buttonTexture.SetData(new Color[] { Color.White });
-
-            #region Create Button
-
-            // Initialize the new game button
-            Button btnNewGame = new Button(_buttonTexture, _font)
-            {
-                Text = "New Game",
-                Position = new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f),
-                PenColour = Color.White
-            };
-            // Assign the event
-            btnNewGame.Click += BtnNewGame_Click;
-            // Add the button in the list
-            _leftMenuButtonList.Add(btnNewGame);
-
-
-            // Initialize the settings button
-            Button btnSettings = new Button(_buttonTexture, _font)
-            {
-                Text = "Settings",
-                Position = GetButtonPosition(),
-                PenColour = Color.White
-            };
-            // Assign the event
-            btnSettings.Click += BtnSettings_Click;
-            // Add the button in the list
-            _leftMenuButtonList.Add(btnSettings);
-
-
-            // Initialize the Quit button
-            Button btnQuit = new Button(_buttonTexture, _font)
-            {
-                Text = "Quit",
-                Position = GetButtonPosition(),
-                PenColour = Color.White
-            };
-            // Assign the event
-            btnQuit.Click += BtnQuit_Click;
-            // Add the button in the list
-            _leftMenuButtonList.Add(btnQuit);
-
-            // Initialize the Join game button
-            Button btnJoinGame = new Button(_buttonTexture, _font)
-            {
-                Text = "Join",
-                Position = new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f),
-                PenColour = Color.White
-            };
-            // Assign the event
-            btnJoinGame.Click += BtnJoinGame_Click;
-            // Add the button in the list
-            _leftMenuButtonList.Add(btnJoinGame);
-
-            #endregion
-
-            this._mainMenuSettings.Load(screen);
-        }
-
-
-        public void Update(GameTime gameTime, Screen screen)
-        {
+            // pour tester
             if (Keyboard.GetState().IsKeyDown(Keys.J))
             {
-                this._animationStarted = true;
-                this.Option = _RightMenuSelected.None;
-                
-            }
-
-            // Updates all buttons that are in the list 
-            foreach (Button item in _leftMenuButtonList)
-            {
-                item.Update(gameTime, screen);
+                animationStarted = true;
             }
 
             // Start the animation 
-            if (_animationStarted)
+            if (animationStarted)
             {
-                this.PlayLateralAnimation(gameTime, screen);
+                if (_isOnTheLeftWall)
+                {
+                    changePosition = new Vector2(-1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds, 0 * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                }
+                else {
+                    changePosition = new Vector2(1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds, 0 * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                }
+                this.PlayLateralAnimation(gameTime, screen, ref changePosition);
             }
+
+            base.Update(gameTime, screen,ref changePosition);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            // Background
-            spriteBatch.Draw(this._background, this._backgroundPosition, null, Color.White, 0f, Vector2.Zero,this._backgroudScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(this._background, this._backgroundPosition, null, Color.White, 0f, Vector2.Zero, _backgroudScale, SpriteEffects.None, 0f);
 
-            // Title
-            spriteBatch.DrawString(_font, "13th Haunted St", this._titlePosition, Color.White);
-
-            // All button
-            foreach (Button item in _leftMenuButtonList)
-            {
-                item.Draw(spriteBatch);
-            }
+            base.Draw(gameTime, spriteBatch);
         }
 
-        #region Menu Animation
+        //public override void Add(ItemsMenu newItem)
+        //{
+        //    listItems.Add(newItem);
+        //}
+
+        //public override void Remove(ItemsMenu removeItem)
+        //{
+        //    for (int i = listItems.Count - 1; i >= 0; i--)
+        //    {
+        //        if (listItems[i] == removeItem)
+        //        {
+        //            listItems.RemoveAt(i);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Move the position of the background to create an animation between the two walls
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="screen"></param>
-        private void PlayLateralAnimation(GameTime gameTime, Screen screen)
+        private void PlayLateralAnimation(GameTime gameTime, Screen screen, ref Vector2 changePosition)
         {
+
+
             // Get the game time in milliseconds
             this._currentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // When the game time has reached timer tick
             if (this._currentTime >= _TIMERTICK)
-            {   
-                if (_isOnTheLeftWall)
+            {
+                float finalPosition = Screen.OriginalScreenSize.X - (this._background.Width * _backgroudScale);
+
+                // Move the menu to the left
+                if (this._backgroundPosition.X > finalPosition || this._backgroundPosition.X < 0)
                 {
-                    float finalPosition = Screen.OriginalScreenSize.X - (this._background.Width * this._backgroudScale);
+                    // Move the background
+                    Vector2 newPosition = new Vector2(this._backgroundPosition.X + changePosition.X, this._backgroundPosition.Y + changePosition.Y);
+                    this._backgroundPosition = newPosition;
+                    // Move the Title
 
-                    // Move the menu to the left
-                    if (this._backgroundPosition.X > finalPosition)
-                    {
-                        // Move the background
-                        this._backgroundPosition.X -= 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                        // Move the Title
-                        this._titlePosition.X -= 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                        // Move all buttons 
-                        foreach (Button item in _leftMenuButtonList)
-                        {
-                            item.Position = new Vector2(item.Position.X - (1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds), item.Position.Y);
-                        }
-
-                        // To make sure the menu position doesn't move too far
-                        if (this._backgroundPosition.X <= finalPosition)
-                            this._backgroundPosition.X = finalPosition;
-                    }
-                    else
-                    {
-                        // Reset the value 
-                        this._animationStarted = false;
+                    // To make sure the menu position doesn't move too far
+                    if (this._backgroundPosition.X <= finalPosition) { 
+                        this._backgroundPosition.X = finalPosition;
                         this._isOnTheLeftWall = false;
+                        this.animationStarted = false;
+                        changePosition = Vector2.Zero;
                     }
-                }
-                else
-                {
-                    // Move the menu to the right
-                    if (this._backgroundPosition.X < 0)
-                    {
-                        // Move the background
-                        this._backgroundPosition.X += 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                        // Move the title
-                        this._titlePosition.X += 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                        // Move all button
-                        foreach (Button item in _leftMenuButtonList)
-                        {
-                            item.Position = new Vector2(item.Position.X + (1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds), item.Position.Y);
-                        }
 
-                        // To make sure the menu position doesn't move too far
-                        if (this._backgroundPosition.X >= 0)
-                            this._backgroundPosition.X = 0;
-                    }
-                    else
+                    if (this._backgroundPosition.X >= 0)
                     {
-                        // Reset the value
-                        this._animationStarted = false;
+                        this._backgroundPosition.X = 0;
                         this._isOnTheLeftWall = true;
+                        this.animationStarted = false;
+                        changePosition = Vector2.Zero;
                     }
                 }
 
@@ -244,69 +157,12 @@ namespace _13thHauntedStreet
             }
         }
 
-        #endregion
-
-
-        #region Button Event and more
-
-        /// <summary>
-        /// Retrieves the position of the previous button in the list and adapts this position
-        /// </summary>
-        /// <returns></returns>
         private Vector2 GetButtonPosition()
         {
             return new Vector2(
-                Game1.graphics.PreferredBackBufferWidth / 7, 
-                _leftMenuButtonList[_leftMenuButtonList.Count - 1].Position.Y + _font.MeasureString(_leftMenuButtonList[_leftMenuButtonList.Count - 1].Text).Y * 1.5f
+                listItems[listItems.Count -1].Position.X,
+                listItems[listItems.Count - 1].Position.Y + _font.MeasureString(listItems[listItems.Count - 1].Text).Y * 1.5f
                 );
         }
-
-
-        /// <summary>
-        /// New game button event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnNewGame_Click(object sender, EventArgs e)
-        {
-            this._animationStarted = true;
-            this.Option = _RightMenuSelected.NewGame;
-        }
-
-        /// <summary>
-        /// Settings button event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnSettings_Click(object sender, EventArgs e)
-        {
-            this._animationStarted = true;
-            this.Option = _RightMenuSelected.Settings;
-        }
-
-        /// <summary>
-        /// Join the game button event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnJoinGame_Click(object sender, EventArgs e)
-        {
-            this._animationStarted = true;
-            this.Option = _RightMenuSelected.JoinGame;
-        }
-
-        /// <summary>
-        /// Quit button event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnQuit_Click(object sender, EventArgs e)
-        {
-            this.quitedTheGame = true;
-        }
-
-        #endregion
-
-        #endregion
     }
 }
