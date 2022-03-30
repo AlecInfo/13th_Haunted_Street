@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bqQ/W1eORJ6qHBWAiJzPMr98Vhm3vWE90e4P2rzcRPdjTloydKuQ53wGWjFlvhjAqXdOHc0HUDHG/JlRnbCDLw==",
+  "dgSpecHash": "iKUoMmsJZFqXxaRFKPe8/dUAvp4KXazF1Vpo1e05yWub86G0z6GrR4/xN2lVXcE4zDtGs7N5hQEKhJYuWmbMvQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Marco.Rdrgs2\\source\\repos\\13thHauntedStreet\\13thHauntedStreet\\13thHauntedStreet.csproj",
   "expectedPackageFiles": [
@@ -24,6 +24,7 @@
     "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\microsoft.win32.registry\\4.0.0\\microsoft.win32.registry.4.0.0.nupkg.sha512",
     "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
     "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\monogame.framework.windowsdx\\3.8.0.1641\\monogame.framework.windowsdx.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\monogame.penumbra.windowsdx\\2.1.0\\monogame.penumbra.windowsdx.2.1.0.nupkg.sha512",
     "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\netstandard.library\\1.6.0\\netstandard.library.1.6.0.nupkg.sha512",
     "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\runtime.native.system\\4.0.0\\runtime.native.system.4.0.0.nupkg.sha512",
     "C:\\Users\\Marco.Rdrgs2\\.nuget\\packages\\runtime.native.system.io.compression\\4.1.0\\runtime.native.system.io.compression.4.1.0.nupkg.sha512",

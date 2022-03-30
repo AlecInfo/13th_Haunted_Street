@@ -76,3 +76,6 @@ C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.dll
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.pdb
 C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\obj\Debug\netcoreapp3.1\13thHauntedStreet.genruntimeconfig.cache
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\MonoGame.Penumbra.WindowsDX.dll
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\Ground.xnb
+C:\Users\Marco.Rdrgs2\source\repos\13thHauntedStreet\13thHauntedStreet\bin\Debug\netcoreapp3.1\Content\TempFiles\Walls.xnb

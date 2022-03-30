@@ -81,7 +81,7 @@ namespace _13thHauntedStreet
             Button btnNewGame = new Button(_buttonTexture, _font)
             {
                 Text = "New Game",
-                Position = new Vector2(screen.OriginalScreenSize.X / 7, screen.OriginalScreenSize.Y / 1.8f),
+                Position = new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f),
                 PenColour = Color.White
             };
             // Assign the event
@@ -119,7 +119,7 @@ namespace _13thHauntedStreet
             Button btnJoinGame = new Button(_buttonTexture, _font)
             {
                 Text = "Join",
-                Position = new Vector2(screen.OriginalScreenSize.X / 3.05f, screen.OriginalScreenSize.Y / 1.46f),
+                Position = new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f),
                 PenColour = Color.White
             };
             // Assign the event
@@ -187,7 +187,7 @@ namespace _13thHauntedStreet
             {   
                 if (_isOnTheLeftWall)
                 {
-                    float finalPosition = screen.OriginalScreenSize.X - (this._background.Width * this._backgroudScale);
+                    float finalPosition = Screen.OriginalScreenSize.X - (this._background.Width * this._backgroudScale);
 
                     // Move the menu to the left
                     if (this._backgroundPosition.X > finalPosition)

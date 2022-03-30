@@ -2,7 +2,6 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Player abstract class
- * Date    : 14.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Penumbra;
 
 namespace _13thHauntedStreet
 {
@@ -17,24 +17,25 @@ namespace _13thHauntedStreet
     {
         // Properties
         protected Input _input;
+        protected GameTime _gameTime;
+        public Scene currentScene;
+        public Light light;
 
         protected Vector2 _movement;
-        protected float _scale;
+        public float scale;
+        protected Rectangle _collisionBox;
 
-        protected Vector2 _collisionPos;
-        protected Vector2 _collisionSize;
+        protected List<Furniture> _furnitureList;
 
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 100;
 
 
         // Methods
-        public abstract void Update(GameTime gameTime, List<Furniture> furnitureList);
-
-        //public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Update(GameTime gameTime, List<Furniture> furnitureList, Scene scene);
 
         /// <summary>
-        /// Updates movement 
+        /// Updates movement with input
         /// </summary>
         protected void readInput()
         {
@@ -44,31 +45,36 @@ namespace _13thHauntedStreet
             // X
             if (kbdState.IsKeyDown(this._input.Left))
             {
-                _movement.X = -1;
+                this._movement.X += -1;
             }
 
             if (kbdState.IsKeyDown(this._input.Right))
             {
-                _movement.X = +1;
+                this._movement.X += 1;
             }
 
             // Y
             if (kbdState.IsKeyDown(this._input.Up))
             {
-                _movement.Y = -1;
+                this._movement.Y += -1;
             }
 
             if (kbdState.IsKeyDown(this._input.Down))
             {
-                _movement.Y = +1;
+                this._movement.Y += 1;
             }
 
             // diagonal fix
-            if (_movement.X != 0 && _movement.Y != 0) // if is moving diagonally
+            if (this._movement.X != 0 && this._movement.Y != 0) // if is moving diagonally
             {
-                _movement /= 1.4f;
+                this._movement /= 1.4f;
             }
         }
+
+        /// <summary>
+        /// Updates the player position
+        /// </summary>
+        public abstract void updatePosition();
 
         /// <summary>
         /// plays the animation
@@ -76,81 +82,100 @@ namespace _13thHauntedStreet
         /// <param name="gameTime"></param>
         /// <param name="animation">animation that is currently playing</param>
         /// <param name="currentTexture">texture that is currently beeing drawn</param>
-        /// <returns>next frame</returns>
-        protected Texture2D playAnim(GameTime gameTime, List<Texture2D> animation, Texture2D currentTexture)
+        protected void playAnim(List<Texture2D> animation, ref Texture2D currentTexture)
         {
-            this.timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+            this.timeSinceLastFrame += this._gameTime.ElapsedGameTime.Milliseconds;
             if (this.timeSinceLastFrame > this.millisecondsPerFrame)
             {
                 this.timeSinceLastFrame -= this.millisecondsPerFrame;
-                
+
                 // find current frame id
-                int nextTextureId = animation.FindIndex(item => item == currentTexture);
+                Texture2D texture = currentTexture;
+                int nextTextureId = animation.FindIndex(item => item == texture);
 
                 if (nextTextureId < animation.Count - 1)
                 {
-                    return animation[nextTextureId + 1];
+                    currentTexture = animation[nextTextureId + 1];
                 }
-
-                // else
-                return animation[0];
+                else
+                    currentTexture = animation[0];
             }
-
-            // else
-            return currentTexture;
         }
 
         /// <summary>
-        /// draw the player collision box to help debug
+        /// Draw the player collision box to help debug
         /// </summary>
         /// <param name="spriteBatch"></param>
         protected void drawCollisionBox(SpriteBatch spriteBatch)
         {
-            Texture2D defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
-            defaultTexture.SetData(new Color[] { Color.White });
-
-            spriteBatch.Draw(defaultTexture, new Rectangle(this._collisionPos.ToPoint(), (this._collisionSize).ToPoint()), null, Color.White * 0.5f, 0f, new Vector2(0.5f), SpriteEffects.None, 1f);
-            spriteBatch.Draw(defaultTexture, new Rectangle(this._collisionPos.ToPoint(), new Vector2(5).ToPoint()), null, Color.Red, 0f, new Vector2(0.5f), SpriteEffects.None, 1f);
+            spriteBatch.Draw(Game1.defaultTexture, this._collisionBox, null, Color.White * 0.5f, 0f, Vector2.Zero, SpriteEffects.None, 1f);
         }
 
-        protected Vector2 objectCollision(List<Furniture> furnitureList, Vector2 distance)
+        /// <summary>
+        /// collision between the player and game objects
+        /// </summary>
+        /// <param name="distance"></param>
+        protected void objectCollision(ref Vector2 distance)
         {
-            foreach (Furniture item in furnitureList)
+            foreach (Furniture item in this._furnitureList)
             {
-                if (this._collisionPos.X + this._collisionSize.X / 2 + distance.X > item.collisionBox.Left &&
-                    this._collisionPos.X - this._collisionSize.X / 2 < item.collisionBox.Left &&
-                    this._collisionPos.Y + this._collisionSize.Y / 2 > item.collisionBox.Top &&
-                    this._collisionPos.Y - this._collisionSize.Y / 2 < item.collisionBox.Bottom) // Left
+                if (this._collisionBox.Right + distance.X > item.collisionBox.Left &&
+                    this._collisionBox.Left < item.collisionBox.Left &&
+                    this._collisionBox.Bottom > item.collisionBox.Top &&
+                    this._collisionBox.Top < item.collisionBox.Bottom) // Left
                 {
                     distance.X = 0;
                 }
 
-                if (this._collisionPos.X - this._collisionSize.X / 2 + distance.X < item.collisionBox.Right &&
-                    this._collisionPos.X + this._collisionSize.X / 2 > item.collisionBox.Right &&
-                    this._collisionPos.Y + this._collisionSize.Y / 2 > item.collisionBox.Top &&
-                    this._collisionPos.Y - this._collisionSize.Y / 2 < item.collisionBox.Bottom) // Right
+                if (this._collisionBox.Left + distance.X < item.collisionBox.Right &&
+                    this._collisionBox.Right > item.collisionBox.Right &&
+                    this._collisionBox.Bottom > item.collisionBox.Top &&
+                    this._collisionBox.Top < item.collisionBox.Bottom) // Right
                 {
                     distance.X = 0;
                 }
 
-                if (this._collisionPos.Y + this._collisionSize.Y / 2 + distance.Y > item.collisionBox.Top &&
-                    this._collisionPos.Y - this._collisionSize.Y / 2 < item.collisionBox.Top &&
-                    this._collisionPos.X + this._collisionSize.X / 2 > item.collisionBox.Left &&
-                    this._collisionPos.X - this._collisionSize.X / 2 < item.collisionBox.Right) // Top
+                if (this._collisionBox.Bottom + distance.Y > item.collisionBox.Top &&
+                    this._collisionBox.Top < item.collisionBox.Top &&
+                    this._collisionBox.Right > item.collisionBox.Left &&
+                    this._collisionBox.Left < item.collisionBox.Right) // Top
                 {
                     distance.Y = 0;
                 }
 
-                if (this._collisionPos.Y - this._collisionSize.Y / 2 + distance.Y < item.collisionBox.Bottom &&
-                    this._collisionPos.Y + this._collisionSize.Y / 2 > item.collisionBox.Bottom &&
-                    this._collisionPos.X + this._collisionSize.X / 2 > item.collisionBox.Left &&
-                    this._collisionPos.X - this._collisionSize.X / 2 < item.collisionBox.Right) // Bottom
+                if (this._collisionBox.Top + distance.Y < item.collisionBox.Bottom &&
+                    this._collisionBox.Bottom > item.collisionBox.Bottom &&
+                    this._collisionBox.Right > item.collisionBox.Left &&
+                    this._collisionBox.Left < item.collisionBox.Right) // Bottom
                 {
                     distance.Y = 0;
                 }
             }
+        }
 
-            return distance;
+        /// <summary>
+        /// collision between the current scene walls and the player
+        /// </summary>
+        /// <param name="distance"></param>
+        protected void wallCollision(ref Vector2 distance)
+        {
+            if (this._collisionBox.Left + distance.X < this.currentScene.groundArea.Left) // Left
+            {
+                distance.X = 0;
+            }
+            else if (this._collisionBox.Right + distance.X > this.currentScene.groundArea.Right) // Right
+            {
+                distance.X = 0;
+            }
+
+            if (this._collisionBox.Top + distance.Y < this.currentScene.groundArea.Top) // Top
+            {
+                distance.Y = 0;
+            }
+            else if (this._collisionBox.Bottom + distance.Y > this.currentScene.groundArea.Bottom) // Bottom
+            {
+                distance.Y = 0;
+            }
         }
     }
 }

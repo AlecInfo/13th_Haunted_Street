@@ -2,7 +2,6 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Ghost class (inherits from player abstract class)
- * Date    : 09.03.2022
  */
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Penumbra;
 
 namespace _13thHauntedStreet
 {
@@ -30,50 +30,64 @@ namespace _13thHauntedStreet
         {
             this._input = input;
             this.position = initialPos;
+            this.scale = 1.5f;
 
             this._animManager = animationManager;
             this._animManager.currentAnim = this._animManager.animationRight;
             this.texture = this._animManager.currentAnim[0];
 
-            this._collisionPos = new Vector2(this.position.X, this.position.Y + this.texture.Height / 2);
-            this._collisionSize = new Vector2(this.texture.Width, this.texture.Height / 2);
-
-            this._scale = 1.5f;
+            this.light = new PointLight
+            {
+                Scale = new Vector2(1000),
+                Position = this._collisionBox.Center.ToVector2(),
+                ShadowType = ShadowType.Occluded,
+                Radius = 10,
+                Intensity = 1f
+            };
         }
 
 
         // Method
-        public override void Update(GameTime gameTime, List<Furniture> furnitureList)
+        public override void Update(GameTime gameTime, List<Furniture> furnitureList, Scene scene)
         {
+            this._gameTime = gameTime;
+            this._furnitureList = furnitureList;
+            this.currentScene = scene;
+
             this.readInput();
 
-            this.updatePosition(gameTime, furnitureList);
-
-            this.updateAnim(gameTime);
-        }
-
-        /// <summary>
-        /// Updates the player position
-        /// </summary>
-        private void updatePosition(GameTime gameTime, List<Furniture> furnitureList)
-        {
+            // if the player is not moving in the y axis, make the ghost float
             if (this._movement.Y == 0)
             {
-                this._floatTimer += (float)gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
+                this._floatTimer += (float)this._gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
                 this._movement.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
             }
+            
+            // if player has moved update position
+            if (this._movement.X != 0 || this._movement.Y != 0)
+            {
+                this.updatePosition();
+            }
 
-            this.position += this._movement * MOVEMENTSPEED * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            this.updateAnim();
+        }
 
-            this._collisionPos = new Vector2(this.position.X, this.position.Y + this.texture.Height / 2);
-            this._collisionSize = new Vector2(this.texture.Width, this.texture.Height / 2);
+        public override void updatePosition()
+        {
+            Vector2 distance = this._movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            this.wallCollision(ref distance);
+
+            this.position += distance;
+            this.light.Position = this.position;
+
+            this._collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
         }
 
         /// <summary>
         /// Updates the animation that is playing 
         /// </summary>
-        /// <param name="gameTime"></param>
-        private void updateAnim(GameTime gameTime)
+        private void updateAnim()
         {
             if (this._movement.X > 0)
             {
@@ -83,12 +97,13 @@ namespace _13thHauntedStreet
             {
                 this._animManager.currentAnim = this._animManager.animationLeft;
             }
-            this.texture = this.playAnim(gameTime, this._animManager.currentAnim, this.texture);
+
+            this.playAnim(this._animManager.currentAnim, ref this.texture);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this._scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this.scale, SpriteEffects.None, 0f);
             //this.drawCollisionBox(spriteBatch);
         }
     }

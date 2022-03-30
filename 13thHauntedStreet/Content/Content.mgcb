@@ -169,6 +169,18 @@
 /processorParam:TextureFormat=Color
 /build:TempFiles/GhostSprites/ghostRight03.png
 
+#begin TempFiles/Ground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Ground.png
+
 #begin TempFiles/HunterSprites/idle/idle_down.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -511,4 +523,16 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:TempFiles/theFont.spritefont
+
+#begin TempFiles/Walls.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Walls.png
 

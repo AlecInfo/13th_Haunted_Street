@@ -24,7 +24,7 @@ namespace _13thHauntedStreet
         private const int _ORIGINALSIZE_X = 1920;
         private const int _ORIGINALSIZE_Y = 1080;
 
-        public Vector2 OriginalScreenSize
+        public static Vector2 OriginalScreenSize
         {
             get => new Vector2(_ORIGINALSIZE_X, _ORIGINALSIZE_Y);
         }

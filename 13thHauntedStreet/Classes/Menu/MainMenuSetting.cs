@@ -34,7 +34,7 @@ namespace _13thHauntedStreet
                 new ArrowButton(this._buttonTexture, this._font)
                 {
                     Text = "Full screen",
-                    Position = new Vector2(screen.OriginalScreenSize.X / 3.05f, screen.OriginalScreenSize.Y / 1.46f),
+                    Position = new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f),
                     EnableMode = true,
                     State = true
                 }

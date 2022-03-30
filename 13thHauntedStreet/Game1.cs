@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Penumbra;
 
 namespace _13thHauntedStreet
 {
@@ -12,6 +13,7 @@ namespace _13thHauntedStreet
     {
         public static GraphicsDeviceManager graphics;
         private SpriteBatch _spriteBatch;
+        public PenumbraComponent penumbra;
 
         private Screen _screen;
 
@@ -20,25 +22,31 @@ namespace _13thHauntedStreet
         private Texture2D _arrowButton;
         private SpriteFont _font;
 
-        private Ghost ghost;
-        private GhostAnimationManager ghostAM = new GhostAnimationManager();
+        public static Texture2D defaultTexture;
 
-        private Hunter hunter;
+        private GhostAnimationManager ghostAM = new GhostAnimationManager();
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
+        private List<Player> playerList = new List<Player>();
 
         private Texture2D bedTexture;
         private Texture2D drawerTexture;
         private List<Furniture> furnitureList = new List<Furniture>();
 
+        private Scene testScene;
+
         // remove later
         private Texture2D bg;
+        private Texture2D ground;
+        private Texture2D walls;
 
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            penumbra = new PenumbraComponent(this) {
+                AmbientColor = Color.Black
+            };
             Content.RootDirectory = "Content";
-
 
             IsMouseVisible = true;
             Window.IsBorderless = true;
@@ -50,6 +58,8 @@ namespace _13thHauntedStreet
         protected override void Initialize()
         {
             _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
+
+            penumbra.Initialize();
 
             base.Initialize();
         }
@@ -66,12 +76,15 @@ namespace _13thHauntedStreet
             _mainMenu = new MainMenu(_backgroundMainMenu, _font);
             _mainMenu.LoadContent(_screen);
 
+            defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
+            defaultTexture.SetData(new Color[] { Color.White });
+
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
 
 
             // Ghost
-            ghost = new Ghost(
+            playerList.Add(new Ghost(
                 new Input()
                 {
                     Left = Keys.Left,
@@ -81,7 +94,7 @@ namespace _13thHauntedStreet
                 },
                 new Vector2(500, 500),
                 ghostAM
-                );
+            ));
 
             // Hunter
             hunterAM.walkingLeft = multipleTextureLoader("TempFiles/HunterSprites/walking_left/walking_left", 6);
@@ -93,7 +106,7 @@ namespace _13thHauntedStreet
             hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_up"));
             hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_down"));
 
-            hunter = new Hunter(
+            playerList.Add(new Hunter(
                 new Input()
                 {
                     Left = Keys.A,
@@ -103,7 +116,7 @@ namespace _13thHauntedStreet
                 },
                 new Vector2(500, 500),
                 hunterAM
-            );
+            ));
 
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
             drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
@@ -111,7 +124,10 @@ namespace _13thHauntedStreet
             furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
 
             bg = Content.Load<Texture2D>("TempFiles/bg");
+            ground = Content.Load<Texture2D>("TempFiles/Ground");
+            walls = Content.Load<Texture2D>("TempFiles/Walls");
 
+            testScene = new Scene(bg, walls, Vector2.One/1.125f, new Rectangle(360, 215, 1200, 650), playerList, furnitureList);
 
             // method that loads every texture of an animation
             List<Texture2D> multipleTextureLoader(string filePrefix, int size)
@@ -131,11 +147,23 @@ namespace _13thHauntedStreet
             if (_mainMenu.quitedTheGame)
                 Exit();
 
-            _screen.Update(gameTime);
-            _mainMenu.Update(gameTime, _screen);
+            // clear hulls and lights
+            penumbra.Hulls.Clear();
+            penumbra.Lights.Clear();
 
-            hunter.Update(gameTime, furnitureList);
-            ghost.Update(gameTime, furnitureList);
+            // make penumbra visible if in the game
+            penumbra.Visible = (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
+            
+            if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
+            {
+                testScene.Update(gameTime, penumbra);
+            }
+            else
+            {
+                _mainMenu.Update(gameTime, _screen);
+            }
+
+            _screen.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -143,36 +171,32 @@ namespace _13thHauntedStreet
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
-            GraphicsDevice.Clear(Color.Black);
-
-            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
-
-
             if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
             {
-                _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
+                penumbra.BeginDraw();
+                GraphicsDevice.Clear(Color.Black);
+            
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+  
+                testScene.Draw(_spriteBatch);
 
-                List<GameObject> gameObjectList = new List<GameObject>();
-                gameObjectList.AddRange(furnitureList);
-                gameObjectList.Add(hunter);
+                _spriteBatch.End();
+                penumbra.Draw(gameTime);
 
-                foreach (GameObject gameObject in gameObjectList.OrderBy(o => o.position.Y))
-                {
-                    gameObject.Draw(_spriteBatch);
-                }
-                ghost.Draw(_spriteBatch);
+                // Draw infront of shadow
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _spriteBatch.End();
             }
             else
             {
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _mainMenu.Draw(_spriteBatch);
+                _spriteBatch.End();
             }
 
 
-            _spriteBatch.End();
-
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
-
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(_screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, _screen.Scale, SpriteEffects.None, 0f);

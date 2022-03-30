@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/HunterSprites/idle/idle_left.png</SourceFile>
-  <SourceTime>2022-03-02T15:17:10.8295128+01:00</SourceTime>
+  <SourceTime>2022-03-24T15:43:26.0580396+01:00</SourceTime>
   <DestFile>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/bin/Windows/Content/TempFiles/HunterSprites/idle/idle_left.xnb</DestFile>
-  <DestTime>2022-03-14T10:24:18.6389844+01:00</DestTime>
+  <DestTime>2022-03-24T15:55:17.2777537+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
