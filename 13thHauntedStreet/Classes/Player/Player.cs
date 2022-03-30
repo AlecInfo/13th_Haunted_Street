@@ -30,6 +30,16 @@ namespace _13thHauntedStreet
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 100;
 
+        public Rectangle rectangle
+        { 
+            get
+            {
+                return new Rectangle(
+                    this.position.ToPoint() - (this.texture.Bounds.Size.ToVector2() * this.scale / 2).ToPoint(), 
+                    (this.texture.Bounds.Size.ToVector2() + this.texture.Bounds.Size.ToVector2() / 2 * this.scale).ToPoint());
+            }
+        }
+
 
         // Methods
         public abstract void Update(GameTime gameTime, List<Furniture> furnitureList, Scene scene);

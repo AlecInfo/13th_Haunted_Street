@@ -25,6 +25,7 @@ namespace _13thHauntedStreet
 
         public List<Player> playerList;
         public List<Furniture> furnitureList;
+        public List<Door> doorList = new List<Door>();
 
         private PenumbraComponent _penumbra;
 
@@ -104,12 +105,11 @@ namespace _13thHauntedStreet
         private bool isInside(Furniture furniture, Player player)
         {
             Rectangle furnitureRect = new Rectangle(furniture.position.ToPoint(), furniture.texture.Bounds.Size);
-            Rectangle playerRect = new Rectangle(player.position.ToPoint() - (player.texture.Bounds.Size.ToVector2() * player.scale / 2).ToPoint(), (player.texture.Bounds.Size.ToVector2() + player.texture.Bounds.Size.ToVector2() / 2 * player.scale).ToPoint());
             
-            if (playerRect.Right >= furnitureRect.Left &&
-                playerRect.Left <= furnitureRect.Right &&
-                playerRect.Bottom >= furnitureRect.Top &&
-                playerRect.Top <= furnitureRect.Bottom)
+            if (player.rectangle.Right >= furnitureRect.Left &&
+                player.rectangle.Left <= furnitureRect.Right &&
+                player.rectangle.Bottom >= furnitureRect.Top &&
+                player.rectangle.Top <= furnitureRect.Bottom)
             {
                 return true;
             }

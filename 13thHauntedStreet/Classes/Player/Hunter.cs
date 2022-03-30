@@ -23,15 +23,7 @@ namespace _13thHauntedStreet
 
         private HunterAnimationManager _animManager;
 
-        private enum direction
-        {
-            none,
-            left,
-            right,
-            up,
-            down
-        }
-        private direction _currentDirection = direction.down;
+        private Game1.direction _currentDirection = Game1.direction.down;
 
 
         // Ctor
@@ -119,24 +111,24 @@ namespace _13thHauntedStreet
                 if (this._movement.X < 0)
                 {
                     this._animManager.currentAnim = this._animManager.walkingLeft;
-                    this._currentDirection = direction.left;
+                    this._currentDirection = Game1.direction.left;
                 }
                 else if (this._movement.X > 0)
                 {
                     this._animManager.currentAnim = this._animManager.walkingRight;
-                    this._currentDirection = direction.right;
+                    this._currentDirection = Game1.direction.right;
                 }
                 else
                 {
                     if (this._movement.Y < 0)
                     {
                         this._animManager.currentAnim = this._animManager.walkingUp;
-                        this._currentDirection = direction.up;
+                        this._currentDirection = Game1.direction.up;
                     }
                     else if (this._movement.Y > 0)
                     {
                         this._animManager.currentAnim = this._animManager.walkingDown;
-                        this._currentDirection = direction.down;
+                        this._currentDirection = Game1.direction.down;
                     }
                 }
             }
@@ -144,19 +136,19 @@ namespace _13thHauntedStreet
             {
                 switch (this._currentDirection)
                 {
-                    case direction.left:
+                    case Game1.direction.left:
                         this._animManager.currentAnim = this._animManager.idleLeft;
                         break;
 
-                    case direction.right:
+                    case Game1.direction.right:
                         this._animManager.currentAnim = this._animManager.idleRight;
                         break;
 
-                    case direction.up:
+                    case Game1.direction.up:
                         this._animManager.currentAnim = this._animManager.idleUp;
                         break;
 
-                    case direction.down:
+                    case Game1.direction.down:
                         this._animManager.currentAnim = this._animManager.idleDown;
                         break;
                 }

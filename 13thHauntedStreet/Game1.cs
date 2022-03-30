@@ -12,13 +12,22 @@ namespace _13thHauntedStreet
     public class Game1 : Game
     {
         // Graphics, spriteBatch and Penumbra
-        public static GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics; 
 
         public static Game1 self;
 
         private SpriteBatch _spriteBatch;
         public PenumbraComponent penumbra;
 
+        public enum direction
+        {
+            none,
+            left,
+            right,
+            up,
+            down
+        }
+        
         // Screen
         private Screen _screen;
         
