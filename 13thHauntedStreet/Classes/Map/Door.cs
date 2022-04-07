@@ -17,11 +17,12 @@ namespace _13thHauntedStreet
         // Properties
         private Game1.direction _direction;
         public Rectangle area;
+        public const int LENGTH = 50;
         
-        public Door conectedDoor;
+        public Door connectedDoor;
         public Scene scene;
 
-        private const int SPAWNOFFSET = 10;
+        private const int SPAWNOFFSET = 50;
         public Vector2 spawnPos
         {
             get
@@ -53,13 +54,30 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Door(Game1.direction direction, Vector2 position, Vector2 size, Scene scene) : this(direction, new Rectangle(position.ToPoint(), size.ToPoint()), scene) { }
-        public Door(Game1.direction direction, Rectangle area, Scene scene)
+        public Door(Game1.direction direction, Scene scene)
         {
             this._direction = direction;
-            this.area = area;
-
             this.scene = scene;
+
+            // find area
+            switch (this._direction)
+            {
+                case Game1.direction.left:
+                    this.area = new Rectangle(this.scene.groundArea.Left + 5, this.scene.groundArea.Top + (this.scene.groundArea.Height - LENGTH) / 2, 5, LENGTH);
+                    break;
+
+                case Game1.direction.right:
+                    this.area = new Rectangle(this.scene.groundArea.Right - 5, this.scene.groundArea.Top + (this.scene.groundArea.Height - LENGTH) / 2, 5, LENGTH);
+                    break;
+
+                case Game1.direction.up:
+                    this.area = new Rectangle(this.scene.groundArea.Left + (this.scene.groundArea.Width - LENGTH) / 2, this.scene.groundArea.Top + 5, LENGTH, 5);
+                    break;
+
+                case Game1.direction.down:
+                    this.area = new Rectangle(this.scene.groundArea.Left + (this.scene.groundArea.Width - LENGTH) / 2, this.scene.groundArea.Bottom - 5, LENGTH, 5);
+                    break;
+            }
         }
 
 
@@ -71,10 +89,10 @@ namespace _13thHauntedStreet
         /// <returns>true if inside door area, else false</returns>
         public bool hasEntered(Player player)
         {
-            if (player.rectangle.Right >= this.area.Left &&
-                player.rectangle.Left <= this.area.Right &&
-                player.rectangle.Bottom >= this.area.Top &&
-                player.rectangle.Top <= this.area.Bottom)
+            if (player.collisionBox.Right >= this.area.Left &&
+                player.collisionBox.Left <= this.area.Right &&
+                player.collisionBox.Bottom >= this.area.Top &&
+                player.collisionBox.Top <= this.area.Bottom)
             {
                 return true;
             }

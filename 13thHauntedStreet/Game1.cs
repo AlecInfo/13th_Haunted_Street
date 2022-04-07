@@ -17,7 +17,7 @@ namespace _13thHauntedStreet
         public static Game1 self;
 
         private SpriteBatch _spriteBatch;
-        public PenumbraComponent penumbra;
+        public static PenumbraComponent penumbra;
 
         public enum direction
         {
@@ -57,28 +57,21 @@ namespace _13thHauntedStreet
         public static Texture2D defaultTexture;
 
         // Players
-        private Ghost ghost;
-
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
-
-        private Hunter hunter;
-
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
-        private List<Player> playerList = new List<Player>();
+        private Player player;
 
         // Furnitures
         private Texture2D bedTexture;
-
         private Texture2D drawerTexture;
-
         private List<Furniture> furnitureList = new List<Furniture>();
-
-        private Scene testScene;
 
         // remove later
         private Texture2D bg;
+        private Texture2D bg2;
         private Texture2D ground;
         private Texture2D walls;
+        private Map testMap;
 
 
 
@@ -138,22 +131,10 @@ namespace _13thHauntedStreet
             defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             defaultTexture.SetData(new Color[] { Color.White });
 
-            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
-            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
-
 
             // Ghost
-            playerList.Add(new Ghost(
-                new Input()
-                {
-                    Left = Keys.Left,
-                    Right = Keys.Right,
-                    Up = Keys.Up,
-                    Down = Keys.Down
-                },
-                new Vector2(500, 500),
-                ghostAM
-            ));
+            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
+            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
 
             // Hunter
             hunterAM.walkingLeft = multipleTextureLoader("TempFiles/HunterSprites/walking_left/walking_left", 6);
@@ -165,7 +146,7 @@ namespace _13thHauntedStreet
             hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_up"));
             hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_down"));
 
-            playerList.Add(new Hunter(
+            player = new Ghost(
                 new Input()
                 {
                     Left = Keys.A,
@@ -174,8 +155,8 @@ namespace _13thHauntedStreet
                     Down = Keys.S
                 },
                 new Vector2(500, 500),
-                hunterAM
-            ));
+                ghostAM
+            );
 
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
             drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
@@ -183,10 +164,27 @@ namespace _13thHauntedStreet
             furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
 
             bg = Content.Load<Texture2D>("TempFiles/bg");
+            bg2 = Content.Load<Texture2D>("TempFiles/bg2");
             ground = Content.Load<Texture2D>("TempFiles/Ground");
             walls = Content.Load<Texture2D>("TempFiles/Walls");
 
-            testScene = new Scene(bg, walls, Vector2.One/1.125f, new Rectangle(360, 215, 1200, 650), playerList, furnitureList);
+            testMap = new Map(player,
+                new List<Scene>() {
+                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList),
+                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>())
+                }
+            );
+
+            testMap.doorList.Add(new Door(direction.up, testMap.listScenes[0]));
+            testMap.doorList.Add(new Door(direction.down, testMap.listScenes[1]));
+            testMap.doorList[0].connectedDoor = testMap.doorList[1];
+            testMap.doorList[1].connectedDoor = testMap.doorList[0];
+
+            /*testMap.listScenes[0].doorList.Add(new Door(direction.up, new Rectangle(940, 175, 50, 15), testMap.listScenes[0]));
+            testMap.listScenes[1].doorList.Add(new Door(direction.down, new Rectangle(940, 875, 50, 15), testMap.listScenes[1]));
+            testMap.listScenes[0].doorList[0].conectedDoor = testMap.listScenes[1].doorList[0];
+            testMap.listScenes[1].doorList[0].conectedDoor = testMap.listScenes[0].doorList[0];*/
+
 
             // method that loads every texture of an animation
             List<Texture2D> multipleTextureLoader(string filePrefix, int size)
@@ -218,9 +216,9 @@ namespace _13thHauntedStreet
             penumbra.Lights.Clear();
 
             // make penumbra visible if in the game
-            //penumbra.Visible = (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
+            penumbra.Visible = false;// (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
             
-            testScene.Update(gameTime, penumbra);
+            testMap.Update(gameTime);
 
             //Vector2 posOri = Vector2.Zero;
             //_mainMenu.Update(gameTime, _screen, ref posOri);
@@ -240,7 +238,7 @@ namespace _13thHauntedStreet
             
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
   
-                testScene.Draw(_spriteBatch);
+                testMap.Draw(_spriteBatch);
 
                 _spriteBatch.End();
                 penumbra.Draw(gameTime);

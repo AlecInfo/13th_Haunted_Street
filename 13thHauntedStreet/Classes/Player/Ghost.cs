@@ -39,7 +39,7 @@ namespace _13thHauntedStreet
             this.light = new PointLight
             {
                 Scale = new Vector2(1000),
-                Position = this._collisionBox.Center.ToVector2(),
+                Position = this.collisionBox.Center.ToVector2(),
                 ShadowType = ShadowType.Occluded,
                 Radius = 10,
                 Intensity = 1f
@@ -81,7 +81,7 @@ namespace _13thHauntedStreet
             this.position += distance;
             this.light.Position = this.position;
 
-            this._collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
+            this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
         }
 
         /// <summary>

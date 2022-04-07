@@ -19,78 +19,69 @@ namespace _13thHauntedStreet
         // Properties
         private Texture2D _ground;
         public Texture2D walls;
-        private Vector2 _backgroundScale;
+        public Vector2 backgroundScale;
 
         public Rectangle groundArea;
 
-        public List<Player> playerList;
+        public Player player;
         public List<Furniture> furnitureList;
-        public List<Door> doorList = new List<Door>();
-
-        private PenumbraComponent _penumbra;
 
 
         // Ctor
-        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, List<Player> playerList, List<Furniture> furnitureList) : this(ground, walls, Vector2.One, groundArea, playerList, furnitureList) { }
+        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList) { }
 
-        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, List<Player> playerList, List<Furniture> furnitureList)
+        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList)
         {
             this._ground = ground;
             this.walls = walls;
-            this._backgroundScale = backgroundScale;
+            this.backgroundScale = backgroundScale;
              
             this.groundArea = groundArea;
 
-            this.playerList = playerList;
+            this.player = player;
             this.furnitureList = furnitureList;
         }
 
 
         // Methods
-        public void Update(GameTime gameTime, PenumbraComponent penumbra)
+        public void Update(GameTime gameTime)
         {
-            this._penumbra = penumbra;
 
-            // Update player
-            foreach (Player player in this.playerList)
+            player.Update(gameTime, this.furnitureList, this);
+
+            // lights
+            Game1.penumbra.Lights.Add(player.light);
+            if (player.GetType() == typeof(Hunter))
             {
-                player.Update(gameTime, this.furnitureList, this);
-
-                // lights
-                penumbra.Lights.Add(player.light);
-                if (player.GetType() == typeof(Hunter))
-                {
-                    penumbra.Lights.Add((player as Hunter).flashLight);
-                }
+                Game1.penumbra.Lights.Add((player as Hunter).flashLight);
             }
+
 
             // Update furniture hulls
             foreach (Furniture furniture in this.furnitureList)
             {
-                penumbra.Hulls.Add(furniture.hull);
-                foreach (Player player in this.playerList)
-                {
-                    // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
-                    if (isInside(furniture, player))
-                    {
-                        if (!player.light.IgnoredHulls.Contains(furniture.hull))
-                        {
-                            player.light.IgnoredHulls.Add(furniture.hull);
+                Game1.penumbra.Hulls.Add(furniture.hull);
 
-                            if (player.GetType() == typeof(Hunter))
-                            {
-                                (player as Hunter).flashLight.IgnoredHulls.Add(furniture.hull);
-                            }
-                        }
-                    }
-                    else
+                // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
+                if (isInside(furniture, player))
+                {
+                    if (!player.light.IgnoredHulls.Contains(furniture.hull))
                     {
-                        player.light.IgnoredHulls.Remove(furniture.hull);
+                        player.light.IgnoredHulls.Add(furniture.hull);
 
                         if (player.GetType() == typeof(Hunter))
                         {
-                            (player as Hunter).flashLight.IgnoredHulls.Remove(furniture.hull);
+                            (player as Hunter).flashLight.IgnoredHulls.Add(furniture.hull);
                         }
+                    }
+                }
+                else
+                {
+                    player.light.IgnoredHulls.Remove(furniture.hull);
+
+                    if (player.GetType() == typeof(Hunter))
+                    {
+                        (player as Hunter).flashLight.IgnoredHulls.Remove(furniture.hull);
                     }
                 }
             }
@@ -120,7 +111,7 @@ namespace _13thHauntedStreet
         public void Draw(SpriteBatch spriteBatch)
         {
             // draw background image
-            spriteBatch.Draw(this._ground, Screen.OriginalScreenSize / 2, null, Color.White, 0, this._ground.Bounds.Center.ToVector2(), this._backgroundScale, 0, 0);
+            spriteBatch.Draw(this._ground, Screen.OriginalScreenSize / 2, null, Color.White, 0, this._ground.Bounds.Center.ToVector2(), this.backgroundScale, 0, 0);
 
             // draw game objects (player, furniture)
             List<GameObject> gameObjectList = new List<GameObject>();
@@ -129,18 +120,16 @@ namespace _13thHauntedStreet
             gameObjectList.AddRange(furnitureList);
 
             // filter by player type
-            foreach (Player player in this.playerList)
+            if (this.player.GetType() == typeof(Hunter))
             {
-                if (player.GetType() == typeof(Hunter))
-                {
-                    gameObjectList.Add(player);
-                }
-
-                if(player.GetType() == typeof(Ghost))
-                {
-                    ghostList.Add(player);
-                }
+                gameObjectList.Add(player);
             }
+
+            if(this.player.GetType() == typeof(Ghost))
+            {
+                ghostList.Add(player);
+            }
+
 
             // Draw game objects ordered by Y
             foreach (GameObject gameObject in gameObjectList.OrderBy(o => o.position.Y))

@@ -23,7 +23,7 @@ namespace _13thHauntedStreet
 
         protected Vector2 _movement;
         public float scale;
-        protected Rectangle _collisionBox;
+        public Rectangle collisionBox;
 
         protected List<Furniture> _furnitureList;
 
@@ -118,7 +118,7 @@ namespace _13thHauntedStreet
         /// <param name="spriteBatch"></param>
         protected void drawCollisionBox(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Game1.defaultTexture, this._collisionBox, null, Color.White * 0.5f, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+            spriteBatch.Draw(Game1.defaultTexture, this.collisionBox, null, Color.White * 0.5f, 0f, Vector2.Zero, SpriteEffects.None, 1f);
         }
 
         /// <summary>
@@ -129,34 +129,34 @@ namespace _13thHauntedStreet
         {
             foreach (Furniture item in this._furnitureList)
             {
-                if (this._collisionBox.Right + distance.X > item.collisionBox.Left &&
-                    this._collisionBox.Left < item.collisionBox.Left &&
-                    this._collisionBox.Bottom > item.collisionBox.Top &&
-                    this._collisionBox.Top < item.collisionBox.Bottom) // Left
+                if (this.collisionBox.Right + distance.X > item.collisionBox.Left &&
+                    this.collisionBox.Left < item.collisionBox.Left &&
+                    this.collisionBox.Bottom > item.collisionBox.Top &&
+                    this.collisionBox.Top < item.collisionBox.Bottom) // Left
                 {
                     distance.X = 0;
                 }
 
-                if (this._collisionBox.Left + distance.X < item.collisionBox.Right &&
-                    this._collisionBox.Right > item.collisionBox.Right &&
-                    this._collisionBox.Bottom > item.collisionBox.Top &&
-                    this._collisionBox.Top < item.collisionBox.Bottom) // Right
+                if (this.collisionBox.Left + distance.X < item.collisionBox.Right &&
+                    this.collisionBox.Right > item.collisionBox.Right &&
+                    this.collisionBox.Bottom > item.collisionBox.Top &&
+                    this.collisionBox.Top < item.collisionBox.Bottom) // Right
                 {
                     distance.X = 0;
                 }
 
-                if (this._collisionBox.Bottom + distance.Y > item.collisionBox.Top &&
-                    this._collisionBox.Top < item.collisionBox.Top &&
-                    this._collisionBox.Right > item.collisionBox.Left &&
-                    this._collisionBox.Left < item.collisionBox.Right) // Top
+                if (this.collisionBox.Bottom + distance.Y > item.collisionBox.Top &&
+                    this.collisionBox.Top < item.collisionBox.Top &&
+                    this.collisionBox.Right > item.collisionBox.Left &&
+                    this.collisionBox.Left < item.collisionBox.Right) // Top
                 {
                     distance.Y = 0;
                 }
 
-                if (this._collisionBox.Top + distance.Y < item.collisionBox.Bottom &&
-                    this._collisionBox.Bottom > item.collisionBox.Bottom &&
-                    this._collisionBox.Right > item.collisionBox.Left &&
-                    this._collisionBox.Left < item.collisionBox.Right) // Bottom
+                if (this.collisionBox.Top + distance.Y < item.collisionBox.Bottom &&
+                    this.collisionBox.Bottom > item.collisionBox.Bottom &&
+                    this.collisionBox.Right > item.collisionBox.Left &&
+                    this.collisionBox.Left < item.collisionBox.Right) // Bottom
                 {
                     distance.Y = 0;
                 }
@@ -169,20 +169,20 @@ namespace _13thHauntedStreet
         /// <param name="distance"></param>
         protected void wallCollision(ref Vector2 distance)
         {
-            if (this._collisionBox.Left + distance.X < this.currentScene.groundArea.Left) // Left
+            if (this.collisionBox.Left + distance.X < this.currentScene.groundArea.Left) // Left
             {
                 distance.X = 0;
             }
-            else if (this._collisionBox.Right + distance.X > this.currentScene.groundArea.Right) // Right
+            else if (this.collisionBox.Right + distance.X > this.currentScene.groundArea.Right) // Right
             {
                 distance.X = 0;
             }
 
-            if (this._collisionBox.Top + distance.Y < this.currentScene.groundArea.Top) // Top
+            if (this.collisionBox.Top + distance.Y < this.currentScene.groundArea.Top) // Top
             {
                 distance.Y = 0;
             }
-            else if (this._collisionBox.Bottom + distance.Y > this.currentScene.groundArea.Bottom) // Bottom
+            else if (this.collisionBox.Bottom + distance.Y > this.currentScene.groundArea.Bottom) // Bottom
             {
                 distance.Y = 0;
             }

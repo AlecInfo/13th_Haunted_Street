@@ -38,7 +38,7 @@ namespace _13thHauntedStreet
             this.texture = this._animManager.currentAnim[0];
 
             // Collision box
-            this._collisionBox = new Rectangle(
+            this.collisionBox = new Rectangle(
                 (int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y,
                 (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
 
@@ -53,7 +53,7 @@ namespace _13thHauntedStreet
             this.flashLight = new Spotlight
             {
                 Scale = new Vector2(1000, 750),
-                Position = new Vector2(this._collisionBox.Center.X, this._collisionBox.Top),
+                Position = new Vector2(this.collisionBox.Center.X, this.collisionBox.Top),
                 ShadowType = ShadowType.Occluded,
                 Radius = 10,
                 Intensity = 1.5f
@@ -95,8 +95,8 @@ namespace _13thHauntedStreet
 
             this.position += distance;
 
-            this._collisionBox = new Rectangle((int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y, (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
-            this.light.Position = new Vector2(this._collisionBox.Center.X, this._collisionBox.Top);
+            this.collisionBox = new Rectangle((int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y, (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
+            this.light.Position = new Vector2(this.collisionBox.Center.X, this.collisionBox.Top);
             this.flashLight.Position = this.position;
         }
 
