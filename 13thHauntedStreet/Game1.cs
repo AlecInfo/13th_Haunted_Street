@@ -60,6 +60,8 @@ namespace _13thHauntedStreet
         private GhostAnimationManager ghostAM = new GhostAnimationManager();
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
         private Player player;
+        public Texture2D crosshair;
+        public static Texture2D flashlightIcon;
 
         // Furnitures
         private Texture2D bedTexture;
@@ -93,7 +95,7 @@ namespace _13thHauntedStreet
             previusLimitedFps = limitedFps;
 
             // Set the windows
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             Window.IsBorderless = true;
 
@@ -146,7 +148,10 @@ namespace _13thHauntedStreet
             hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_up"));
             hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_down"));
 
-            player = new Ghost(
+            crosshair = Content.Load<Texture2D>("TempFiles/crosshair");
+            flashlightIcon = Content.Load<Texture2D>("TempFiles/flashlightIcon");
+
+            player = new Hunter(
                 new Input()
                 {
                     Left = Keys.A,
@@ -155,7 +160,7 @@ namespace _13thHauntedStreet
                     Down = Keys.S
                 },
                 new Vector2(500, 500),
-                ghostAM
+                hunterAM
             );
 
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
@@ -216,7 +221,7 @@ namespace _13thHauntedStreet
             penumbra.Lights.Clear();
 
             // make penumbra visible if in the game
-            penumbra.Visible = false;// (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
+            //penumbra.Visible = false;// (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame);
             
             testMap.Update(gameTime);
 
@@ -264,7 +269,12 @@ namespace _13thHauntedStreet
 
                 _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }*/
-            
+
+            // draw crosshair cursor
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _spriteBatch.Draw(crosshair, Mouse.GetState().Position.ToVector2(), null, Color.White, 0f, crosshair.Bounds.Center.ToVector2(), 3, SpriteEffects.None, 0f);
+            _spriteBatch.End();
+
 
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);

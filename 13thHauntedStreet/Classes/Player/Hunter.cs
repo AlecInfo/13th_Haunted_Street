@@ -160,6 +160,10 @@ namespace _13thHauntedStreet
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this.scale, SpriteEffects.None, 1f);
+
+            Vector2 flashCursorPos = Vector2.Normalize(Mouse.GetState().Position.ToVector2() - this.position) * 75;
+            spriteBatch.Draw(Game1.flashlightIcon, this.position+flashCursorPos, null, Color.White, this.lightAngle, Game1.flashlightIcon.Bounds.Center.ToVector2(), 4, 0, 1f); // a finir
+
             //this.drawCollisionBox(spriteBatch);
         }
     }
