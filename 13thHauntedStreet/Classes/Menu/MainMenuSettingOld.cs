@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class MainMenuSetting
+    class MainMenuSettingOld
     {
         #region Fields
 
@@ -21,9 +21,9 @@ namespace _13thHauntedStreet
 
         private float _changePosition = 0;
 
-        private List<Button> _tabList = new List<Button>();
+        private List<ButtonOld> _tabList = new List<ButtonOld>();
 
-        private List<ArrowButton> _settingsList = new List<ArrowButton>();
+        private List<ArrowButtonOld> _settingsList = new List<ArrowButtonOld>();
 
         private List<object> _controlsList = new List<object>();
 
@@ -38,9 +38,9 @@ namespace _13thHauntedStreet
 
         public float ChangePosition { get => _changePosition; set => _changePosition = value; }
 
-        public List<Button> TabList { get => _tabList; set => _tabList = value; }
+        public List<ButtonOld> TabList { get => _tabList; set => _tabList = value; }
 
-        public List<ArrowButton> SettingsList { get => _settingsList; set => _settingsList = value; }
+        public List<ArrowButtonOld> SettingsList { get => _settingsList; set => _settingsList = value; }
 
         public List<object> ControlsList { get => _controlsList; set => _controlsList = value; }
 
@@ -64,7 +64,7 @@ namespace _13thHauntedStreet
 
             // Add Full screen arrow button to the list
             SettingsList.Add(
-                new ArrowButton(this._buttonTexture, font)
+                new ArrowButtonOld(this._buttonTexture, font)
                 {
                     Text = "Full screen",
                     Position = new Vector2(Screen.OriginalScreenSize.X / 0.78f, Screen.OriginalScreenSize.Y / 1.80f),
@@ -76,11 +76,11 @@ namespace _13thHauntedStreet
 
             // Add Refresh rate arrow button to the list
             SettingsList.Add(
-                new ArrowButton(this._buttonTexture, font)
+                new ArrowButtonOld(this._buttonTexture, font)
                 {
                     Text = "Refresh rate",
                     Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
-                    Value = Game1.limitedFps,
+                    //Value = Game1.limitedFps,
                     MinValue = 10,
                     MaxValue = 144,
                     Scale = 0.7f
@@ -89,23 +89,23 @@ namespace _13thHauntedStreet
 
             // Add Refresh rate display arrow button to the list
             SettingsList.Add(
-                new ArrowButton(this._buttonTexture, font)
+                new ArrowButtonOld(this._buttonTexture, font)
                 {
                     Text = "Refresh rate display",
                     Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
                     EnableMode = true,
-                    State = Game1.showFps,
+                    //State = Game1.showFps,
                     Scale = 0.7f
                 }
                 );
 
             // Add SFX volume arrow button to the list
             SettingsList.Add(
-                new ArrowButton(this._buttonTexture, font)
+                new ArrowButtonOld(this._buttonTexture, font)
                 {
                     Text = "SFX volume",
                     Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
-                    Value = Game1.sfxVolume,
+                    //Value = Game1.sfxVolume,
                     MinValue = 0,
                     MaxValue = 10,
                     Scale = 0.7f
@@ -114,11 +114,11 @@ namespace _13thHauntedStreet
 
             // Add Music volume arrow button to the list
             SettingsList.Add(
-                new ArrowButton(this._buttonTexture, font)
+                new ArrowButtonOld(this._buttonTexture, font)
                 {
                     Text = "Music volume",
                     Position = new Vector2(this.SettingsList[0].Position.X, GetArrowButtonPosition()),
-                    Value = Game1.musicVolume,
+                    //Value = Game1.musicVolume,
                     MinValue = 0,
                     MaxValue = 10,
                     Scale = 0.7f
@@ -131,7 +131,7 @@ namespace _13thHauntedStreet
             _buttonTexture.SetData(new Color[] { Color.White });
 
             // Create the settings button
-            Button btnSettings = new Button(_buttonTexture, font)
+            ButtonOld btnSettings = new ButtonOld(_buttonTexture, font)
             {
                 Text = "Settings",
                 Position = new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.6f),
@@ -144,7 +144,7 @@ namespace _13thHauntedStreet
             this._tabList.Add(btnSettings);
 
             // Create the controls button
-            Button btnControls = new Button(_buttonTexture, font)
+            ButtonOld btnControls = new ButtonOld(_buttonTexture, font)
             {
                 Text = "Controls",
                 Position = new Vector2(this.TabList[0].Position.X, GetButtonPosition()),
@@ -156,7 +156,7 @@ namespace _13thHauntedStreet
             this.TabList.Add(btnControls);
 
             // Create the back button
-            Button btnBack = new Button(_buttonTexture, font)
+            ButtonOld btnBack = new ButtonOld(_buttonTexture, font)
             {
                 Text = "Back",
                 Position = new Vector2(this.TabList[0].Position.X, GetButtonPosition()),
@@ -304,7 +304,7 @@ namespace _13thHauntedStreet
 
         private void BtnSettings_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
+            ButtonOld btn = (ButtonOld)sender;
 
             foreach (var item in TabList)
             {
@@ -318,7 +318,7 @@ namespace _13thHauntedStreet
 
         private void BtnControls_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
+            ButtonOld btn = (ButtonOld)sender;
 
             foreach (var item in TabList)
             {
@@ -332,7 +332,7 @@ namespace _13thHauntedStreet
 
         private void BtnBack_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
+            ButtonOld btn = (ButtonOld)sender;
 
             btn.Clicked = true;
         }

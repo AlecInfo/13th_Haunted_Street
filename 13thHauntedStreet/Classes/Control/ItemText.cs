@@ -22,6 +22,7 @@ namespace _13thHauntedStreet
 
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
         {
+            // Change text position
             Vector2 newPosition = new Vector2(this.Position.X + changePosition.X, this.Position.Y + changePosition.Y);
             this.Position = newPosition;
         }

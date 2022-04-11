@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class ArrowButton 
+    class ArrowButtonOld 
     {
         private SpriteFont _font;
 
         private Texture2D _texture;
 
-        private List<Button> _buttonList = new List<Button>();
+        private List<ButtonOld> _buttonList = new List<ButtonOld>();
 
         private string _state;
 
@@ -46,7 +46,7 @@ namespace _13thHauntedStreet
 
         public bool Clicked { get; set; }
 
-        public ArrowButton(Texture2D texture = null, SpriteFont font = null)
+        public ArrowButtonOld(Texture2D texture = null, SpriteFont font = null)
         {
             this._texture = texture;
 
@@ -113,8 +113,10 @@ namespace _13thHauntedStreet
         public void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.DrawString(this._font, this.Text, new Vector2(this.Position.X - (this._font.MeasureString(this.Text).X + TEXTSPACING), this.Position.Y), this.PenColour, 0f, Vector2.Zero, 0.60f, SpriteEffects.None, 1f);
+            
+        
             spriteBatch.DrawString(this._font, this.Text, new Vector2(this.Position.X - (this._font.MeasureString(this.Text).X * this.Scale) - TEXTSPACING, this.Position.Y), this.PenColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
-
+        
             if (EnableMode)
             {
                 spriteBatch.DrawString(this._font, this._state, new Vector2(this.Position.X + (ARROWSPACING + this._buttonList[1].Rectangle.Width) / 2 - this._font.MeasureString(this._state).X * this.Scale / 2, this.Position.Y), this.PenColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);

@@ -85,17 +85,6 @@ namespace _13thHauntedStreet
 
         public void Update(GameTime gameTime)
         {
-
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
-            {
-                this.WindowedScreen();
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.H))
-            {
-                this.FullScreen();
-            }
-
             // Get the scale of the screen
             this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width); ;
 

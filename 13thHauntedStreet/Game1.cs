@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Text;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -20,29 +21,35 @@ namespace _13thHauntedStreet
         
         private PenumbraComponent _penumbra;
 
+        private QuitProgram _quit = new QuitProgram();
+
         // Screen
-        private Screen _screen;
+        public Screen screen;
         
         // Refresh rate limited and display 
         private FrameCounter _frameCounter = new FrameCounter();
 
-        public static bool showFps = true;
+        public bool showFps;
 
-        public static float limitedFps = 60f;
+        public int limitedFps = Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()]);
 
         public static float previusLimitedFps;
 
         // Sound Volume
-        public static float sfxVolume = 8f;
+        public float sfxVolume;
 
-        public static float musicVolume = 8f;
+        public float musicVolume;
 
         // Menu
+        public bool displayMainMenu = true;
+
         private MainMenu _mainMenu;
+
+        public SettingsMenu settingsMenu;
 
         private Texture2D _backgroundMainMenu;
 
-        private Texture2D _arrowButton;
+        public Texture2D _arrowButton;
 
         private SpriteFont _font;
 
@@ -64,8 +71,6 @@ namespace _13thHauntedStreet
 
         // remove later
         private Texture2D bg;
-
-
 
         public Game1()
         {
@@ -101,7 +106,7 @@ namespace _13thHauntedStreet
             _penumbra.Initialize();
 
             // Initialize Screen
-            _screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
+            screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
             base.Initialize();
         }
@@ -110,13 +115,13 @@ namespace _13thHauntedStreet
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            _screen.LoadContent();
+            screen.LoadContent();
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
             _arrowButton = Content.Load<Texture2D>("TempFiles/arrow");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
-            _mainMenu = new MainMenu(Vector2.Zero,_backgroundMainMenu, _font);
-            //_mainMenu.LoadContent(_screen, _arrowButton);
+
+            _mainMenu = new MainMenu(Vector2.Zero, _backgroundMainMenu, _font);
 
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
@@ -126,10 +131,10 @@ namespace _13thHauntedStreet
             ghost = new Ghost(
                 new Input()
                 {
-                    Left = Keys.Left,
-                    Right = Keys.Right,
-                    Up = Keys.Up,
-                    Down = Keys.Down
+                    Left = Microsoft.Xna.Framework.Input.Keys.Left,
+                    Right = Microsoft.Xna.Framework.Input.Keys.Right,
+                    Up = Microsoft.Xna.Framework.Input.Keys.Up,
+                    Down = Microsoft.Xna.Framework.Input.Keys.Down
                 },
                 new Vector2(500, 500),
                 ghostAM
@@ -148,10 +153,10 @@ namespace _13thHauntedStreet
             hunter = new Hunter(
                 new Input()
                 {
-                    Left = Keys.A,
-                    Right = Keys.D,
-                    Up = Keys.W,
-                    Down = Keys.S
+                    Left = Microsoft.Xna.Framework.Input.Keys.A,
+                    Right = Microsoft.Xna.Framework.Input.Keys.D,
+                    Up = Microsoft.Xna.Framework.Input.Keys.W,
+                    Down = Microsoft.Xna.Framework.Input.Keys.S
                 },
                 new Vector2(500, 500),
                 hunterAM
@@ -180,9 +185,8 @@ namespace _13thHauntedStreet
 
         protected override void Update(GameTime gameTime)
         {
-            /*if (_mainMenu.quitedTheGame)
-                Exit();
-            */
+            _quit.Update(gameTime, self);
+
             // if the fps limit has changed
             if (previusLimitedFps != limitedFps)
             {
@@ -190,13 +194,22 @@ namespace _13thHauntedStreet
                 previusLimitedFps = limitedFps;
             }
 
-            _screen.Update(gameTime);
+            screen.Update(gameTime);
 
-            Vector2 posOri = Vector2.Zero;
-            _mainMenu.Update(gameTime, _screen, ref posOri);
-
-            hunter.Update(gameTime, furnitureList);
-            ghost.Update(gameTime, furnitureList);
+            if (displayMainMenu)
+            {
+                Vector2 posOri = Vector2.Zero;
+                _mainMenu.Update(gameTime, screen, ref posOri);
+                if (settingsMenu != null)
+                {
+                    settingsMenu.Update(gameTime, screen, ref posOri);
+                }
+            }
+            else
+            {
+                hunter.Update(gameTime, furnitureList);
+                ghost.Update(gameTime, furnitureList);
+            }
 
             base.Update(gameTime);
         }
@@ -204,15 +217,27 @@ namespace _13thHauntedStreet
         protected override void Draw(GameTime gameTime)
         {
             _penumbra.BeginDraw();
-            GraphicsDevice.SetRenderTarget(_screen.RenderTarget);
+            GraphicsDevice.SetRenderTarget(screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _mainMenu.Draw(gameTime, _spriteBatch);
-            /*
-            if (_mainMenu.Option == MainMenu._RightMenuSelected.NewGame)
+
+            // If the menu should be displayed
+            if (displayMainMenu)
             {
-                _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
+                // Display the main menu
+                _mainMenu.Draw(gameTime, _spriteBatch);
+
+                // If the gameplay menu is instantiated
+                if (settingsMenu != null)
+                {
+                    // Display the gameplay menu
+                    settingsMenu.Draw(gameTime, _spriteBatch);
+                }
+            }
+            else
+            {
+                _spriteBatch.Draw(bg, new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2), null, Color.White, 0f, bg.Bounds.Center.ToVector2(), 0.95f, SpriteEffects.None, 1f);
 
                 List<GameObject> gameObjectList = new List<GameObject>();
                 gameObjectList.AddRange(furnitureList);
@@ -224,22 +249,16 @@ namespace _13thHauntedStreet
                 }
                 ghost.Draw(_spriteBatch);
             }
-            else
-            {
-                _mainMenu.Draw(_spriteBatch);
-            }
-            
+
             if (showFps)
             {
-                
-
                 _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
 
                 _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }
-            */
+            
             _spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
@@ -247,7 +266,7 @@ namespace _13thHauntedStreet
 
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(_screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, _screen.Scale, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(screen.RenderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, screen.Scale, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
 

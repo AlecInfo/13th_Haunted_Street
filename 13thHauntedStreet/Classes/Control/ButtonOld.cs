@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    public class Button //: FormItem
+    public class ButtonOld //: FormItem
     {
         #region Fields
 
@@ -62,7 +62,7 @@ namespace _13thHauntedStreet
 
         #region Methods
 
-        public Button(Texture2D texture, SpriteFont font)
+        public ButtonOld(Texture2D texture, SpriteFont font)
         {
             // Create a rectangle texture
             this._defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);

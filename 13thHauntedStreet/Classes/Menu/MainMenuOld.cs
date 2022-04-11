@@ -13,14 +13,14 @@ namespace _13thHauntedStreet
 
         private static MainMenuOld _instance;
 
-        private MainMenuSetting _mainMenuSettings = new MainMenuSetting();
+        private MainMenuSettingOld _mainMenuSettings = new MainMenuSettingOld();
 
         private SpriteFont _font;
 
         private Texture2D _background;
 
-        private List<Button> _leftMenuButtonList = new List<Button>();
-        private List<Button> _rightMenuButtonList = new List<Button>();
+        private List<ButtonOld> _leftMenuButtonList = new List<ButtonOld>();
+        private List<ButtonOld> _rightMenuButtonList = new List<ButtonOld>();
         private Texture2D _buttonTexture;
 
         private Vector2 _backgroundPosition = Vector2.Zero;
@@ -80,7 +80,7 @@ namespace _13thHauntedStreet
             #region Create Button
 
             // Initialize the new game button
-            Button btnNewGame = new Button(_buttonTexture, _font)
+            ButtonOld btnNewGame = new ButtonOld(_buttonTexture, _font)
             {
                 Text = "New Game",
                 Position = new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f),
@@ -93,7 +93,7 @@ namespace _13thHauntedStreet
 
 
             // Initialize the settings button
-            Button btnSettings = new Button(_buttonTexture, _font)
+            ButtonOld btnSettings = new ButtonOld(_buttonTexture, _font)
             {
                 Text = "Settings",
                 Position = GetButtonPosition(),
@@ -106,7 +106,7 @@ namespace _13thHauntedStreet
 
 
             // Initialize the Quit button
-            Button btnQuit = new Button(_buttonTexture, _font)
+            ButtonOld btnQuit = new ButtonOld(_buttonTexture, _font)
             {
                 Text = "Quit",
                 Position = GetButtonPosition(),
@@ -118,7 +118,7 @@ namespace _13thHauntedStreet
             _leftMenuButtonList.Add(btnQuit);
 
             // Initialize the Join game button
-            Button btnJoinGame = new Button(_buttonTexture, _font)
+            ButtonOld btnJoinGame = new ButtonOld(_buttonTexture, _font)
             {
                 Text = "Join",
                 Position = new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f),
@@ -210,7 +210,7 @@ namespace _13thHauntedStreet
                         // Move the Title
                         this._titlePosition.X -= 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                         // Move all buttons 
-                        foreach (Button item in _leftMenuButtonList)
+                        foreach (ButtonOld item in _leftMenuButtonList)
                         {
                             item.Position = new Vector2(item.Position.X - (1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds), item.Position.Y);
                         }
@@ -239,7 +239,7 @@ namespace _13thHauntedStreet
                         // Move the title
                         this._titlePosition.X += 1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                         // Move all button
-                        foreach (Button item in _leftMenuButtonList)
+                        foreach (ButtonOld item in _leftMenuButtonList)
                         {
                             item.Position = new Vector2(item.Position.X + (1 * (float)gameTime.ElapsedGameTime.TotalMilliseconds), item.Position.Y);
                         }
