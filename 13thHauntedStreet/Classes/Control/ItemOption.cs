@@ -1,4 +1,13 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class ItemOption allows you to change the id 
+ *               and this allows to change the value in a textbox
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;

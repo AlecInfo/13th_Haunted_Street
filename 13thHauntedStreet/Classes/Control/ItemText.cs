@@ -1,4 +1,12 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class ItemText allows you to create text 
+ *              
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;

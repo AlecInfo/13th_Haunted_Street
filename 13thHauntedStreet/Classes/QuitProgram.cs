@@ -1,4 +1,12 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class QuitProgram allows you to quit the program
+ * 
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;

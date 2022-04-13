@@ -1,4 +1,12 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class Settings allows you to list all 
+ *               value for the menus
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -64,28 +72,47 @@ namespace _13thHauntedStreet
 
         #region Set the default value 
 
+        /// <summary>
+        /// This method allows to define the varriables depending on whether there is a backup
+        /// </summary>
         public static void SetDefautlValue()
         {
+            // if the file exists 
             if (File.Exists(fileSave))
             {
                 SaveSettings saveSettings;
 
                 XmlSerializer restore = new XmlSerializer(typeof(SaveSettings));
 
+                // Restore the data
                 using (StreamReader item = new StreamReader(fileSave))
                 {
                     saveSettings = (SaveSettings)restore.Deserialize(item);
                 }
 
+                // And set the variables with him
                 _fullscreen = saveSettings.Fullscreen;
 
                 _refreshRate = saveSettings.RefreshRate;
 
-                _refreshRateDefault = saveSettings.RefreshRateDisplay;
+                _refreshRateDisplay = saveSettings.RefreshRateDisplay;
 
                 _sfxVolume = saveSettings.SfxVolume;
 
                 _musicVolume = saveSettings.MusicVolume;
+            }
+            else
+            {
+                // Set the variables with the default values
+                _fullscreen = _fullscreenDefault;
+
+                _refreshRate = _refreshRateDefault;
+
+                _refreshRateDisplay = _refreshRateDisplayDefault;
+
+                _sfxVolume = _sfxVolumeDefault;
+
+                _musicVolume = _musicVolumeDefault;
             }
         }
 

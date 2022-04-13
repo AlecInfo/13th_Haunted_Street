@@ -1,4 +1,12 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class MainMenu allows you to create the main menu
+ *               of the game with button, animation, ...
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -46,8 +54,8 @@ namespace _13thHauntedStreet
             // Action of settings
             callback = () => { 
                 animationStarted = true; 
-                Game1.self.settingsMenu = new SettingsMenu( position,  background, Game1.self._arrowButton, font);
                 Settings.SetDefautlValue();
+                Game1.self.settingsMenu = new SettingsMenu( position,  background, Game1.self._arrowButton, font);
             };
             // Create the button new game
             Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback));
