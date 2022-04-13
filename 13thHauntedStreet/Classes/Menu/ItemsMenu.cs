@@ -12,6 +12,7 @@ namespace _13thHauntedStreet
         #region Variables
         public List<FormItem> listItems = new List<FormItem>();
         #endregion
+
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
         {
             // Browse all item in the list and uptade

@@ -33,6 +33,7 @@ namespace _13thHauntedStreet
 
         #endregion
 
+        // Ctor
         public ItemButton(Texture2D texture, SpriteFont font, Action eventButton)
         {
             // Create a rectangle texture 1 per 1 pixels, color white

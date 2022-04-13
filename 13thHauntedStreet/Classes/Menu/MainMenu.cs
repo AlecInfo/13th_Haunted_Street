@@ -23,6 +23,7 @@ namespace _13thHauntedStreet
         Action callback;
         #endregion
 
+        // Ctor
         public MainMenu(Vector2 position, Texture2D background, SpriteFont font)
         {
             this.Position = position; 

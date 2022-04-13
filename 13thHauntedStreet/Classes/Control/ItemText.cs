@@ -9,6 +9,7 @@ namespace _13thHauntedStreet
 {
     class ItemText : FormItem
     {
+        // Ctor
         public ItemText(SpriteFont font, string text)
         {
             this._font = font;
@@ -22,7 +23,7 @@ namespace _13thHauntedStreet
 
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
         {
-            // Change text position
+            // Change text position for the menu animation
             Vector2 newPosition = new Vector2(this.Position.X + changePosition.X, this.Position.Y + changePosition.Y);
             this.Position = newPosition;
         }

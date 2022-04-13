@@ -9,7 +9,8 @@ namespace _13thHauntedStreet
 {
     public class Screen
     {
-        // Varriables
+        #region Varriables
+
         private static Screen instance;
 
         private GameWindow _window;
@@ -55,6 +56,7 @@ namespace _13thHauntedStreet
 
         private bool _windowsIsChanged = false;
 
+        #endregion
 
         // Ctor
         public Screen(Vector2 newSize, GameWindow window)

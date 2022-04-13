@@ -6,13 +6,15 @@ namespace _13thHauntedStreet
 {
     static class Settings
     {
-        // All default value 
+        #region Default values
+
         private static string _fullscreenDefault = "Enabled";
         private static string _refreshRateDefault = "60";
         private static string _refreshRateDisplayDefault = "Disabled";
         private static string _sfxVolume = "7";
         private static string _musicVolume = "7";
 
+        #endregion
 
         /// <summary>
         /// This method allows to return the id from the default value according to the list of value,

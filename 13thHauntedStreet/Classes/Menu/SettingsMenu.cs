@@ -19,6 +19,7 @@ namespace _13thHauntedStreet
         Action callback;
         #endregion
 
+        // Ctor
         public SettingsMenu(Vector2 position, Texture2D backgroundTexture, Texture2D buttonTexture, SpriteFont font)
         {
             Texture2D buttonTextureDefault = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
@@ -38,16 +39,14 @@ namespace _13thHauntedStreet
             // Action of the control button,
             // which display all gameplay parameters
             callback = () => { _displayMenuGameplay = false; };
-            Func<bool> funct = () => false;
             // Create the button control
-            Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, funct));
+            Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));
 
             // Action of the back button,
             // which replay the animation and going back to the main menu
             callback = () => { MainMenu.animationStarted = true; };
-            Func<bool> functi = () => false;
             // Create the button back
-            Add(SettingsMenu.NewButton("Back", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.47f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, functi));
+            Add(SettingsMenu.NewButton("Back", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.47f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));
 
 
             // Item list of the gameplay settings

@@ -16,6 +16,7 @@ namespace _13thHauntedStreet
         public int Id { get => _id; set => _id = value; }
         #endregion
 
+        // Ctor
         public ItemOption(SpriteFont font, List<string> values) : base(font, "")
         {
             this._font = font;

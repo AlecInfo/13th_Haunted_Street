@@ -7,6 +7,9 @@
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/arrow.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/BackgroundMenu.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/bg.png</File>
+    <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/bg2.png</File>
+    <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/crosshair.png</File>
+    <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/flashlightIcon.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/Furniture/bed.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/Furniture/big_bed.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/Furniture/drawer.png</File>
@@ -18,6 +21,7 @@
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight01.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight02.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostRight03.png</File>
+    <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/Ground.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/HunterSprites/idle/idle_down.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/HunterSprites/idle/idle_left.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/HunterSprites/idle/idle_right.png</File>
@@ -47,8 +51,14 @@
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/HunterSprites/walking_up/walking_up05.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/HunterSprites/walking_up/walking_up06.png</File>
     <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/theFont.spritefont</File>
+    <File>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/Walls.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

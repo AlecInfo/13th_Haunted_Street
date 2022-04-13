@@ -15,6 +15,7 @@ namespace _13thHauntedStreet
         private Color _disableColor = Color.Gray;
         #endregion
 
+        // Ctor
         public ItemButtonOption(Texture2D texture, SpriteFont font, Action eventButton, Func<bool> enabledButton) : base(texture, font, eventButton)
         {
             this.enabledButton = enabledButton;
