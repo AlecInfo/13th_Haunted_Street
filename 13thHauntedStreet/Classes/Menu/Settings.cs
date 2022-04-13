@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace _13thHauntedStreet
 {
@@ -8,13 +10,35 @@ namespace _13thHauntedStreet
     {
         #region Default values
 
+        public static string fileSave = "BackupMenu.xml";
+
         private static string _fullscreenDefault = "Enabled";
+
         private static string _refreshRateDefault = "60";
+
         private static string _refreshRateDisplayDefault = "Disabled";
-        private static string _sfxVolume = "7";
-        private static string _musicVolume = "7";
+
+        private static string _sfxVolumeDefault = "7";
+
+        private static string _musicVolumeDefault = "7";
 
         #endregion
+
+        #region Variables
+
+        private static string _fullscreen;
+
+        private static string _refreshRate;
+
+        private static string _refreshRateDisplay;
+
+        private static string _sfxVolume;
+
+        private static string _musicVolume;
+
+        #endregion
+        
+
 
         /// <summary>
         /// This method allows to return the id from the default value according to the list of value,
@@ -37,6 +61,89 @@ namespace _13thHauntedStreet
             }
             return 0;
         }
+
+        #region Set the default value 
+
+        public static void SetDefautlValue()
+        {
+            if (File.Exists(fileSave))
+            {
+                SaveSettings saveSettings;
+
+                XmlSerializer restore = new XmlSerializer(typeof(SaveSettings));
+
+                using (StreamReader item = new StreamReader(fileSave))
+                {
+                    saveSettings = (SaveSettings)restore.Deserialize(item);
+                }
+
+                _fullscreen = saveSettings.Fullscreen;
+
+                _refreshRate = saveSettings.RefreshRate;
+
+                _refreshRateDefault = saveSettings.RefreshRateDisplay;
+
+                _sfxVolume = saveSettings.SfxVolume;
+
+                _musicVolume = saveSettings.MusicVolume;
+            }
+        }
+
+        #endregion
+
+        #region Get the button action
+        /// <summary>
+        /// This method is used to retrieve the action of the button for the setting menu,
+        /// the parametres of the method are the name of the button and the value
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="state"></param>
+        public static void ButtonAction(string button, string state)
+        {
+            // The action of the fullscreen menu
+            if (button == getTitleFullscreen())
+            {
+                // Put the window in fullscreen
+                if (state == "Enabled")
+                    Game1.self.screen.FullScreen();
+                // Put the window in windowed
+                else if (state == "Disabled")
+                    Game1.self.screen.WindowedScreen();
+            }
+
+            // The action of the refresh rate menu
+            if (button == getTitleRefreshRate())
+            {
+                // Get the value and apply the limit
+                Game1.self.limitedFps = Convert.ToInt32(state);
+            }
+
+            // The action of the refresh rate display menu
+            if (button == getTitleRefreshRateDisplay())
+            {
+                // Display the rifresh rate 
+                if (state == "Enabled")
+                    Game1.self.showFps = true;
+                // Undisplay the rifresh rate
+                else if (state == "Disabled")
+                    Game1.self.showFps = false;
+            }
+
+            // The action of the effect volume menu
+            if (button ==getTitleSFXVolume())
+            {
+                // Get the value and apply the volume
+                Game1.self.sfxVolume = Convert.ToInt32(state);
+            }
+
+            // The action of the music volume menu
+            if (button == getTitleMusicVolume())
+            {
+                // Get the value and apply the volume
+                Game1.self.musicVolume = Convert.ToInt32(state);
+            }
+        }
+        #endregion
 
         #region Get Title settings
 
@@ -80,7 +187,7 @@ namespace _13thHauntedStreet
         public static int getFullscreenID()
         {
             // Return the id
-            return GetIDValue(_fullscreenDefault, getValuesFullscreen());
+            return GetIDValue(_fullscreen, getValuesFullscreen());
         }
         #endregion
 
@@ -131,7 +238,7 @@ namespace _13thHauntedStreet
         public static int getRefreshRateID()
         {
             // Return the id
-            return GetIDValue(_refreshRateDefault, getValuesRefreshRate());
+            return GetIDValue(_refreshRate, getValuesRefreshRate());
         }
         #endregion
 
@@ -164,7 +271,7 @@ namespace _13thHauntedStreet
         public static int getRefreshRateDisplayID()
         {
             // Return the id
-            return GetIDValue(_refreshRateDisplayDefault, getValuesRefreshRateDisplay());
+            return GetIDValue(_refreshRateDisplay, getValuesRefreshRateDisplay());
         }
         #endregion
 
@@ -268,58 +375,5 @@ namespace _13thHauntedStreet
         }
         #endregion
 
-        #region Get the button action
-        /// <summary>
-        /// This method is used to retrieve the action of the button for the setting menu,
-        /// the parametres of the method are the name of the button and the value
-        /// </summary>
-        /// <param name="button"></param>
-        /// <param name="state"></param>
-        public static void ButtonAction(string button, string state)
-        {
-            // The action of the fullscreen menu
-            if (button == getTitleFullscreen())
-            {
-                // Put the window in fullscreen
-                if (state == "Enabled")
-                    Game1.self.screen.FullScreen();
-                // Put the window in windowed
-                else if (state == "Disabled")
-                    Game1.self.screen.WindowedScreen();
-            }
-
-            // The action of the refresh rate menu
-            if (button == getTitleRefreshRate())
-            {
-                // Get the value and apply the limit
-                Game1.self.limitedFps = Convert.ToInt32(state);
-            }
-
-            // The action of the refresh rate display menu
-            if (button == getTitleRefreshRateDisplay())
-            {
-                // Display the rifresh rate 
-                if (state == "Enabled")
-                    Game1.self.showFps = true;
-                // Undisplay the rifresh rate
-                else if (state == "Disabled")
-                    Game1.self.showFps = false;
-            }
-
-            // The action of the effect volume menu
-            if (button ==getTitleSFXVolume())
-            {
-                // Get the value and apply the volume
-                Game1.self.sfxVolume = Convert.ToInt32(state);
-            }
-
-            // The action of the music volume menu
-            if (button == getTitleMusicVolume())
-            {
-                // Get the value and apply the volume
-                Game1.self.musicVolume = Convert.ToInt32(state);
-            }
-        }
-        #endregion
     }
 }
