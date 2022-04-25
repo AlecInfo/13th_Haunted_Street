@@ -58,11 +58,11 @@ namespace _13thHauntedStreet
                 MainMenu.animationStarted = true;
 
                 //zzz enregistrement de la liste de score
-                //XmlSerializer sauver = new XmlSerializer(typeof(SaveSettings));
-                //using (StreamWriter f = new StreamWriter(Settings.fileSave))
-                //{
-                //    sauver.Serialize(f, new SaveSettings(/*zzz récupérer les valeurs en string de tous les boutons*/));
-                //}
+                XmlSerializer sauver = new XmlSerializer(typeof(SaveSettings));
+                using (StreamWriter f = new StreamWriter(Settings.fileSave))
+                {
+                    sauver.Serialize(f, new SaveSettings(/*zzz récupérer les valeurs en string de tous les boutons*/));
+                }
             };
             // Create the button back
             Add(SettingsMenu.NewButton("Back", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.47f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));

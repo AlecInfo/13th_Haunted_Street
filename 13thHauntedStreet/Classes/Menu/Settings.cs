@@ -103,19 +103,24 @@ namespace _13thHauntedStreet
             }
             else
             {
-                // Set the variables with the default values
-                _fullscreen = _fullscreenDefault;
-
-                _refreshRate = _refreshRateDefault;
-
-                _refreshRateDisplay = _refreshRateDisplayDefault;
-
-                _sfxVolume = _sfxVolumeDefault;
-
-                _musicVolume = _musicVolumeDefault;
+                DefaultValues();
             }
         }
 
+
+        public static void DefaultValues()
+        {
+            // Set the variables with the default values
+            _fullscreen = _fullscreenDefault;
+
+            _refreshRate = _refreshRateDefault;
+
+            _refreshRateDisplay = _refreshRateDisplayDefault;
+
+            _sfxVolume = _sfxVolumeDefault;
+
+            _musicVolume = _musicVolumeDefault;
+        }
         #endregion
 
         #region Get the button action

@@ -103,7 +103,7 @@ namespace _13thHauntedStreet
                 }
             }
 
-            //zzz ne marche pas ché po pour quoi
+            //zzz ne marche pas ché po pour quoi, quand la souris passe par deçu le bouton alors le bouton devien plus sombre
             if (isHovering && !string.IsNullOrEmpty(this.Text))
             {
                 this.FontColor = Color.White;

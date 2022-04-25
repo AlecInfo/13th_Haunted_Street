@@ -54,7 +54,7 @@ namespace _13thHauntedStreet
             // Action of settings
             callback = () => { 
                 animationStarted = true; 
-                Settings.SetDefautlValue();
+                //Settings.SetDefautlValue();
                 Game1.self.settingsMenu = new SettingsMenu( position,  background, Game1.self._arrowButton, font);
             };
             // Create the button new game

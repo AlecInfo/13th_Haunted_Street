@@ -39,7 +39,7 @@ namespace _13thHauntedStreet
 
         public bool showFps;
 
-        public int limitedFps = Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()]);
+        public int limitedFps /*= Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()])*/;
 
         public static float previusLimitedFps;
 
@@ -85,15 +85,22 @@ namespace _13thHauntedStreet
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
             penumbra = new PenumbraComponent(this) {
                 AmbientColor = Color.Black
             };
+
             Content.RootDirectory = "Content";
 
             self = this;
-            
+
+            // Set the default parameters like the refresh rate, music volume or fullscreen
+            Settings.SetDefautlValue();
+
             // Set the fps to 60
             IsFixedTimeStep = true;
+
+            limitedFps = Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()]);
 
             TargetElapsedTime = TimeSpan.FromSeconds(1f / limitedFps);
 
