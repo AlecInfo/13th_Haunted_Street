@@ -18,8 +18,9 @@ namespace _13thHauntedStreet
         private Game1.direction _direction;
         public Rectangle area;
         public const int LENGTH = 50;
-        
+
         public Door connectedDoor;
+
         public Scene scene;
 
         private const int SPAWNOFFSET = 50;
@@ -98,6 +99,17 @@ namespace _13thHauntedStreet
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// connects two doors together
+        /// </summary>
+        /// <param name="door1"></param>
+        /// <param name="door2"></param>
+        public static void connectDoors(Door door1, Door door2)
+        {
+            door1.connectedDoor = door2;
+            door2.connectedDoor = door1;
         }
     }
 }

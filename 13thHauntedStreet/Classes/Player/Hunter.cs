@@ -16,10 +16,11 @@ namespace _13thHauntedStreet
     class Hunter : Player
     {
         // Properties
-        public float lightAngle;
-        public Light flashLight;
+        private bool hasReleasedItemKey = true;
+        private List<Tool> tools = new List<Tool>();
+        public Tool tool;
 
-        private const float MOVEMENTSPEED = 0.45f;
+        private const float MOVEMENTSPEED = 0.3f;
 
         private HunterAnimationManager _animManager;
 
@@ -27,9 +28,8 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Hunter(Input input, Vector2 initialPos, HunterAnimationManager animationManager)
+        public Hunter(Vector2 initialPos, HunterAnimationManager animationManager)
         {
-            this._input = input;
             this.position = initialPos;
             this.scale = 3f;
 
@@ -45,20 +45,16 @@ namespace _13thHauntedStreet
             // Lights
             this.light = new PointLight
             {
-                Scale = new Vector2(250),
+                Scale = new Vector2(400),
                 Position = this.position,
                 ShadowType = ShadowType.Occluded,
-                Intensity = 0.5f
-            };
-            this.flashLight = new Spotlight
-            {
-                Scale = new Vector2(1000, 750),
-                Position = new Vector2(this.collisionBox.Center.X, this.collisionBox.Top),
-                ShadowType = ShadowType.Occluded,
-                Radius = 10,
-                Intensity = 1.5f
+                Intensity = 1f
             };
 
+            // Tools
+            this.tools.Add(new Flashlight());
+            this.tools.Add(new Vacuum());
+            this.tool = this.tools[0];
         }
 
 
@@ -69,41 +65,38 @@ namespace _13thHauntedStreet
             this._furnitureList = furnitureList;
             this.currentScene = scene;
 
-            this.readInput();
+            this.ReadInput();
+            this.ReadItemChangingKey();
 
             // if player has moved update position
             if (this._movement.X != 0 || this._movement.Y != 0)
             {
-                this.updatePosition();
+                this.UpdatePosition();
             }
 
-            // update flashlight angle with mouse position
-            MouseState msState = Mouse.GetState();
-            this.lightAngle = (float)Math.Atan2(msState.Y - this.position.Y, msState.X - this.position.X);
-            this.flashLight.Rotation = this.lightAngle;
+            this.tool.Update(gameTime, this.position);
 
-            this.updateAnim();
+            this.UpdateAnim();
         }
 
-        public override void updatePosition()
+        public override void UpdatePosition()
         {
             Vector2 distance = this._movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            this.objectCollision(ref distance);
+            this.ObjectCollision(ref distance);
 
-            this.wallCollision(ref distance);
+            this.WallCollision(ref distance);
 
             this.position += distance;
 
             this.collisionBox = new Rectangle((int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y, (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
             this.light.Position = new Vector2(this.collisionBox.Center.X, this.collisionBox.Top);
-            this.flashLight.Position = this.position;
         }
 
         /// <summary>
         /// Updates the animation that is playing
         /// </summary>
-        private void updateAnim()
+        private void UpdateAnim()
         {
             // if is moving
             if (this._movement.X != 0 || this._movement.Y != 0)
@@ -154,17 +147,67 @@ namespace _13thHauntedStreet
                 }
             }
 
-            this.playAnim(this._animManager.currentAnim, ref this.texture);
+            this.PlayAnim(this._animManager.currentAnim, ref this.texture);
+        }
+
+        /// <summary>
+        /// Read keys that change the tool that is currently being used
+        /// </summary>
+        /// <remarks>Differs from ReakKey() because this method is Hunter only</remarks>
+        private void ReadItemChangingKey()
+        {
+            int? index = null;
+
+            // Item Up Key
+            if (Keyboard.GetState().IsKeyDown(Game1.input.ItemUp) && this.hasReleasedItemKey)
+            {
+                this.hasReleasedItemKey = false;
+
+                index = tools.FindIndex(x => x == this.tool) + 1;
+            }
+
+            // Item Down Key
+            if (Keyboard.GetState().IsKeyDown(Game1.input.ItemDown) && this.hasReleasedItemKey)
+            {
+                this.hasReleasedItemKey = false;
+
+                index = tools.FindIndex(x => x == this.tool) - 1;
+            }
+
+            // if index not null
+            if(!(index is null))
+            {
+                // check if too high or too low
+                if (index == tools.Count)
+                {
+                    index = 0;
+                }
+                else if (index < 0)
+                {
+                    index = tools.Count - 1;
+                }
+                
+                // then apply changement
+                this.tool = this.tools[index ?? default(int)];
+            }
+
+            // Release Key
+            if (Keyboard.GetState().IsKeyUp(Game1.input.ItemUp) && Keyboard.GetState().IsKeyUp(Game1.input.ItemDown))
+            {
+                this.hasReleasedItemKey = true;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this.scale, SpriteEffects.None, 1f);
 
-            Vector2 flashCursorPos = Vector2.Normalize(Mouse.GetState().Position.ToVector2() - this.position) * 75;
-            spriteBatch.Draw(Game1.flashlightIcon, this.position+flashCursorPos, null, Color.White, this.lightAngle, Game1.flashlightIcon.Bounds.Center.ToVector2(), 4, 0, 1f); // a finir
-
             //this.drawCollisionBox(spriteBatch);
+        }
+
+        public override void DrawUI(SpriteBatch spriteBatch)
+        {
+            tool.Draw(spriteBatch, this.position);
         }
     }
 }

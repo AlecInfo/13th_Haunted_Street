@@ -16,7 +16,7 @@ namespace _13thHauntedStreet
     abstract class Player : GameObject
     {
         // Properties
-        protected Input _input;
+        //protected Input _input;
         protected GameTime _gameTime;
         public Scene currentScene;
         public Light light;
@@ -36,40 +36,58 @@ namespace _13thHauntedStreet
             {
                 return new Rectangle(
                     this.position.ToPoint() - (this.texture.Bounds.Size.ToVector2() * this.scale / 2).ToPoint(), 
-                    (this.texture.Bounds.Size.ToVector2() + this.texture.Bounds.Size.ToVector2() / 2 * this.scale).ToPoint());
+                    (this.texture.Bounds.Size.ToVector2()/* + this.texture.Bounds.Size.ToVector2() / 2 */* this.scale).ToPoint());
+            }
+        }
+
+        public List<Light> lights
+        {
+            get
+            {
+                List<Light> lights = new List<Light>();
+                lights.Add(this.light);
+
+                // add tool light if player is hunter
+                if (this.GetType() == typeof(Hunter))
+                {
+                    lights.Add((this as Hunter).tool.light);
+                }
+
+                return lights;
             }
         }
 
 
         // Methods
         public abstract void Update(GameTime gameTime, List<Furniture> furnitureList, Scene scene);
+        public virtual void DrawUI(SpriteBatch spriteBatch) { }
 
         /// <summary>
         /// Updates movement with input
         /// </summary>
-        protected void readInput()
+        protected void ReadInput()
         {
             KeyboardState kbdState = Keyboard.GetState();
             this._movement = Vector2.Zero;
 
             // X
-            if (kbdState.IsKeyDown(this._input.Left))
+            if (kbdState.IsKeyDown(Game1.input.Left))
             {
                 this._movement.X += -1;
             }
 
-            if (kbdState.IsKeyDown(this._input.Right))
+            if (kbdState.IsKeyDown(Game1.input.Right))
             {
                 this._movement.X += 1;
             }
 
             // Y
-            if (kbdState.IsKeyDown(this._input.Up))
+            if (kbdState.IsKeyDown(Game1.input.Up))
             {
                 this._movement.Y += -1;
             }
 
-            if (kbdState.IsKeyDown(this._input.Down))
+            if (kbdState.IsKeyDown(Game1.input.Down))
             {
                 this._movement.Y += 1;
             }
@@ -84,7 +102,7 @@ namespace _13thHauntedStreet
         /// <summary>
         /// Updates the player position
         /// </summary>
-        public abstract void updatePosition();
+        public abstract void UpdatePosition();
 
         /// <summary>
         /// plays the animation
@@ -92,7 +110,7 @@ namespace _13thHauntedStreet
         /// <param name="gameTime"></param>
         /// <param name="animation">animation that is currently playing</param>
         /// <param name="currentTexture">texture that is currently beeing drawn</param>
-        protected void playAnim(List<Texture2D> animation, ref Texture2D currentTexture)
+        protected void PlayAnim(List<Texture2D> animation, ref Texture2D currentTexture)
         {
             this.timeSinceLastFrame += this._gameTime.ElapsedGameTime.Milliseconds;
             if (this.timeSinceLastFrame > this.millisecondsPerFrame)
@@ -116,7 +134,7 @@ namespace _13thHauntedStreet
         /// Draw the player collision box to help debug
         /// </summary>
         /// <param name="spriteBatch"></param>
-        protected void drawCollisionBox(SpriteBatch spriteBatch)
+        protected void DrawCollisionBox(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Game1.defaultTexture, this.collisionBox, null, Color.White * 0.5f, 0f, Vector2.Zero, SpriteEffects.None, 1f);
         }
@@ -125,7 +143,7 @@ namespace _13thHauntedStreet
         /// collision between the player and game objects
         /// </summary>
         /// <param name="distance"></param>
-        protected void objectCollision(ref Vector2 distance)
+        protected void ObjectCollision(ref Vector2 distance)
         {
             foreach (Furniture item in this._furnitureList)
             {
@@ -167,7 +185,7 @@ namespace _13thHauntedStreet
         /// collision between the current scene walls and the player
         /// </summary>
         /// <param name="distance"></param>
-        protected void wallCollision(ref Vector2 distance)
+        protected void WallCollision(ref Vector2 distance)
         {
             if (this.collisionBox.Left + distance.X < this.currentScene.groundArea.Left) // Left
             {

@@ -26,9 +26,8 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Ghost(Input input, Vector2 initialPos, GhostAnimationManager animationManager)
+        public Ghost(Vector2 initialPos, GhostAnimationManager animationManager)
         {
-            this._input = input;
             this.position = initialPos;
             this.scale = 1.5f;
 
@@ -54,7 +53,7 @@ namespace _13thHauntedStreet
             this._furnitureList = furnitureList;
             this.currentScene = scene;
 
-            this.readInput();
+            this.ReadInput();
 
             // if the player is not moving in the y axis, make the ghost float
             if (this._movement.Y == 0)
@@ -66,17 +65,17 @@ namespace _13thHauntedStreet
             // if player has moved update position
             if (this._movement.X != 0 || this._movement.Y != 0)
             {
-                this.updatePosition();
+                this.UpdatePosition();
             }
 
-            this.updateAnim();
+            this.UpdateAnim();
         }
 
-        public override void updatePosition()
+        public override void UpdatePosition()
         {
             Vector2 distance = this._movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            this.wallCollision(ref distance);
+            this.WallCollision(ref distance);
 
             this.position += distance;
             this.light.Position = this.position;
@@ -87,7 +86,7 @@ namespace _13thHauntedStreet
         /// <summary>
         /// Updates the animation that is playing 
         /// </summary>
-        private void updateAnim()
+        private void UpdateAnim()
         {
             if (this._movement.X > 0)
             {
@@ -98,7 +97,7 @@ namespace _13thHauntedStreet
                 this._animManager.currentAnim = this._animManager.animationLeft;
             }
 
-            this.playAnim(this._animManager.currentAnim, ref this.texture);
+            this.PlayAnim(this._animManager.currentAnim, ref this.texture);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
