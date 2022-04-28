@@ -1,4 +1,12 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class Screen allows you to manage the window
+ * 
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -9,7 +17,8 @@ namespace _13thHauntedStreet
 {
     public class Screen
     {
-        // Varriables
+        #region Varriables
+
         private static Screen instance;
 
         private GameWindow _window;
@@ -55,6 +64,7 @@ namespace _13thHauntedStreet
 
         private bool _windowsIsChanged = false;
 
+        #endregion
 
         // Ctor
         public Screen(Vector2 newSize, GameWindow window)
@@ -85,17 +95,6 @@ namespace _13thHauntedStreet
 
         public void Update(GameTime gameTime)
         {
-
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
-            {
-                this.WindowedScreen();
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.H))
-            {
-                this.FullScreen();
-            }
-
             // Get the scale of the screen
             this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width); ;
 

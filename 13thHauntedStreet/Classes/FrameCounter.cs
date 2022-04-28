@@ -1,4 +1,12 @@
-﻿using System;
+﻿/********************************
+ * Project : 13th Haunted Street
+ * Description : This class FrameCounter allows you to calculate
+ *               the refresh rate of this programm
+ * Date : 13/04/2022
+ * Author : Piette Alec
+*******************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,18 +15,20 @@ namespace _13thHauntedStreet
 {
     class FrameCounter
     {
+        #region Variables
         public long TotalFrames { get; private set; }
         public float TotalSeconds { get; private set; }
         public float AverageFramesPerSecond { get; private set; }
         public float CurrentFramesPerSecond { get; private set; }
 
-        public const int MAXIMUM_SAMPLES = 100;
+        public const int MAXIMUM_SAMPLES = 120;
 
         private Queue<float> _sampleBuffer = new Queue<float>();
+        #endregion
 
         public void Update(float gameTime)
         {
-            CurrentFramesPerSecond = 1.0f / gameTime;
+            CurrentFramesPerSecond = 1f / gameTime;
 
             _sampleBuffer.Enqueue(CurrentFramesPerSecond);
 
