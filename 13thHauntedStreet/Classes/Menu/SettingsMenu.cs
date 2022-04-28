@@ -61,7 +61,7 @@ namespace _13thHauntedStreet
                 XmlSerializer sauver = new XmlSerializer(typeof(SaveSettings));
                 using (StreamWriter f = new StreamWriter(Settings.fileSave))
                 {
-                    sauver.Serialize(f, new SaveSettings(/*zzz récupérer les valeurs en string de tous les boutons*/));
+                    //sauver.Serialize(f, new SaveSettings(/*zzz récupérer les valeurs en string de tous les boutons*/));
                 }
             };
             // Create the button back

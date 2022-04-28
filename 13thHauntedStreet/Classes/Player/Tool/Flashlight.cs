@@ -2,7 +2,7 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Flashlight class (inherits from Tool abstract class)
- * Tool    : The flashlight is the default tool used to search for ghost, can be turned on and off
+ * Tool    : Default tool used to search for ghost, can be turned on and off
  */
 using System;
 using System.Collections.Generic;

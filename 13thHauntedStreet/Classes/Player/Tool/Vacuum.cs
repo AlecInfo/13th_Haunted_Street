@@ -2,7 +2,7 @@
  * Author  : Marco Rodrigues
  * Project : 13th Haunted Street
  * Details : Flashlight class (inherits from Tool abstract class)
- * Tool    : 
+ * Tool    : Used to catch ghost, by sucking them, its light is narrower than the default flashlight
  */
 using System;
 using System.Collections.Generic;
