@@ -162,6 +162,7 @@ namespace _13thHauntedStreet
             hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_up"));
             hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_down"));
 
+            // Player
             crosshair = Content.Load<Texture2D>("TempFiles/crosshair");
             Mouse.SetCursor(MouseCursor.FromTexture2D(crosshair, crosshair.Bounds.Center.X, crosshair.Bounds.Center.Y));
 
@@ -169,26 +170,27 @@ namespace _13thHauntedStreet
             vacuumIconOff = Content.Load<Texture2D>("TempFiles/VacuumOff");
             vacuumIconOn = Content.Load<Texture2D>("TempFiles/VacuumOn");
 
-            input = new Input()
-            {
-                Left = Keys.A,
-                Right = Keys.D,
-                Up = Keys.W,
-                Down = Keys.S,
-                Use1 = Keys.E,
-                ItemUp = Keys.Up,
-                ItemDown = Keys.Down
-            };
+            input = Input.GetInstance();
+            input.Left = Keys.A;
+            input.Right = Keys.D;
+            input.Up = Keys.W;
+            input.Down = Keys.S;
+            input.Use1 = Keys.E;
+            input.ItemUp = Keys.Up;
+            input.ItemDown = Keys.Down;
+
             player = new Hunter(
                 new Vector2(500, 500),
                 hunterAM
             );
 
+            // Furniture
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
             drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
             furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
             furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
 
+            // Map
             bg = Content.Load<Texture2D>("TempFiles/bg");
             bg2 = Content.Load<Texture2D>("TempFiles/bg2");
             ground = Content.Load<Texture2D>("TempFiles/Ground");
@@ -205,6 +207,7 @@ namespace _13thHauntedStreet
             testMap.doorList.Add(new Door(direction.down, testMap.listScenes[1]));
             //testMap.doorList[0].connectedDoor = testMap.doorList[1];
             Door.connectDoors(testMap.doorList[0], testMap.doorList[1]);
+
 
             // method that loads every texture of an animation
             List<Texture2D> multipleTextureLoader(string filePrefix, int size)
