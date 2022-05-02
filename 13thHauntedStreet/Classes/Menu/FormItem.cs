@@ -97,5 +97,14 @@ namespace _13thHauntedStreet
         {
             return this.Text;
         }
+
+        /// <summary>
+        /// This method allows to create a transfert the parametters in to the list fort save in the xml file
+        /// </summary>
+        /// <param name="parameters"></param>
+        public virtual void ConstructParameterList(ref Dictionary<string, string> parameters)
+        {
+            
+        }
     }
 }

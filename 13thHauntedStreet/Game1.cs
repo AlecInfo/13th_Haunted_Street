@@ -39,7 +39,7 @@ namespace _13thHauntedStreet
 
         public bool showFps;
 
-        public int limitedFps /*= Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()])*/;
+        public int limitedFps;
 
         public static float previusLimitedFps;
 
@@ -94,17 +94,10 @@ namespace _13thHauntedStreet
 
             self = this;
 
-            // Set the default parameters like the refresh rate, music volume or fullscreen
-            Settings.SetDefautlValue();
-
             // Set the fps to 60
             IsFixedTimeStep = true;
 
-            limitedFps = Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()]);
-
-            TargetElapsedTime = TimeSpan.FromSeconds(1f / limitedFps);
-
-            previusLimitedFps = limitedFps;
+            previusLimitedFps = 60 ;
 
             // Set the windows
             IsMouseVisible = false;
@@ -125,7 +118,7 @@ namespace _13thHauntedStreet
             // Initialize Screen
             screen = Screen.Instance(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, Window);
 
-            penumbra.Initialize();
+            
 
             base.Initialize();
         }
@@ -208,6 +201,9 @@ namespace _13thHauntedStreet
 
                 return result;
             }
+
+            // Set the default parameters like the refresh rate, music volume or fullscreen
+            Settings.SetDefautlValue();
         }
 
         protected override void Update(GameTime gameTime)

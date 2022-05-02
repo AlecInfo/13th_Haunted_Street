@@ -21,6 +21,9 @@ namespace _13thHauntedStreet
         #region Variables
         List<string> listValue = new List<string>();
 
+        private string _name;
+        public string Name { get => _name; set => _name = value; }
+
         private int _id = 0;
         public int Id { get => _id; set => _id = value; }
         #endregion
@@ -88,6 +91,11 @@ namespace _13thHauntedStreet
         public override string GetValue()
         {
             return listValue[Id];
+        }
+
+        public override void ConstructParameterList(ref Dictionary<string, string> parameters)
+        {
+            parameters.Add(Name, GetValue());
         }
     }
 }

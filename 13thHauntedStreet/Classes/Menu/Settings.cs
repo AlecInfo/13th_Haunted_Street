@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -18,17 +19,18 @@ namespace _13thHauntedStreet
     {
         #region Default values
 
+        // Name of the xml file and it's located "13th Haunted Street\13th_Haunted_Street\13thHauntedStreet\bin\Debug\netcoreapp3.1\BackupMenu.xml"
         public static string fileSave = "BackupMenu.xml";
 
-        private static string _fullscreenDefault = "Enabled";
-
-        private static string _refreshRateDefault = "60";
-
-        private static string _refreshRateDisplayDefault = "Disabled";
-
-        private static string _sfxVolumeDefault = "7";
-
-        private static string _musicVolumeDefault = "7";
+        // Dictionary with the default values
+        private static Dictionary<string, string> defaultValues = new Dictionary<string, string>()
+        {
+            { Settings.GetTitleFullscreen(), "Enabled" },
+            { Settings.GetTitleRefreshRate(), "60" },
+            { Settings.GetTitleRefreshRateDisplay(), "Disabled" },
+            { Settings.GetTitleSFXVolume(), "7" },
+            { Settings.GetTitleMusicVolume(), "7" },
+        };
 
         #endregion
 
@@ -70,57 +72,69 @@ namespace _13thHauntedStreet
             return 0;
         }
 
-        #region Set the default value 
+        #region Set the values 
 
         /// <summary>
         /// This method allows to define the varriables depending on whether there is a backup
         /// </summary>
         public static void SetDefautlValue()
         {
-            // if the file exists 
+            // If the file exists 
             if (File.Exists(fileSave))
             {
-                SaveSettings saveSettings;
+                // Recover the data int to parameterList
+                Dictionary<string, string> parameterList = new Dictionary<string, string>();
+                XmlSerializer serializer = new XmlSerializer(typeof(Setting[]), new XmlRootAttribute() { ElementName = "settings" });
 
-                XmlSerializer restore = new XmlSerializer(typeof(SaveSettings));
-
-                // Restore the data
-                using (StreamReader item = new StreamReader(fileSave))
+                using (StreamReader stream = new StreamReader(Settings.fileSave))
                 {
-                    saveSettings = (SaveSettings)restore.Deserialize(item);
+                    parameterList = ((Setting[])serializer.Deserialize(stream)).ToDictionary(i => i.id, i => i.value);
                 }
 
-                // And set the variables with him
-                _fullscreen = saveSettings.Fullscreen;
-
-                _refreshRate = saveSettings.RefreshRate;
-
-                _refreshRateDisplay = saveSettings.RefreshRateDisplay;
-
-                _sfxVolume = saveSettings.SfxVolume;
-
-                _musicVolume = saveSettings.MusicVolume;
+                // And apply the parameterList values 
+                ChangeValues(parameterList);
             }
             else
             {
-                DefaultValues();
+                // Apply the default values 
+                ChangeValues(defaultValues);
+            }
+
+        }
+
+        public static void ChangeValues(Dictionary<string, string> dictio)
+        {
+            // Set the variables with the default values
+            foreach (var item in dictio)
+            {
+                if (item.Key == Settings.GetTitleFullscreen())
+                {
+                    _fullscreen = item.Value;
+                    FullscreenAction(item.Value);
+                }
+                else if (item.Key == Settings.GetTitleRefreshRate())
+                {
+                    _refreshRate = item.Value;
+                    RefreshRateAction(item.Value);
+                }
+                else if (item.Key == Settings.GetTitleRefreshRateDisplay())
+                {
+                    _refreshRateDisplay = item.Value;
+                    RefreshRateDisplayAction(item.Value);
+                }
+                else if (item.Key == Settings.GetTitleSFXVolume())
+                {
+                    _sfxVolume = item.Value;
+                    SFXVolumeAction(item.Value);
+                }
+                else if (item.Key == Settings.GetTitleMusicVolume())
+                {
+                    _musicVolume = item.Value;
+                    MusicVolumeAction(item.Value);
+                }
             }
         }
 
-
-        public static void DefaultValues()
-        {
-            // Set the variables with the default values
-            _fullscreen = _fullscreenDefault;
-
-            _refreshRate = _refreshRateDefault;
-
-            _refreshRateDisplay = _refreshRateDisplayDefault;
-
-            _sfxVolume = _sfxVolumeDefault;
-
-            _musicVolume = _musicVolumeDefault;
-        }
         #endregion
 
         #region Get the button action
@@ -133,51 +147,43 @@ namespace _13thHauntedStreet
         public static void ButtonAction(string button, string state)
         {
             // The action of the fullscreen menu
-            if (button == getTitleFullscreen())
+            if (button == GetTitleFullscreen())
             {
                 // Put the window in fullscreen
-                if (state == "Enabled")
-                    Game1.self.screen.FullScreen();
-                // Put the window in windowed
-                else if (state == "Disabled")
-                    Game1.self.screen.WindowedScreen();
+                FullscreenAction(state);
             }
 
             // The action of the refresh rate menu
-            if (button == getTitleRefreshRate())
+            if (button == GetTitleRefreshRate())
             {
                 // Get the value and apply the limit
-                Game1.self.limitedFps = Convert.ToInt32(state);
+                RefreshRateAction(state);
             }
 
             // The action of the refresh rate display menu
-            if (button == getTitleRefreshRateDisplay())
+            if (button == GetTitleRefreshRateDisplay())
             {
-                // Display the rifresh rate 
-                if (state == "Enabled")
-                    Game1.self.showFps = true;
-                // Undisplay the rifresh rate
-                else if (state == "Disabled")
-                    Game1.self.showFps = false;
+                RefreshRateDisplayAction(state);
             }
 
             // The action of the effect volume menu
-            if (button ==getTitleSFXVolume())
+            if (button == GetTitleSFXVolume())
             {
                 // Get the value and apply the volume
-                Game1.self.sfxVolume = Convert.ToInt32(state);
+                SFXVolumeAction(state);
             }
 
             // The action of the music volume menu
-            if (button == getTitleMusicVolume())
+            if (button == GetTitleMusicVolume())
             {
                 // Get the value and apply the volume
-                Game1.self.musicVolume = Convert.ToInt32(state);
+                MusicVolumeAction(state);
             }
         }
+
         #endregion
 
-        #region Get Title settings
+        #region Get Title of the pages
 
         /// <summary>
         /// This method returns the first part of the menu title
@@ -196,7 +202,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button full screen
         /// </summary>
         /// <returns></returns>
-        public static string getTitleFullscreen() 
+        public static string GetTitleFullscreen() 
         {
             // Return the title
             return "Full Screen";
@@ -206,7 +212,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the list of values ​​that the button has
         /// </summary>
         /// <returns></returns>
-        public static List<string> getValuesFullscreen()
+        public static List<string> GetValuesFullscreen()
         {
             // Returns a list with the value disabled and enabled
             return new List<string>() { "Disabled", "Enabled" };
@@ -216,10 +222,24 @@ namespace _13thHauntedStreet
         /// This method allows to get the id of the default value and return it
         /// </summary>
         /// <returns></returns>
-        public static int getFullscreenID()
+        public static int GetFullscreenID()
         {
             // Return the id
-            return GetIDValue(_fullscreen, getValuesFullscreen());
+            return GetIDValue(_fullscreen, GetValuesFullscreen());
+        }
+
+        /// <summary>
+        /// This method is the action after clicking the button, it changes the screen either in fullscreen or windowed
+        /// </summary>
+        /// <param name="state"></param>
+        private static void FullscreenAction(string state)
+        {
+            // Put the window in fullscreen
+            if (state == "Enabled")
+                Game1.self.screen.FullScreen();
+            // Put the window in windowed
+            else if (state == "Disabled")
+                Game1.self.screen.WindowedScreen();
         }
         #endregion
 
@@ -230,7 +250,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button refresh rate
         /// </summary>
         /// <returns></returns>
-        public static string getTitleRefreshRate()
+        public static string GetTitleRefreshRate()
         {
             // Return the title
             return "Refresh rate";
@@ -240,7 +260,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the list of values ​​that the button has
         /// </summary>
         /// <returns></returns>
-        public static List<string> getValuesRefreshRate()
+        public static List<string> GetValuesRefreshRate()
         {
             // Create the list
             List<string> listValue = new List<string>();
@@ -267,10 +287,20 @@ namespace _13thHauntedStreet
         /// This method allows to get the id of the default value and return it
         /// </summary>
         /// <returns></returns>
-        public static int getRefreshRateID()
+        public static int GetRefreshRateID()
         {
             // Return the id
-            return GetIDValue(_refreshRate, getValuesRefreshRate());
+            return GetIDValue(_refreshRate, GetValuesRefreshRate());
+        }
+
+        /// <summary>
+        /// This method is the action after clicking the button, it changes the limit fps 
+        /// </summary>
+        /// <param name="state"></param>
+        private static void RefreshRateAction(string state)
+        {
+            // Get the value and apply the limit
+            Game1.self.limitedFps = Convert.ToInt32(state);
         }
         #endregion
 
@@ -280,7 +310,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button refresh rate display
         /// </summary>
         /// <returns></returns>
-        public static string getTitleRefreshRateDisplay()
+        public static string GetTitleRefreshRateDisplay()
         {
             // Return the title
             return "Refresh rate display";
@@ -290,7 +320,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the list of values ​​that the button has
         /// </summary>
         /// <returns></returns>
-        public static List<string> getValuesRefreshRateDisplay()
+        public static List<string> GetValuesRefreshRateDisplay()
         {
             // Returns a list with the value disabled and enabled
             return new List<string>() { "Disabled", "Enabled" };
@@ -300,10 +330,24 @@ namespace _13thHauntedStreet
         /// This method allows to get the id of the default value and return it
         /// </summary>
         /// <returns></returns>
-        public static int getRefreshRateDisplayID()
+        public static int GetRefreshRateDisplayID()
         {
             // Return the id
-            return GetIDValue(_refreshRateDisplay, getValuesRefreshRateDisplay());
+            return GetIDValue(_refreshRateDisplay, GetValuesRefreshRateDisplay());
+        }
+
+        /// <summary>
+        /// This method is the action after clicking the button, it changes whether or not it displays fps
+        /// </summary>
+        /// <param name="state"></param>
+        public static void RefreshRateDisplayAction(string state)
+        {
+            // Display the rifresh rate 
+            if (state == "Enabled")
+                Game1.self.showFps = true;
+            // Undisplay the rifresh rate
+            else if (state == "Disabled")
+                Game1.self.showFps = false;
         }
         #endregion
 
@@ -313,7 +357,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button effect volume
         /// </summary>
         /// <returns></returns>
-        public static string getTitleSFXVolume()
+        public static string GetTitleSFXVolume()
         {
             // Return the title
             return "Effect volume";
@@ -323,7 +367,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the list of values ​​that the button has
         /// </summary>
         /// <returns></returns>
-        public static List<string> getValuesSFXVolume()
+        public static List<string> GetValuesSFXVolume()
         {
             // Create the list
             List<string> listValue = new List<string>();
@@ -350,10 +394,20 @@ namespace _13thHauntedStreet
         /// This method allows to get the id of the default value and return it
         /// </summary>
         /// <returns></returns>
-        public static int getSFXVolumeID()
+        public static int GetSFXVolumeID()
         {
             // Return the id
-            return GetIDValue(_sfxVolume, getValuesSFXVolume());
+            return GetIDValue(_sfxVolume, GetValuesSFXVolume());
+        }
+
+        /// <summary>
+        /// This method is the action after clicking the button, it changes the SFX volume values
+        /// </summary>
+        /// <param name="state"></param>
+        private static void SFXVolumeAction(string state)
+        {
+            // Get the value and apply the volume
+            Game1.self.sfxVolume = Convert.ToInt32(state);
         }
 
         #endregion
@@ -364,7 +418,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button music volume
         /// </summary>
         /// <returns></returns>
-        public static string getTitleMusicVolume()
+        public static string GetTitleMusicVolume()
         {
             // Return the title
             return "Music volume";
@@ -374,7 +428,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the list of values ​​that the button has
         /// </summary>
         /// <returns></returns>
-        public static List<string> getValuesMusicVolume()
+        public static List<string> GetValuesMusicVolume()
         {
             // Create the list
             List<string> listValue = new List<string>();
@@ -400,10 +454,20 @@ namespace _13thHauntedStreet
         /// This method allows to get the id of the default value and return it
         /// </summary>
         /// <returns></returns>
-        public static int getMusicVolumeID()
+        public static int GetMusicVolumeID()
         {
             // Return the id
-            return GetIDValue(_musicVolume, getValuesSFXVolume());
+            return GetIDValue(_musicVolume, GetValuesSFXVolume());
+        }
+
+        /// <summary>
+        /// This method is the action after clicking the button, it changes the music volume values
+        /// </summary>
+        /// <param name="state"></param>
+        private static void MusicVolumeAction(string state)
+        {
+            // Get the value and apply the volume
+            Game1.self.musicVolume = Convert.ToInt32(state);
         }
         #endregion
 

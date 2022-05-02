@@ -17,6 +17,9 @@
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Penumbra.WindowsDX" Version="2.1.0" />
+    <PackageReference Include="PostSharp.Redist" Version="6.10.10" />
+    <PackageReference Include="Rebus" Version="6.6.4" />
+    <PackageReference Include="SharpYaml" Version="1.9.0" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

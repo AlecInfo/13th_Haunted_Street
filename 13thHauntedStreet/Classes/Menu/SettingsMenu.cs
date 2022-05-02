@@ -9,11 +9,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using PostSharp.Serialization.Serializers;
+using Rebus.Serialization;
+using SharpYaml.Serialization.Serializers;
 
 namespace _13thHauntedStreet
 {
@@ -57,34 +62,39 @@ namespace _13thHauntedStreet
             callback = () => { 
                 MainMenu.animationStarted = true;
 
-                //zzz enregistrement de la liste de score
-                XmlSerializer sauver = new XmlSerializer(typeof(SaveSettings));
-                using (StreamWriter f = new StreamWriter(Settings.fileSave))
+                Dictionary<string, string> parameterList = new Dictionary<string, string>();
+                this.ConstructParameterList(ref parameterList);
+
+                //When the user returns to the main menu, the settings are saved in an xml file
+                XmlSerializer serializer = new XmlSerializer(typeof(Setting[]), new XmlRootAttribute() { ElementName = "settings" });
+                using (StreamWriter stream = new StreamWriter(Settings.fileSave))
                 {
-                    sauver.Serialize(f, new SaveSettings(/*zzz récupérer les valeurs en string de tous les boutons*/));
+                    serializer.Serialize(stream, parameterList.Select(kv => new Setting() { id = kv.Key, value = kv.Value }).ToArray());
                 }
+
             };
+
             // Create the button back
             Add(SettingsMenu.NewButton("Back", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.47f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));
 
-
             // Item list of the gameplay settings
             // The title
-            menuGameplay.Add(SettingsMenu.NewText("Settings : Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
+            menuGameplay.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
             // The fullscreen option
-            LineOption(buttonTexture, Settings.getValuesFullscreen(), Settings.getTitleFullscreen(), Screen.OriginalScreenSize.Y / 1.80f, Settings.getFullscreenID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesFullscreen(), Settings.GetTitleFullscreen(), Screen.OriginalScreenSize.Y / 1.80f, Settings.GetFullscreenID(), menuGameplay);
             // The refresh rate option
-            LineOption(buttonTexture, Settings.getValuesRefreshRate(), Settings.getTitleRefreshRate(), SpacingOption(menuGameplay), Settings.getRefreshRateID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesRefreshRate(), Settings.GetTitleRefreshRate(), SpacingOption(menuGameplay), Settings.GetRefreshRateID(), menuGameplay);
             // The refresh rate display option
-            LineOption(buttonTexture, Settings.getValuesRefreshRateDisplay(), Settings.getTitleRefreshRateDisplay(), SpacingOption(menuGameplay), Settings.getRefreshRateDisplayID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesRefreshRateDisplay(), Settings.GetTitleRefreshRateDisplay(), SpacingOption(menuGameplay), Settings.GetRefreshRateDisplayID(), menuGameplay);
             // The effects volume option
-            LineOption(buttonTexture, Settings.getValuesSFXVolume(), Settings.getTitleSFXVolume(), SpacingOption(menuGameplay), Settings.getSFXVolumeID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesSFXVolume(), Settings.GetTitleSFXVolume(), SpacingOption(menuGameplay), Settings.GetSFXVolumeID(), menuGameplay);
             // The musics volume option
-            LineOption(buttonTexture, Settings.getValuesMusicVolume(), Settings.getTitleMusicVolume(), SpacingOption(menuGameplay), Settings.getMusicVolumeID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesMusicVolume(), Settings.GetTitleMusicVolume(), SpacingOption(menuGameplay), Settings.GetMusicVolumeID(), menuGameplay);
 
             // Item list of the control settings
+            //int positionX 
             // The title
-            menuControl.Add(SettingsMenu.NewText("Settings : Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
+            menuControl.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Controls", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
 
         }
 
@@ -93,14 +103,8 @@ namespace _13thHauntedStreet
             base.Update(gameTime, screen, ref changePosition);
 
             // Update the menu gameplay or control
-            if (_displayMenuGameplay)
-            {
-                menuGameplay.Update(gameTime, screen, ref changePosition);
-            }
-            else
-            {
-                menuControl.Update(gameTime, screen, ref changePosition);
-            }
+            menuGameplay.Update(gameTime, screen, ref changePosition);
+            menuControl.Update(gameTime, screen, ref changePosition);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -134,7 +138,7 @@ namespace _13thHauntedStreet
             float scale = 0.7f;
 
             // The value of the button
-            ItemOption typeScreen = SettingsMenu.NewOption(listValue, _font, new Vector2(Screen.OriginalScreenSize.X / 0.8f + 105, positionY), scale, defaultValue);
+            ItemOption typeScreen = SettingsMenu.NewOption(listValue, _font, new Vector2(Screen.OriginalScreenSize.X / 0.8f + 105, positionY), scale, defaultValue, titleOption);
 
             // Left button 
             // The action of this
@@ -217,7 +221,7 @@ namespace _13thHauntedStreet
         /// <param name="scale"></param>
         /// <param name="defaultValue"></param>
         /// <returns> itemOption </returns>
-        static ItemOption NewOption(List<string> values, SpriteFont font, Vector2 position, float scale, int defaultValue)
+        static ItemOption NewOption(List<string> values, SpriteFont font, Vector2 position, float scale, int defaultValue, string titleOption)
         {
             return new ItemOption(font, values)
             {
@@ -225,7 +229,18 @@ namespace _13thHauntedStreet
                 Scale = scale,
                 align = AlignItem.Center,
                 Id = defaultValue,
+                Name = titleOption,
             };
+        }
+
+        /// <summary>
+        /// This method allows to create the list with menu control and menu gameplay
+        /// </summary>
+        /// <param name="parameters"></param>
+        public override void ConstructParameterList(ref Dictionary<string, string> parameters)
+        {
+            this.menuControl.ConstructParameterList(ref parameters);
+            this.menuGameplay.ConstructParameterList(ref parameters);
         }
     }
 }
