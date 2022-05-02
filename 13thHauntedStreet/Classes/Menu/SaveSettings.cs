@@ -13,7 +13,7 @@ using System.Text;
 namespace _13thHauntedStreet
 {
     [Serializable]
-    class SaveSettings
+    public class SaveSettings
     {
         #region Variables
 
@@ -29,6 +29,7 @@ namespace _13thHauntedStreet
 
         #endregion
 
+        public SaveSettings(){}
         public SaveSettings(string fullscreen, string refreshrate, string refreshratedisplay, string sfxvolume, string musicvolume)
         {
             this.Fullscreen = fullscreen;

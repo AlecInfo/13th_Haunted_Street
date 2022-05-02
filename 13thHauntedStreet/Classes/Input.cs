@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Author  : Marco Rodrigues
+ * Project : 13th Haunted Street
+ * Details : Singleton class that manages player input
+ */
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;

@@ -208,6 +208,9 @@ namespace _13thHauntedStreet
         public override void DrawUI(SpriteBatch spriteBatch)
         {
             tool.Draw(spriteBatch, this.position);
+
+            // Draw item frame
+            spriteBatch.Draw(Game1.UiFrame, Game1.self.screen.EditSize/*-Game1.UiFrame.Bounds.Size.ToVector2()*/, null, Color.White, 0f, Game1.UiFrame.Bounds.Center.ToVector2(), 2, 0, 0);
         }
     }
 }

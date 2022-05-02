@@ -74,6 +74,8 @@ namespace _13thHauntedStreet
         public override void Draw(SpriteBatch spriteBatch, Vector2 playerPosition)
         {
             spriteBatch.Draw(Game1.flashlightIcon, playerPosition + this.position, null, this._isLit?Color.White:Color.Gray, this.angle, Game1.flashlightIcon.Bounds.Center.ToVector2(), 4, 0, 1f);
+
+            //spriteBatch.Draw(Game1.flashlightFrameIcon, );
         }
     }
 }

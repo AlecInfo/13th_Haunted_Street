@@ -9,7 +9,9 @@
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/bg.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/bg2.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/crosshair.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/flashlightFrameIcon.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/flashlightIcon.png</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/frame.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/Furniture/bed.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/Furniture/big_bed.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/Furniture/drawer.png</File>
@@ -51,11 +53,15 @@
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/HunterSprites/walking_up/walking_up05.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/HunterSprites/walking_up/walking_up06.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/theFont.spritefont</File>
+    <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/vacuumFrameIcon.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/VacuumOff.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/VacuumOn.png</File>
     <File>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/Walls.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

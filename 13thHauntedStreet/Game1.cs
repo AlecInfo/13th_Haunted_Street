@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Text;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
 using Penumbra;
 
 namespace _13thHauntedStreet
@@ -71,8 +69,11 @@ namespace _13thHauntedStreet
         private Player player;
         public Texture2D crosshair;
         public static Texture2D flashlightIcon;
+        public static Texture2D flashlightFrameIcon;
         public static Texture2D vacuumIconOff;
         public static Texture2D vacuumIconOn;
+        public static Texture2D vacuumFrameIcon;
+        public static Texture2D UiFrame;
 
         // Furnitures
         private Texture2D bedTexture;
@@ -85,6 +86,7 @@ namespace _13thHauntedStreet
         private Texture2D ground;
         private Texture2D walls;
         private Map testMap;
+
 
         public Game1()
         {
@@ -167,8 +169,11 @@ namespace _13thHauntedStreet
             Mouse.SetCursor(MouseCursor.FromTexture2D(crosshair, crosshair.Bounds.Center.X, crosshair.Bounds.Center.Y));
 
             flashlightIcon = Content.Load<Texture2D>("TempFiles/flashlightIcon");
+            flashlightFrameIcon = Content.Load<Texture2D>("TempFiles/flashlightFrameIcon");
             vacuumIconOff = Content.Load<Texture2D>("TempFiles/VacuumOff");
             vacuumIconOn = Content.Load<Texture2D>("TempFiles/VacuumOn");
+            vacuumFrameIcon = Content.Load<Texture2D>("TempFiles/vacuumFrameIcon");
+            UiFrame = Content.Load<Texture2D>("TempFiles/frame");
 
             input = Input.GetInstance();
             input.Left = Keys.A;
