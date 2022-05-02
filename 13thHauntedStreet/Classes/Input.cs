@@ -7,11 +7,31 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class Input
+    public sealed class Input
     {
+        private Input() { }
+        private static Input _instance;
+
+        public static Input GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new Input();
+            }
+            return _instance;
+        }
+
+
+        // Directional
         public Keys Up;
         public Keys Down;
         public Keys Left;
         public Keys Right;
+
+        // Uses
+        public Keys Use1;
+        public Keys Use2;
+        public Keys ItemUp;
+        public Keys ItemDown;
     }
 }

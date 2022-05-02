@@ -50,38 +50,27 @@ namespace _13thHauntedStreet
             player.Update(gameTime, this.furnitureList, this);
 
             // lights
-            Game1.penumbra.Lights.Add(player.light);
+            Game1.penumbra.Lights.AddRange(player.lights);
+
+            // Update furniture hulls (hunter only)
             if (player.GetType() == typeof(Hunter))
             {
-                Game1.penumbra.Lights.Add((player as Hunter).flashLight);
-            }
-
-
-            // Update furniture hulls
-            foreach (Furniture furniture in this.furnitureList)
-            {
-                Game1.penumbra.Hulls.Add(furniture.hull);
-
-                // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
-                if (isInside(furniture, player))
+                Hunter hunter = (player as Hunter);
+                foreach (Furniture furniture in this.furnitureList)
                 {
-                    if (!player.light.IgnoredHulls.Contains(furniture.hull))
-                    {
-                        player.light.IgnoredHulls.Add(furniture.hull);
+                    Game1.penumbra.Hulls.Add(furniture.hull);
 
-                        if (player.GetType() == typeof(Hunter))
+                    // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
+                    if (isInside(furniture, player))
+                    {
+                        if (!hunter.tool.light.IgnoredHulls.Contains(furniture.hull))
                         {
-                            (player as Hunter).flashLight.IgnoredHulls.Add(furniture.hull);
+                            hunter.tool.light.IgnoredHulls.Add(furniture.hull);
                         }
                     }
-                }
-                else
-                {
-                    player.light.IgnoredHulls.Remove(furniture.hull);
-
-                    if (player.GetType() == typeof(Hunter))
+                    else
                     {
-                        (player as Hunter).flashLight.IgnoredHulls.Remove(furniture.hull);
+                        hunter.tool.light.IgnoredHulls.Remove(furniture.hull);
                     }
                 }
             }
@@ -97,8 +86,8 @@ namespace _13thHauntedStreet
         {
             Rectangle furnitureRect = new Rectangle(furniture.position.ToPoint(), furniture.texture.Bounds.Size);
             
-            if (player.rectangle.Right >= furnitureRect.Left &&
-                player.rectangle.Left <= furnitureRect.Right &&
+            if (player.rectangle.Right+5 >= furnitureRect.Left-5 &&
+                player.rectangle.Left-5 <= furnitureRect.Right+5 &&
                 player.rectangle.Bottom >= furnitureRect.Top &&
                 player.rectangle.Top <= furnitureRect.Bottom)
             {
