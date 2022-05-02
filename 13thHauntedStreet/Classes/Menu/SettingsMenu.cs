@@ -49,13 +49,13 @@ namespace _13thHauntedStreet
             callback = () => { _displayMenuGameplay = true; };
             Func<bool> func = () => false;
             // Create the button gameplay
-            Add(SettingsMenu.NewButton("Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.6f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));
+            Add(SettingsMenu.NewButton("Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.6f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Action of the control button,
             // which display all gameplay parameters
             callback = () => { _displayMenuGameplay = false; };
             // Create the button control
-            Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));
+            Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Action of the back button,
             // which replay the animation and going back to the main menu
@@ -75,13 +75,13 @@ namespace _13thHauntedStreet
             };
 
             // Create the button back
-            Add(SettingsMenu.NewButton("Back", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.47f), buttonTextureDefault, 0.65f, SpriteEffects.None, callback, func));
+            Add(SettingsMenu.NewButton("Back", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.47f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Item list of the gameplay settings
             // The title
             menuGameplay.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
             // The fullscreen option
-            LineOption(buttonTexture, Settings.GetValuesFullscreen(), Settings.GetTitleFullscreen(), Screen.OriginalScreenSize.Y / 1.80f, Settings.GetFullscreenID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesFullscreen(), Settings.GetTitleFullscreen(), Screen.OriginalScreenSize.Y / 2f, Settings.GetFullscreenID(), menuGameplay);
             // The refresh rate option
             LineOption(buttonTexture, Settings.GetValuesRefreshRate(), Settings.GetTitleRefreshRate(), SpacingOption(menuGameplay), Settings.GetRefreshRateID(), menuGameplay);
             // The refresh rate display option
@@ -92,10 +92,19 @@ namespace _13thHauntedStreet
             LineOption(buttonTexture, Settings.GetValuesMusicVolume(), Settings.GetTitleMusicVolume(), SpacingOption(menuGameplay), Settings.GetMusicVolumeID(), menuGameplay);
 
             // Item list of the control settings
-            //int positionX 
             // The title
             menuControl.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Controls", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
 
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveUp(), Screen.OriginalScreenSize.Y / 2f, "W", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveLeft(), SpacingOption(menuControl), "A", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveDown(), SpacingOption(menuControl), "S", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveRight(), SpacingOption(menuControl), "D", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleChangeWeapons(), SpacingOption(menuControl), "Mouse scroll", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleWeaponOne(), SpacingOption(menuControl), "1", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleWeaponTwo(), SpacingOption(menuControl), "2", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleAttack(), SpacingOption(menuControl), "Left click", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleTransform(), SpacingOption(menuControl), "Left click", menuControl);
+            LineOptionControl(Game1.self._controlButton, Settings.GetTitleDetransform(), SpacingOption(menuControl), "Right click", menuControl);
         }
 
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
@@ -137,18 +146,21 @@ namespace _13thHauntedStreet
             // The scale text
             float scale = 0.7f;
 
+            // The position x
+            float posX = Screen.OriginalScreenSize.X / 0.79f;
+
             // The value of the button
-            ItemOption typeScreen = SettingsMenu.NewOption(listValue, _font, new Vector2(Screen.OriginalScreenSize.X / 0.8f + 105, positionY), scale, defaultValue, titleOption);
+            ItemOption typeScreen = SettingsMenu.NewOption(listValue, _font, new Vector2(posX + 105, positionY), scale, defaultValue, titleOption);
 
             // Left button 
             // The action of this
             Action callback = () => { typeScreen.Left(); Settings.ButtonAction(titleOption, typeScreen.GetValue()); };
             Func<bool> enabledButton = () => typeScreen.IsLeft();
             // Add the left button
-            addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(Screen.OriginalScreenSize.X / 0.8f, positionY), buttonTexture, scale, SpriteEffects.None, callback, enabledButton));
+            addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(posX, positionY), buttonTexture, Color.White, scale, SpriteEffects.None, callback, enabledButton, false, scale));
 
             // The title of the line which adapts its position according to the position of the left button
-            addingOption.Add(SettingsMenu.NewText(titleOption, _font, new Vector2(Screen.OriginalScreenSize.X / 0.8f - this._font.MeasureString(titleOption).X * scale - 20, positionY), scale));
+            addingOption.Add(SettingsMenu.NewText(titleOption, _font, new Vector2(posX - this._font.MeasureString(titleOption).X * scale - 20, positionY), scale));
 
             // Add the value of the button
             addingOption.Add(typeScreen);
@@ -158,7 +170,28 @@ namespace _13thHauntedStreet
             callback = () => { typeScreen.Right(); Settings.ButtonAction(titleOption, typeScreen.GetValue()); };
             enabledButton = () => typeScreen.IsRight();
             // Add the right button
-            addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(Screen.OriginalScreenSize.X / 0.8f + 170, positionY), buttonTexture, scale, SpriteEffects.FlipHorizontally, callback, enabledButton));
+            addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(posX + 170, positionY), buttonTexture, Color.White, scale, SpriteEffects.FlipHorizontally, callback, enabledButton, false, scale));
+        }
+
+        private void LineOptionControl(Texture2D buttonTexture, string titleOption, float positionY, string defaultValue, ItemsMenu addingOption)
+        {
+            // The scale text
+            float scaleButton = 2.2f;
+            float scaleText = 0.7f;
+
+            // The position x
+            float posX = Screen.OriginalScreenSize.X / 0.79f;
+
+            // The title of the line which adapts its position according to the position of the button
+            addingOption.Add(SettingsMenu.NewText(titleOption, _font, new Vector2(posX - this._font.MeasureString(titleOption).X * scaleText - 20, positionY), scaleText));
+
+            // The button
+            // The action of this
+            Action callback = () => { MainMenu.animationStarted = true; };
+            Func<bool> enabledButton = () => false;
+            addingOption.Add(SettingsMenu.NewButton(defaultValue, _font, new Vector2(posX, positionY), buttonTexture, Color.Black, scaleButton, SpriteEffects.None, callback, enabledButton, true, scaleText));
+
+            
         }
 
         /// <summary>
@@ -168,7 +201,7 @@ namespace _13thHauntedStreet
         /// <returns> flaot </returns>
         private float SpacingOption(ItemsMenu itemsMenu)
         {
-            return itemsMenu.listItems[itemsMenu.listItems.Count - 1].Position.Y + 50;
+            return itemsMenu.listItems[itemsMenu.listItems.Count - 1].Position.Y + 70;
         }
 
         /// <summary>
@@ -183,14 +216,15 @@ namespace _13thHauntedStreet
         /// <param name="callback"></param>
         /// <param name="enabledButton"></param>
         /// <returns> itemButtonOption </returns>
-        static ItemButtonOption NewButton(string text, SpriteFont font, Vector2 position, Texture2D texture, float scale, SpriteEffects spriteEffect, Action callback, Func<bool> enabledButton)
+        static ItemButtonOption NewButton(string text, SpriteFont font, Vector2 position, Texture2D texture, Color color, float scale, SpriteEffects spriteEffect, Action callback, Func<bool> enabledButton, bool DrawImageText, float ScaleText)
         {
-            return new ItemButtonOption(texture, font, callback, enabledButton)
+            return new ItemButtonOption(texture, font, callback, enabledButton, DrawImageText)
             {
                 Text = text,
                 Position = position,
-                FontColor = Color.White,
+                FontColor = color,
                 Scale = scale,
+                ScaleText = ScaleText,
                 Effect = spriteEffect
             };
         }

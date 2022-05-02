@@ -26,6 +26,8 @@ namespace _13thHauntedStreet
 
         private MouseState _previusMouse;
 
+        private bool _dispalyImageAndText;
+
         public Action Click;
 
         public SpriteEffects Effect { get; set; }
@@ -39,10 +41,12 @@ namespace _13thHauntedStreet
 
         public Color ButtonColor { get; set; }
 
+        public float ScaleText { get; set; }
+
         #endregion
 
         // Ctor
-        public ItemButton(Texture2D texture, SpriteFont font, Action eventButton)
+        public ItemButton(Texture2D texture, SpriteFont font, Action eventButton, bool imageText)
         {
             // Create a rectangle texture 1 per 1 pixels, color white
             this._defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
@@ -60,7 +64,11 @@ namespace _13thHauntedStreet
 
             this.Scale = 1f;
 
+            this.ScaleText = this.Scale;
+
             this.IsSelected = false;
+
+            this._dispalyImageAndText = imageText;
         }
 
         public override void Update(GameTime gameTime, Screen screen,ref Vector2 changePosition)
@@ -69,7 +77,7 @@ namespace _13thHauntedStreet
             this.Position = newPosition;
 
             // Calculate button size according to an image
-            if (string.IsNullOrEmpty(this.Text))
+            if (!string.IsNullOrEmpty(this.Text) && _dispalyImageAndText || string.IsNullOrEmpty(this.Text))
             {
                 this.Rectangle = new Rectangle((int)(this.Position.X), (int)this.Position.Y, (int)(this._texture.Width * this.Scale), (int)(this._texture.Height * this.Scale));
             }
@@ -77,7 +85,7 @@ namespace _13thHauntedStreet
             else
             {
                 this.ButtonColor = Color.White * 0f;
-                this.Rectangle = new Rectangle((int)(Position.X), (int)Position.Y, (int)(_font.MeasureString(this.Text).X * this.Scale), (int)(_font.MeasureString(this.Text).Y * this.Scale));
+                this.Rectangle = new Rectangle((int)(Position.X), (int)Position.Y, (int)(_font.MeasureString(this.Text).X * this.ScaleText), (int)(_font.MeasureString(this.Text).Y * this.ScaleText));
             }
 
             // Get the mouse state, stock the previus dans stock the current
@@ -144,10 +152,10 @@ namespace _13thHauntedStreet
             if (!string.IsNullOrEmpty(this.Text))
             {
                 // The position will be in the center of the button
-                float x = (this.Rectangle.X + (this.Rectangle.Width / 2)) - (this._font.MeasureString(Text).X * this.Scale / 2);
-                float y = (this.Rectangle.Y + (this.Rectangle.Height / 2)) - (this._font.MeasureString(Text).Y * this.Scale / 2);
+                float x = (this.Rectangle.X + (this.Rectangle.Width / 2)) - (this._font.MeasureString(Text).X * this.ScaleText / 2);
+                float y = (this.Rectangle.Y + (this.Rectangle.Height / 2)) - (this._font.MeasureString(Text).Y * this.ScaleText / 2);
                 // Display the text in the button
-                spriteBatch.DrawString(this._font, this.Text, new Vector2(x, y), this.FontColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(this._font, this.Text, new Vector2(x, y), this.FontColor, 0f, Vector2.Zero, this.ScaleText, SpriteEffects.None, 1f);
             }
         }
 

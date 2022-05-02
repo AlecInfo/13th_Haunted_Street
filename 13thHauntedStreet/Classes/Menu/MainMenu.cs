@@ -49,26 +49,26 @@ namespace _13thHauntedStreet
             // Action of new game
             callback = () => { animationStarted = true; Game1.self.displayMainMenu = false;  };
             // Create the button new game
-            Add(MainMenu.NewButton("New game", _font, new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f), callback));
+            Add(MainMenu.NewButton("New game", _font, new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f), callback, false));
             
             // Action of settings
             callback = () => { 
                 animationStarted = true; 
-                //Settings.SetDefautlValue();
+                Settings.SetDefautlValue();
                 Game1.self.settingsMenu = new SettingsMenu( position,  background, Game1.self._arrowButton, font);
             };
             // Create the button new game
-            Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback));
+            Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback, false));
 
             // Action of quit
             callback = () => { QuitProgram.isQuit = true; };
             // Create the button quit
-            Add(MainMenu.NewButton("Quit", _font, GetButtonPosition(), callback));
+            Add(MainMenu.NewButton("Quit", _font, GetButtonPosition(), callback, false));
             
             // Action of join
             callback = () => { animationStarted = true; };
             // Create the button join
-            Add(MainMenu.NewButton("Join", _font, new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f), callback));
+            Add(MainMenu.NewButton("Join", _font, new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f), callback, false));
         }
 
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
@@ -163,11 +163,11 @@ namespace _13thHauntedStreet
         /// <param name="position"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        static ItemButton NewButton(string text, SpriteFont font, Vector2 position, Action callback)
+        static ItemButton NewButton(string text, SpriteFont font, Vector2 position, Action callback, bool DrawImageText)
         {
             Texture2D buttonTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
 
-            return new ItemButton(buttonTexture, font, callback)
+            return new ItemButton(buttonTexture, font, callback, DrawImageText)
             {
                 Text = text,
                 Position = position,

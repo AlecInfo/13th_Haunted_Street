@@ -471,5 +471,49 @@ namespace _13thHauntedStreet
         }
         #endregion
 
+        #region Get the control title
+
+        public static string GetTitleMoveUp()
+        {
+            return "Move Up";
+        }
+        public static string GetTitleMoveLeft()
+        {
+            return "Move Left";
+        }
+        public static string GetTitleMoveDown()
+        {
+            return "Move down";
+        }
+        public static string GetTitleMoveRight()
+        {
+            return "Move right";
+        }
+        public static string GetTitleChangeWeapons()
+        {
+            return "Change weapons";
+        }
+        public static string GetTitleWeaponOne()
+        {
+            return "Equip weapon one";
+        }
+        public static string GetTitleWeaponTwo()
+        {
+            return "Equip weapon two";
+        }
+        public static string GetTitleAttack()
+        {
+            return "Attack";
+        }
+        public static string GetTitleTransform()
+        {
+            return "Transform";
+        }
+        public static string GetTitleDetransform()
+        {
+            return "Detransform";
+        }
+
+        #endregion
     }
 }
