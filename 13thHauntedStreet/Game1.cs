@@ -59,6 +59,8 @@ namespace _13thHauntedStreet
 
         public Texture2D _arrowButton;
 
+        public Texture2D _controlButton;
+
         private SpriteFont _font;
 
         public static Texture2D defaultTexture;
@@ -136,6 +138,7 @@ namespace _13thHauntedStreet
 
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
             _arrowButton = Content.Load<Texture2D>("TempFiles/arrow");
+            _controlButton = Content.Load<Texture2D>("TempFiles/buttonControl");
             _font = Content.Load<SpriteFont>("TempFiles/theFont");
 
             _mainMenu = new MainMenu(Vector2.Zero, _backgroundMainMenu, _font);

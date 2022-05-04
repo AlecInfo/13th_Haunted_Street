@@ -17,6 +17,7 @@ namespace _13thHauntedStreet
 {
     public class Screen
     {
+
         #region Varriables
 
         private static Screen instance;
@@ -96,7 +97,7 @@ namespace _13thHauntedStreet
         public void Update(GameTime gameTime)
         {
             // Get the scale of the screen
-            this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width); ;
+            this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width);
 
             // Put in windowed
             if (!this._windowsIsChanged && !this.WindowsSizeIsEqualScreenSize())
@@ -114,6 +115,8 @@ namespace _13thHauntedStreet
                 // Change the size
                 Game1.graphics.PreferredBackBufferWidth = (int)this.EditSize.X;
                 Game1.graphics.PreferredBackBufferHeight = (int)this.EditSize.Y;
+
+                this._scale = 1f / ((float)this.RenderTarget.Width /(int)EditSize.X);
             }
 
             // Put in full screen
@@ -123,14 +126,18 @@ namespace _13thHauntedStreet
                 _window.IsBorderless = true;
                 _window.AllowUserResizing = false;
                 this._windowsIsChanged = true;
+
             }
 
             // When the user can't modify the window
             if (!_window.AllowUserResizing)
             {
-                // Change de window size
+                // Change the window size
                 Game1.graphics.PreferredBackBufferWidth = (int)EditSize.X;
-                Game1.graphics.PreferredBackBufferHeight = (int)EditSize.Y;               
+                Game1.graphics.PreferredBackBufferHeight = (int)EditSize.Y;
+
+                //this._scale = 1f / ((float)this.RenderTarget.Width / Game1.graphics.GraphicsDevice.Viewport.Width);
+                //this._scale = _scale + 1;
             }
 
             // Apply the change size of the window
