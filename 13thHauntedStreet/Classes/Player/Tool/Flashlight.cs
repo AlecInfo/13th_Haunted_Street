@@ -26,8 +26,10 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Flashlight()
+        public Flashlight(Texture2D icon)
         {
+            this.icon = icon;
+
             this.light = new Spotlight
             {
                 Scale = new Vector2(1000, 850),
@@ -75,7 +77,7 @@ namespace _13thHauntedStreet
         {
             spriteBatch.Draw(Game1.flashlightIcon, playerPosition + this.position, null, this._isLit?Color.White:Color.Gray, this.angle, Game1.flashlightIcon.Bounds.Center.ToVector2(), 4, 0, 1f);
 
-            //spriteBatch.Draw(Game1.flashlightFrameIcon, );
+            spriteBatch.Draw(this.icon, Game1.self.screen.EditSize - new Vector2(Hunter.UIFRAMEBORDER), null, Color.White, 0f, Game1.uiFrame.Bounds.Size.ToVector2(), Hunter.UIFRAMESCALE, 0, 0);
         }
     }
 }

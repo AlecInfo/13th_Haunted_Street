@@ -16,7 +16,7 @@ namespace _13thHauntedStreet
     abstract class Tool
     {
         // Properties
-        public Texture2D Icon;
+        public Texture2D icon;
         public Vector2 position;
         public Light light;
 

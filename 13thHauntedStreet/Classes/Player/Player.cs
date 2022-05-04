@@ -50,7 +50,7 @@ namespace _13thHauntedStreet
                 // add tool light if player is hunter
                 if (this.GetType() == typeof(Hunter))
                 {
-                    lights.Add((this as Hunter).tool.light);
+                    lights.Add((this as Hunter).currentTool.light);
                 }
 
                 return lights;

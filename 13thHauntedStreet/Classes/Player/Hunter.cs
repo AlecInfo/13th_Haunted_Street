@@ -17,14 +17,18 @@ namespace _13thHauntedStreet
     {
         // Properties
         private bool hasReleasedItemKey = true;
-        private List<Tool> tools = new List<Tool>();
-        public Tool tool;
+        private Tool[] tools = new Tool[2];
+        public int currentToolNb = 0;
+        public const int UIFRAMEBORDER = 50;
+        public const float UIFRAMESCALE = 1.5f;
 
         private const float MOVEMENTSPEED = 0.3f;
 
         private HunterAnimationManager _animManager;
 
         private Game1.direction _currentDirection = Game1.direction.down;
+
+        public Tool currentTool { get { return this.tools[this.currentToolNb]; } }
 
 
         // Ctor
@@ -52,9 +56,8 @@ namespace _13thHauntedStreet
             };
 
             // Tools
-            this.tools.Add(new Flashlight());
-            this.tools.Add(new Vacuum());
-            this.tool = this.tools[0];
+            this.tools[0] = new Flashlight(Game1.flashlightFrameIcon);
+            this.tools[1] = new Vacuum(Game1.vacuumFrameIcon);
         }
 
 
@@ -74,7 +77,7 @@ namespace _13thHauntedStreet
                 this.UpdatePosition();
             }
 
-            this.tool.Update(gameTime, this.position);
+            this.tools[this.currentToolNb].Update(gameTime, this.position);
 
             this.UpdateAnim();
         }
@@ -156,39 +159,12 @@ namespace _13thHauntedStreet
         /// <remarks>Differs from ReakKey() because this method is Hunter only</remarks>
         private void ReadItemChangingKey()
         {
-            int? index = null;
 
-            // Item Up Key
-            if (Keyboard.GetState().IsKeyDown(Game1.input.ItemUp) && this.hasReleasedItemKey)
+            // Item Up or Down Key
+            if ((Keyboard.GetState().IsKeyDown(Game1.input.ItemUp) || Keyboard.GetState().IsKeyDown(Game1.input.ItemDown)) && this.hasReleasedItemKey)
             {
                 this.hasReleasedItemKey = false;
-
-                index = tools.FindIndex(x => x == this.tool) + 1;
-            }
-
-            // Item Down Key
-            if (Keyboard.GetState().IsKeyDown(Game1.input.ItemDown) && this.hasReleasedItemKey)
-            {
-                this.hasReleasedItemKey = false;
-
-                index = tools.FindIndex(x => x == this.tool) - 1;
-            }
-
-            // if index not null
-            if(!(index is null))
-            {
-                // check if too high or too low
-                if (index == tools.Count)
-                {
-                    index = 0;
-                }
-                else if (index < 0)
-                {
-                    index = tools.Count - 1;
-                }
-                
-                // then apply changement
-                this.tool = this.tools[index ?? default(int)];
+                this.currentToolNb = this.currentToolNb == 0 ? 1 : 0;
             }
 
             // Release Key
@@ -207,10 +183,29 @@ namespace _13thHauntedStreet
 
         public override void DrawUI(SpriteBatch spriteBatch)
         {
-            tool.Draw(spriteBatch, this.position);
+            tools[this.currentToolNb].Draw(spriteBatch, this.position);
 
-            // Draw item frame
-            spriteBatch.Draw(Game1.UiFrame, Game1.self.screen.EditSize/*-Game1.UiFrame.Bounds.Size.ToVector2()*/, null, Color.White, 0f, Game1.UiFrame.Bounds.Center.ToVector2(), 2, 0, 0);
+            // Draw main item frame
+            spriteBatch.Draw(Game1.uiFrame, 
+                Game1.self.screen.EditSize - new Vector2(UIFRAMEBORDER),
+                null, Color.White, 0f, 
+                Game1.uiFrame.Bounds.Size.ToVector2(),
+                UIFRAMESCALE, 0, 0);
+
+            // Draw secondary item
+            int otherToolNb = this.currentToolNb==0?1:0;
+
+            spriteBatch.Draw(this.tools[otherToolNb].icon,
+                Game1.self.screen.EditSize - new Vector2(Game1.uiFrame.Bounds.Size.X * UIFRAMESCALE + UIFRAMEBORDER * 1.5f, UIFRAMEBORDER),
+                null, Color.White, 0f,
+                this.tools[otherToolNb].icon.Bounds.Size.ToVector2(),
+                ((float)Game1.uiSmallFrame.Bounds.Size.X / (float)Game1.uiFrame.Bounds.Size.X)*UIFRAMESCALE, 0, 0);
+
+            spriteBatch.Draw(Game1.uiSmallFrame, 
+                Game1.self.screen.EditSize - new Vector2(Game1.uiFrame.Bounds.Size.X*UIFRAMESCALE + UIFRAMEBORDER * 1.5f, UIFRAMEBORDER),
+                null, Color.White, 0f,
+                Game1.uiSmallFrame.Bounds.Size.ToVector2(),
+                UIFRAMESCALE, 0, 0);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace _13thHauntedStreet
 
         public bool showFps;
 
-        public int limitedFps /*= Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()])*/;
+        public int limitedFps;
 
         public static float previusLimitedFps;
 
@@ -73,7 +73,8 @@ namespace _13thHauntedStreet
         public static Texture2D vacuumIconOff;
         public static Texture2D vacuumIconOn;
         public static Texture2D vacuumFrameIcon;
-        public static Texture2D UiFrame;
+        public static Texture2D uiFrame;
+        public static Texture2D uiSmallFrame;
 
         // Furnitures
         private Texture2D bedTexture;
@@ -100,17 +101,10 @@ namespace _13thHauntedStreet
 
             self = this;
 
-            // Set the default parameters like the refresh rate, music volume or fullscreen
-            Settings.SetDefautlValue();
-
             // Set the fps to 60
             IsFixedTimeStep = true;
 
-            limitedFps = Convert.ToInt32(Settings.getValuesRefreshRate()[Settings.getRefreshRateID()]);
-
-            TargetElapsedTime = TimeSpan.FromSeconds(1f / limitedFps);
-
-            previusLimitedFps = limitedFps;
+            previusLimitedFps = 60 ;
 
             // Set the windows
             IsMouseVisible = true;
@@ -168,12 +162,13 @@ namespace _13thHauntedStreet
             crosshair = Content.Load<Texture2D>("TempFiles/crosshair");
             Mouse.SetCursor(MouseCursor.FromTexture2D(crosshair, crosshair.Bounds.Center.X, crosshair.Bounds.Center.Y));
 
-            flashlightIcon = Content.Load<Texture2D>("TempFiles/flashlightIcon");
-            flashlightFrameIcon = Content.Load<Texture2D>("TempFiles/flashlightFrameIcon");
-            vacuumIconOff = Content.Load<Texture2D>("TempFiles/VacuumOff");
-            vacuumIconOn = Content.Load<Texture2D>("TempFiles/VacuumOn");
-            vacuumFrameIcon = Content.Load<Texture2D>("TempFiles/vacuumFrameIcon");
-            UiFrame = Content.Load<Texture2D>("TempFiles/frame");
+            flashlightIcon = Content.Load<Texture2D>("TempFiles/Ui/Hunter/flashlightIcon");
+            flashlightFrameIcon = Content.Load<Texture2D>("TempFiles/Ui/Hunter/flashlightFrameIcon");
+            vacuumIconOff = Content.Load<Texture2D>("TempFiles/Ui/Hunter/vacuumOff");
+            vacuumIconOn = Content.Load<Texture2D>("TempFiles/Ui/Hunter/vacuumOn");
+            vacuumFrameIcon = Content.Load<Texture2D>("TempFiles/Ui/Hunter/vacuumFrameIcon");
+            uiFrame = Content.Load<Texture2D>("TempFiles/Ui/Hunter/frame");
+            uiSmallFrame = Content.Load<Texture2D>("TempFiles/Ui/Hunter/frame2");
 
             input = Input.GetInstance();
             input.Left = Keys.A;
@@ -225,6 +220,9 @@ namespace _13thHauntedStreet
 
                 return result;
             }
+
+            // Set the default parameters like the refresh rate, music volume or fullscreen
+            Settings.SetDefautlValue();
         }
 
         protected override void Update(GameTime gameTime)

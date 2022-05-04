@@ -65,5 +65,17 @@ namespace _13thHauntedStreet
                 }
             }
         }
+
+        /// <summary>
+        /// Trasfert the dictionary parameters for saveing it
+        /// </summary>
+        /// <param name="parameters"></param>
+        public override void ConstructParameterList(ref Dictionary<string, string> parameters)
+        {
+            foreach (var item in this.listItems)
+            {
+                item.ConstructParameterList(ref parameters);
+            }
+        }
     }
 }

@@ -25,11 +25,13 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Vacuum()
+        public Vacuum(Texture2D icon)
         {
+            this.icon = icon;
+
             this.light = new Spotlight
             {
-                Scale = new Vector2(1000, 600),
+                Scale = new Vector2(1000, 500),
                 Position = Vector2.Zero,
                 ShadowType = ShadowType.Occluded,
                 Radius = 25,
@@ -70,6 +72,8 @@ namespace _13thHauntedStreet
         public override void Draw(SpriteBatch spriteBatch, Vector2 playerPosition) 
         {
             spriteBatch.Draw(this._isOn?Game1.vacuumIconOn:Game1.vacuumIconOff, playerPosition + this.position, null, Color.White, this.angle, Game1.vacuumIconOff.Bounds.Center.ToVector2(), 3, 0, 1f);
+
+            spriteBatch.Draw(this.icon, Game1.self.screen.EditSize - new Vector2(Hunter.UIFRAMEBORDER), null, Color.White, 0f, Game1.uiFrame.Bounds.Size.ToVector2(), Hunter.UIFRAMESCALE, 0, 0);
         }
     }
 }

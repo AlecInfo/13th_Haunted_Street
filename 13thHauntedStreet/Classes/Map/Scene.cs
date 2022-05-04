@@ -63,14 +63,14 @@ namespace _13thHauntedStreet
                     // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
                     if (isInside(furniture, player))
                     {
-                        if (!hunter.tool.light.IgnoredHulls.Contains(furniture.hull))
+                        if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
                         {
-                            hunter.tool.light.IgnoredHulls.Add(furniture.hull);
+                            hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
                         }
                     }
                     else
                     {
-                        hunter.tool.light.IgnoredHulls.Remove(furniture.hull);
+                        hunter.currentTool.light.IgnoredHulls.Remove(furniture.hull);
                     }
                 }
             }
