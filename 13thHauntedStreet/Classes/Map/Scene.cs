@@ -25,12 +25,13 @@ namespace _13thHauntedStreet
 
         public Player player;
         public List<Furniture> furnitureList;
+        public List<Lantern> lanternList;
 
 
         // Ctor
-        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList) { }
+        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList, lanternList) { }
 
-        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList)
+        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList)
         {
             this._ground = ground;
             this.walls = walls;
@@ -40,6 +41,7 @@ namespace _13thHauntedStreet
 
             this.player = player;
             this.furnitureList = furnitureList;
+            this.lanternList = lanternList;
         }
 
 
@@ -73,6 +75,17 @@ namespace _13thHauntedStreet
                         hunter.currentTool.light.IgnoredHulls.Remove(furniture.hull);
                     }
                 }
+            }
+
+            // Update lanterns
+            foreach (Lantern lantern in this.lanternList)
+            {
+                if (lantern.isOn)       
+                {
+                    Game1.penumbra.Lights.Add(lantern.light);
+                }
+
+                lantern.Update(gameTime);
             }
         }
 
@@ -132,6 +145,11 @@ namespace _13thHauntedStreet
                 ghost.Draw(spriteBatch);
             }
 
+            // Draw Lanterns
+            foreach (Lantern lantern in this.lanternList)
+            {
+                lantern.Draw(spriteBatch);
+            }
 
             // draw collision box
             //spriteBatch.Draw(Game1.defaultTexture, this.walls, null, Color.Purple * 0.5f);

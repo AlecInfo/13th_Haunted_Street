@@ -31,7 +31,7 @@ namespace _13thHauntedStreet
 
             this.light = new Spotlight
             {
-                Scale = new Vector2(1000, 500),
+                Scale = new Vector2(600, 300),
                 Position = Vector2.Zero,
                 ShadowType = ShadowType.Occluded,
                 Radius = 25,

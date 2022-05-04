@@ -201,8 +201,8 @@ namespace _13thHauntedStreet
 
             testMap = new Map(player,
                 new List<Scene>() {
-                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList),
-                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>())
+                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
+                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
                 }
             );
 
