@@ -159,16 +159,15 @@ namespace _13thHauntedStreet
         /// <remarks>Differs from ReakKey() because this method is Hunter only</remarks>
         private void ReadItemChangingKey()
         {
-
             // Item Up or Down Key
-            if ((Keyboard.GetState().IsKeyDown(Game1.input.ItemUp) || Keyboard.GetState().IsKeyDown(Game1.input.ItemDown)) && this.hasReleasedItemKey)
+            if ((Game1.knm.isButtonPressed(Game1.input.ItemUp) || Game1.knm.isButtonPressed(Game1.input.ItemDown)) && this.hasReleasedItemKey)
             {
                 this.hasReleasedItemKey = false;
                 this.currentToolNb = this.currentToolNb == 0 ? 1 : 0;
             }
 
             // Release Key
-            if (Keyboard.GetState().IsKeyUp(Game1.input.ItemUp) && Keyboard.GetState().IsKeyUp(Game1.input.ItemDown))
+            if (!Game1.knm.isButtonPressed(Game1.input.ItemUp) && !Game1.knm.isButtonPressed(Game1.input.ItemDown))
             {
                 this.hasReleasedItemKey = true;
             }
@@ -187,7 +186,7 @@ namespace _13thHauntedStreet
 
             // Draw main item frame
             spriteBatch.Draw(Game1.uiFrame, 
-                Game1.self.screen.EditSize - new Vector2(UIFRAMEBORDER),
+                Screen.OriginalScreenSize - new Vector2(UIFRAMEBORDER),
                 null, Color.White, 0f, 
                 Game1.uiFrame.Bounds.Size.ToVector2(),
                 UIFRAMESCALE, 0, 0);
@@ -196,13 +195,13 @@ namespace _13thHauntedStreet
             int otherToolNb = this.currentToolNb==0?1:0;
 
             spriteBatch.Draw(this.tools[otherToolNb].icon,
-                Game1.self.screen.EditSize - new Vector2(Game1.uiFrame.Bounds.Size.X * UIFRAMESCALE + UIFRAMEBORDER * 1.5f, UIFRAMEBORDER),
+                Screen.OriginalScreenSize - new Vector2(Game1.uiFrame.Bounds.Size.X * UIFRAMESCALE + UIFRAMEBORDER * 1.5f, UIFRAMEBORDER),
                 null, Color.White, 0f,
                 this.tools[otherToolNb].icon.Bounds.Size.ToVector2(),
                 ((float)Game1.uiSmallFrame.Bounds.Size.X / (float)Game1.uiFrame.Bounds.Size.X)*UIFRAMESCALE, 0, 0);
 
-            spriteBatch.Draw(Game1.uiSmallFrame, 
-                Game1.self.screen.EditSize - new Vector2(Game1.uiFrame.Bounds.Size.X*UIFRAMESCALE + UIFRAMEBORDER * 1.5f, UIFRAMEBORDER),
+            spriteBatch.Draw(Game1.uiSmallFrame,
+                Screen.OriginalScreenSize - new Vector2(Game1.uiFrame.Bounds.Size.X*UIFRAMESCALE + UIFRAMEBORDER * 1.5f, UIFRAMEBORDER),
                 null, Color.White, 0f,
                 Game1.uiSmallFrame.Bounds.Size.ToVector2(),
                 UIFRAMESCALE, 0, 0);

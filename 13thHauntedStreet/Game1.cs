@@ -9,7 +9,7 @@ using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    public class Game1 : Game
+    public partial class Game1 : Game
     {
         // Graphics, spriteBatch and Penumbra
         public static GraphicsDeviceManager graphics; 
@@ -20,7 +20,8 @@ namespace _13thHauntedStreet
         public static PenumbraComponent penumbra;
 
         private QuitProgram _quit = new QuitProgram();
-        
+
+        public static KnM knm = new KnM();
         public static Input input;
         public enum direction
         {
@@ -42,7 +43,7 @@ namespace _13thHauntedStreet
         public int limitedFps;
 
         public static float previusLimitedFps;
-
+         
         // Sound Volume
         public float sfxVolume;
 
@@ -174,13 +175,13 @@ namespace _13thHauntedStreet
             uiSmallFrame = Content.Load<Texture2D>("TempFiles/Ui/Hunter/frame2");
 
             input = Input.GetInstance();
-            input.Left = Keys.A;
-            input.Right = Keys.D;
-            input.Up = Keys.W;
-            input.Down = Keys.S;
-            input.Use1 = Keys.E;
-            input.ItemUp = Keys.Up;
-            input.ItemDown = Keys.Down;
+            input.Left = KnMButtons.A;
+            input.Right = KnMButtons.D;
+            input.Up = KnMButtons.W;
+            input.Down = KnMButtons.S;
+            input.Use1 = KnMButtons.LeftClick;
+            input.ItemUp = KnMButtons.ScrollUp;
+            input.ItemDown = KnMButtons.ScrollDown;
 
             player = new Hunter(
                 new Vector2(500, 500),
@@ -208,7 +209,6 @@ namespace _13thHauntedStreet
 
             testMap.doorList.Add(new Door(direction.up, testMap.listScenes[0]));
             testMap.doorList.Add(new Door(direction.down, testMap.listScenes[1]));
-            //testMap.doorList[0].connectedDoor = testMap.doorList[1];
             Door.connectDoors(testMap.doorList[0], testMap.doorList[1]);
 
 
@@ -257,6 +257,8 @@ namespace _13thHauntedStreet
 
                 testMap.Update(gameTime);
             }
+
+            knm.Update();
 
             base.Update(gameTime);
         }

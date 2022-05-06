@@ -28,15 +28,15 @@ namespace _13thHauntedStreet
 
 
         // Directional
-        public Keys Up;
-        public Keys Down;
-        public Keys Left;
-        public Keys Right;
+        public Game1.KnMButtons Up;
+        public Game1.KnMButtons Down;
+        public Game1.KnMButtons Left;
+        public Game1.KnMButtons Right;
 
         // Uses
-        public Keys Use1;
-        public Keys Use2;
-        public Keys ItemUp;
-        public Keys ItemDown;
+        public Game1.KnMButtons Use1;
+        public Game1.KnMButtons Use2;
+        public Game1.KnMButtons ItemUp;
+        public Game1.KnMButtons ItemDown;
     }
 }

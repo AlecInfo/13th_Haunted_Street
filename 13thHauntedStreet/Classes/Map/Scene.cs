@@ -54,27 +54,42 @@ namespace _13thHauntedStreet
             // lights
             Game1.penumbra.Lights.AddRange(player.lights);
 
-            // Update furniture hulls (hunter only)
-            if (player.GetType() == typeof(Hunter))
+            foreach (Furniture furniture in this.furnitureList)
             {
-                Hunter hunter = (player as Hunter);
-                foreach (Furniture furniture in this.furnitureList)
-                {
-                    Game1.penumbra.Hulls.Add(furniture.hull);
+                Game1.penumbra.Hulls.Add(furniture.hull);
 
+                // Update furniture hulls (hunter only)
+                /*if (player.GetType() == typeof(Hunter))
+                {*/
+                    //Hunter hunter = (player as Hunter);
                     // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
                     if (isInside(furniture, player))
                     {
-                        if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
+                        if(player.GetType() == typeof(Hunter))
                         {
-                            hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
+                            Hunter hunter = player as Hunter;
+                            if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
+                            {
+                                hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
+                            }
+                        }
+                        else
+                        {
+                            Ghost ghost = player as Ghost;
+                            if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
+                            {
+                                ghost.light.IgnoredHulls.Add(furniture.hull);
+                            }
                         }
                     }
                     else
                     {
-                        hunter.currentTool.light.IgnoredHulls.Remove(furniture.hull);
-                    }
+                        if (player.GetType() == typeof(Hunter))
+                            (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
+                        else
+                            (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
                 }
+                //}
             }
 
             // Update lanterns

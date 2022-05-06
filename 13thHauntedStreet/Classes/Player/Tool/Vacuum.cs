@@ -57,13 +57,12 @@ namespace _13thHauntedStreet
 
         protected override void Use() 
         {
-            KeyboardState kbdState = Keyboard.GetState();
-            if (kbdState.IsKeyDown(Game1.input.Use1))
+            if (Game1.knm.isButtonPressed(Game1.input.Use1))
             {
                 this._isOn = true;
             }
 
-            if (kbdState.IsKeyUp(Game1.input.Use1))
+            if (!Game1.knm.isButtonPressed(Game1.input.Use1))
             {
                 this._isOn = false;
             }
@@ -73,7 +72,7 @@ namespace _13thHauntedStreet
         {
             spriteBatch.Draw(this._isOn?Game1.vacuumIconOn:Game1.vacuumIconOff, playerPosition + this.position, null, Color.White, this.angle, Game1.vacuumIconOff.Bounds.Center.ToVector2(), 3, 0, 1f);
 
-            spriteBatch.Draw(this.icon, Game1.self.screen.EditSize - new Vector2(Hunter.UIFRAMEBORDER), null, Color.White, 0f, Game1.uiFrame.Bounds.Size.ToVector2(), Hunter.UIFRAMESCALE, 0, 0);
+            spriteBatch.Draw(this.icon, Screen.OriginalScreenSize - new Vector2(Hunter.UIFRAMEBORDER), null, Color.White, 0f, Game1.uiFrame.Bounds.Size.ToVector2(), Hunter.UIFRAMESCALE, 0, 0);
         }
     }
 }
