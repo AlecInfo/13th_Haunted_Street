@@ -23,13 +23,29 @@ namespace _13thHauntedStreet
         public static string fileSave = "BackupMenu.xml";
 
         // Dictionary with the default values
-        private static Dictionary<string, string> defaultValues = new Dictionary<string, string>()
+        private static Dictionary<string, string> _defaultValues = new Dictionary<string, string>()
         {
             { Settings.GetTitleFullscreen(), "Enabled" },
             { Settings.GetTitleRefreshRate(), "60" },
             { Settings.GetTitleRefreshRateDisplay(), "Disabled" },
             { Settings.GetTitleSFXVolume(), "7" },
             { Settings.GetTitleMusicVolume(), "7" },
+        };
+
+
+        // Dictionary with the list of the controls
+        public static Dictionary<string, string> listControls = new Dictionary<string, string>()
+        {
+            { Settings.GetTitleMoveUp(), "W" },
+            { Settings.GetTitleMoveLeft(), "A" },
+            { Settings.GetTitleMoveDown(), "S" },
+            { Settings.GetTitleMoveRight(), "D" },
+            { Settings.GetTitleChangeWeapons(), "Scroll mouse" },
+            { Settings.GetTitleWeaponOne(), "1" },
+            { Settings.GetTitleWeaponTwo(), "2" },
+            { Settings.GetTitleAttack(), "Left click" },
+            { Settings.GetTitleTransform(), "Right click" },
+            { Settings.GetTitleDetransform(), "Left click" },
         };
 
         #endregion
@@ -46,9 +62,28 @@ namespace _13thHauntedStreet
 
         private static string _musicVolume;
 
-        #endregion
-        
 
+        private static string _moveUp;
+
+        private static string _moveLeft;
+
+        private static string _moveDown;
+
+        private static string _moveRight;
+
+        private static string _changeWeapon;
+
+        private static string _weaponOne;
+
+        private static string _weaponTwo;
+
+        private static string _attack;
+
+        private static string _transform;
+
+        private static string _detrasform;
+
+        #endregion
 
         /// <summary>
         /// This method allows to return the id from the default value according to the list of value,
@@ -97,7 +132,7 @@ namespace _13thHauntedStreet
             else
             {
                 // Apply the default values 
-                ChangeValues(defaultValues);
+                ChangeValues(_defaultValues);
             }
 
         }
@@ -131,6 +166,46 @@ namespace _13thHauntedStreet
                 {
                     _musicVolume = item.Value;
                     MusicVolumeAction(item.Value);
+                }
+                else if (item.Key == Settings.GetTitleMoveUp())
+                {
+                    _moveUp = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleMoveLeft())
+                {
+                    _moveLeft = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleMoveDown())
+                {
+                    _moveDown = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleMoveRight())
+                {
+                    _moveRight = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleChangeWeapons())
+                {
+                    _changeWeapon = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleWeaponOne())
+                {
+                    _weaponOne = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleWeaponTwo())
+                {
+                    _weaponTwo = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleAttack())
+                {
+                    _attack = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleTransform())
+                {
+                    _transform = item.Value;
+                }
+                else if (item.Key == Settings.GetTitleDetransform())
+                {
+                    _detrasform = item.Value;
                 }
             }
         }
@@ -179,6 +254,11 @@ namespace _13thHauntedStreet
                 // Get the value and apply the volume
                 MusicVolumeAction(state);
             }
+
+            if (button == "ControlPages")
+            {
+
+            }
         }
 
         #endregion
@@ -202,7 +282,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button full screen
         /// </summary>
         /// <returns></returns>
-        public static string GetTitleFullscreen() 
+        public static string GetTitleFullscreen()
         {
             // Return the title
             return "Full Screen";
@@ -340,7 +420,7 @@ namespace _13thHauntedStreet
         /// This method is the action after clicking the button, it changes whether or not it displays fps
         /// </summary>
         /// <param name="state"></param>
-        public static void RefreshRateDisplayAction(string state)
+        private static void RefreshRateDisplayAction(string state)
         {
             // Display the rifresh rate 
             if (state == "Enabled")
@@ -475,11 +555,11 @@ namespace _13thHauntedStreet
 
         public static string GetTitleMoveUp()
         {
-            return "Move Up";
+            return "Move up";
         }
         public static string GetTitleMoveLeft()
         {
-            return "Move Left";
+            return "Move left";
         }
         public static string GetTitleMoveDown()
         {
@@ -512,6 +592,11 @@ namespace _13thHauntedStreet
         public static string GetTitleDetransform()
         {
             return "Detransform";
+        }
+
+        public static void SetPagesSettingsControls()
+        {
+
         }
 
         #endregion

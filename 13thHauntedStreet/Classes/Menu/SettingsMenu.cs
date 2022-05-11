@@ -27,9 +27,15 @@ namespace _13thHauntedStreet
         #region Variables
         private bool _displayMenuGameplay = true;
 
-        private ItemsMenu menuControl = new ItemsMenu();
+        private ItemsMenu _menuControl = new ItemsMenu();
 
-        private ItemsMenu menuGameplay = new ItemsMenu();
+        private ItemsMenu _menuControlPage = new ItemsMenu();
+
+        private ItemsMenu _menuGameplay = new ItemsMenu();
+
+        private List<ItemsMenu> _listPages = new List<ItemsMenu>();
+
+        private ItemsMenu _listPageElements = new ItemsMenu();
 
         Action callback;
         #endregion
@@ -59,7 +65,8 @@ namespace _13thHauntedStreet
 
             // Action of the back button,
             // which replay the animation and going back to the main menu
-            callback = () => { 
+            callback = () =>
+            {
                 MainMenu.animationStarted = true;
 
                 Dictionary<string, string> parameterList = new Dictionary<string, string>();
@@ -79,32 +86,51 @@ namespace _13thHauntedStreet
 
             // Item list of the gameplay settings
             // The title
-            menuGameplay.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
+            _menuGameplay.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
             // The fullscreen option
-            LineOption(buttonTexture, Settings.GetValuesFullscreen(), Settings.GetTitleFullscreen(), Screen.OriginalScreenSize.Y / 2f, Settings.GetFullscreenID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesFullscreen(), Settings.GetTitleFullscreen(), Screen.OriginalScreenSize.Y / 2.2f, Settings.GetFullscreenID(), _menuGameplay);
             // The refresh rate option
-            LineOption(buttonTexture, Settings.GetValuesRefreshRate(), Settings.GetTitleRefreshRate(), SpacingOption(menuGameplay), Settings.GetRefreshRateID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesRefreshRate(), Settings.GetTitleRefreshRate(), SpacingOption(_menuGameplay), Settings.GetRefreshRateID(), _menuGameplay);
             // The refresh rate display option
-            LineOption(buttonTexture, Settings.GetValuesRefreshRateDisplay(), Settings.GetTitleRefreshRateDisplay(), SpacingOption(menuGameplay), Settings.GetRefreshRateDisplayID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesRefreshRateDisplay(), Settings.GetTitleRefreshRateDisplay(), SpacingOption(_menuGameplay), Settings.GetRefreshRateDisplayID(), _menuGameplay);
             // The effects volume option
-            LineOption(buttonTexture, Settings.GetValuesSFXVolume(), Settings.GetTitleSFXVolume(), SpacingOption(menuGameplay), Settings.GetSFXVolumeID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesSFXVolume(), Settings.GetTitleSFXVolume(), SpacingOption(_menuGameplay), Settings.GetSFXVolumeID(), _menuGameplay);
             // The musics volume option
-            LineOption(buttonTexture, Settings.GetValuesMusicVolume(), Settings.GetTitleMusicVolume(), SpacingOption(menuGameplay), Settings.GetMusicVolumeID(), menuGameplay);
+            LineOption(buttonTexture, Settings.GetValuesMusicVolume(), Settings.GetTitleMusicVolume(), SpacingOption(_menuGameplay), Settings.GetMusicVolumeID(), _menuGameplay);
 
             // Item list of the control settings
             // The title
-            menuControl.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Controls", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
+            _menuControl.Add(SettingsMenu.NewText(Settings.GetTitleSettings() + "Controls", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 3.3f), 1f));
 
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveUp(), Screen.OriginalScreenSize.Y / 2f, "W", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveLeft(), SpacingOption(menuControl), "A", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveDown(), SpacingOption(menuControl), "S", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleMoveRight(), SpacingOption(menuControl), "D", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleChangeWeapons(), SpacingOption(menuControl), "Mouse scroll", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleWeaponOne(), SpacingOption(menuControl), "1", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleWeaponTwo(), SpacingOption(menuControl), "2", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleAttack(), SpacingOption(menuControl), "Left click", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleTransform(), SpacingOption(menuControl), "Left click", menuControl);
-            LineOptionControl(Game1.self._controlButton, Settings.GetTitleDetransform(), SpacingOption(menuControl), "Right click", menuControl);
+            float pos = Screen.OriginalScreenSize.Y / 2.2f;
+
+            int maxRange = 10;
+
+            LineOption(buttonTexture, new List<string>() { "1", "2" }, "", 981, 0, _menuControl);
+
+            int i = 1;
+            foreach (var item in Settings.listControls)
+            {
+                LineOptionControl(Game1.self._controlButton, item.Key, pos, item.Value, _listPageElements);
+
+                pos += 70;
+
+                if (((i % 6) == 0 && i > 0) || i == maxRange)
+                {
+                    _listPages.Add(_listPageElements);
+
+                    pos = Screen.OriginalScreenSize.Y / 2.2f;
+                    _listPageElements = new ItemsMenu();
+                }
+                i += 1;
+            }
+
+            //_menuControlPage.listItems = _listPages[0].listItems;
+
+            foreach (var item in _listPages[0].listItems)
+            { 
+                _menuControlPage.listItems.Add(item);
+            }
         }
 
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
@@ -112,8 +138,9 @@ namespace _13thHauntedStreet
             base.Update(gameTime, screen, ref changePosition);
 
             // Update the menu gameplay or control
-            menuGameplay.Update(gameTime, screen, ref changePosition);
-            menuControl.Update(gameTime, screen, ref changePosition);
+            _menuGameplay.Update(gameTime, screen, ref changePosition);
+            _menuControl.Update(gameTime, screen, ref changePosition);
+            _menuControlPage.Update(gameTime, screen, ref changePosition);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -123,11 +150,12 @@ namespace _13thHauntedStreet
             // Display the menu gameplay or the menu control
             if (_displayMenuGameplay)
             {
-                menuGameplay.Draw(gameTime, spriteBatch);
+                _menuGameplay.Draw(gameTime, spriteBatch);
             }
             else
             {
-                menuControl.Draw(gameTime, spriteBatch);
+                _menuControl.Draw(gameTime, spriteBatch);
+                _menuControlPage.Draw(gameTime, spriteBatch);
             }
         }
 
@@ -150,11 +178,15 @@ namespace _13thHauntedStreet
             float posX = Screen.OriginalScreenSize.X / 0.79f;
 
             // The value of the button
-            ItemOption typeScreen = SettingsMenu.NewOption(listValue, _font, new Vector2(posX + 105, positionY), scale, defaultValue, titleOption);
+            ItemLineOption typeScreen = SettingsMenu.NewOption(listValue, _font, new Vector2(posX + 105, positionY), scale, defaultValue, titleOption);
 
             // Left button 
             // The action of this
-            Action callback = () => { typeScreen.Left(); Settings.ButtonAction(titleOption, typeScreen.GetValue()); };
+            Action callback = () => { 
+                typeScreen.Left(); 
+                Settings.ButtonAction(titleOption, typeScreen.GetValue()); 
+                ChangePage(Convert.ToInt32(typeScreen.GetValue())-1);  
+            };
             Func<bool> enabledButton = () => typeScreen.IsLeft();
             // Add the left button
             addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(posX, positionY), buttonTexture, Color.White, scale, SpriteEffects.None, callback, enabledButton, false, scale));
@@ -167,7 +199,11 @@ namespace _13thHauntedStreet
 
             // Right button
             // The action of this
-            callback = () => { typeScreen.Right(); Settings.ButtonAction(titleOption, typeScreen.GetValue()); };
+            callback = () => { 
+                typeScreen.Right(); 
+                Settings.ButtonAction(titleOption, typeScreen.GetValue()); 
+                ChangePage(Convert.ToInt32(typeScreen.GetValue())-1); 
+            };
             enabledButton = () => typeScreen.IsRight();
             // Add the right button
             addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(posX + 170, positionY), buttonTexture, Color.White, scale, SpriteEffects.FlipHorizontally, callback, enabledButton, false, scale));
@@ -182,16 +218,49 @@ namespace _13thHauntedStreet
             // The position x
             float posX = Screen.OriginalScreenSize.X / 0.79f;
 
+            ItemCatchOption buttonAction = SettingsMenu.NewCatch(null, _font);
+
             // The title of the line which adapts its position according to the position of the button
             addingOption.Add(SettingsMenu.NewText(titleOption, _font, new Vector2(posX - this._font.MeasureString(titleOption).X * scaleText - 20, positionY), scaleText));
 
             // The button
             // The action of this
-            Action callback = () => { MainMenu.animationStarted = true; };
+            Action callback = () => { buttonAction.Catch(); };
             Func<bool> enabledButton = () => false;
             addingOption.Add(SettingsMenu.NewButton(defaultValue, _font, new Vector2(posX, positionY), buttonTexture, Color.Black, scaleButton, SpriteEffects.None, callback, enabledButton, true, scaleText));
 
             
+        }
+
+        public void ChangePage(int pageNumber)
+        {
+            float posX = _menuControlPage.listItems[1].Position.X;
+
+            for (int i = _menuControlPage.listItems.Count - 1; i >= 0; i--)
+            {
+                _menuControlPage.listItems.RemoveAt(i);
+            }
+
+            int cpt = 0;
+
+            foreach (var item in _listPages[pageNumber].listItems)
+            {
+                if (cpt % 2 == 0)
+                {
+                    item.Position = new Vector2(posX - this._font.MeasureString(item.Text).X * 0.7f - 20, item.Position.Y);
+                }
+                else
+                {
+                    item.Position = new Vector2(posX, item.Position.Y);
+                }
+
+
+                _menuControlPage.listItems.Add(item);
+
+                cpt += 1;
+            }
+
+            //_menuControlPage = _listPages[pageNumber];
         }
 
         /// <summary>
@@ -255,9 +324,9 @@ namespace _13thHauntedStreet
         /// <param name="scale"></param>
         /// <param name="defaultValue"></param>
         /// <returns> itemOption </returns>
-        static ItemOption NewOption(List<string> values, SpriteFont font, Vector2 position, float scale, int defaultValue, string titleOption)
+        static ItemLineOption NewOption(List<string> values, SpriteFont font, Vector2 position, float scale, int defaultValue, string titleOption)
         {
-            return new ItemOption(font, values)
+            return new ItemLineOption(font, values)
             {
                 Position = position,
                 Scale = scale,
@@ -267,14 +336,19 @@ namespace _13thHauntedStreet
             };
         }
 
+        static ItemCatchOption NewCatch(List<string> values, SpriteFont font)
+        {
+            return new ItemCatchOption(font, values) { };
+        }
+
         /// <summary>
         /// This method allows to create the list with menu control and menu gameplay
         /// </summary>
         /// <param name="parameters"></param>
         public override void ConstructParameterList(ref Dictionary<string, string> parameters)
         {
-            this.menuControl.ConstructParameterList(ref parameters);
-            this.menuGameplay.ConstructParameterList(ref parameters);
+            this._menuControl.ConstructParameterList(ref parameters);
+            this._menuGameplay.ConstructParameterList(ref parameters);
         }
     }
 }
