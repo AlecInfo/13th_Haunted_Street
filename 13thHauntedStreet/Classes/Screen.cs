@@ -18,7 +18,7 @@ namespace _13thHauntedStreet
     public class Screen
     {
 
-        #region Varriables
+        #region Variables
 
         private static Screen _instance;
 

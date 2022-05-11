@@ -20,7 +20,7 @@ namespace _13thHauntedStreet
         // Ctor
         public ItemText(SpriteFont font, string text)
         {
-            this._font = font;
+            _font = font;
 
             this.FontColor = Color.Black;
 

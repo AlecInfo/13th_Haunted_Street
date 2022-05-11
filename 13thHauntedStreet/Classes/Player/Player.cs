@@ -36,7 +36,7 @@ namespace _13thHauntedStreet
             {
                 return new Rectangle(
                     this.position.ToPoint() - (this.texture.Bounds.Size.ToVector2() * this.scale / 2).ToPoint(), 
-                    (this.texture.Bounds.Size.ToVector2()/* + this.texture.Bounds.Size.ToVector2() / 2 */* this.scale).ToPoint());
+                    (this.texture.Bounds.Size.ToVector2() * this.scale).ToPoint());
             }
         }
 
@@ -50,7 +50,7 @@ namespace _13thHauntedStreet
                 // add tool light if player is hunter
                 if (this.GetType() == typeof(Hunter))
                 {
-                    lights.Add((this as Hunter).tool.light);
+                    lights.Add((this as Hunter).currentTool.light);
                 }
 
                 return lights;
@@ -67,27 +67,26 @@ namespace _13thHauntedStreet
         /// </summary>
         protected void ReadInput()
         {
-            KeyboardState kbdState = Keyboard.GetState();
             this._movement = Vector2.Zero;
 
             // X
-            if (kbdState.IsKeyDown(Game1.input.Left))
+            if (Game1.knm.isButtonPressed(Game1.input.Left))
             {
                 this._movement.X += -1;
             }
 
-            if (kbdState.IsKeyDown(Game1.input.Right))
+            if (Game1.knm.isButtonPressed(Game1.input.Right))
             {
                 this._movement.X += 1;
             }
 
             // Y
-            if (kbdState.IsKeyDown(Game1.input.Up))
+            if (Game1.knm.isButtonPressed(Game1.input.Up))
             {
                 this._movement.Y += -1;
             }
 
-            if (kbdState.IsKeyDown(Game1.input.Down))
+            if (Game1.knm.isButtonPressed(Game1.input.Down))
             {
                 this._movement.Y += 1;
             }

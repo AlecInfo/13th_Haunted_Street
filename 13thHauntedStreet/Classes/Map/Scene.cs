@@ -25,12 +25,13 @@ namespace _13thHauntedStreet
 
         public Player player;
         public List<Furniture> furnitureList;
+        public List<Lantern> lanternList;
 
 
         // Ctor
-        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList) { }
+        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList, lanternList) { }
 
-        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList)
+        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList)
         {
             this._ground = ground;
             this.walls = walls;
@@ -40,6 +41,7 @@ namespace _13thHauntedStreet
 
             this.player = player;
             this.furnitureList = furnitureList;
+            this.lanternList = lanternList;
         }
 
 
@@ -52,27 +54,53 @@ namespace _13thHauntedStreet
             // lights
             Game1.penumbra.Lights.AddRange(player.lights);
 
-            // Update furniture hulls (hunter only)
-            if (player.GetType() == typeof(Hunter))
+            foreach (Furniture furniture in this.furnitureList)
             {
-                Hunter hunter = (player as Hunter);
-                foreach (Furniture furniture in this.furnitureList)
-                {
-                    Game1.penumbra.Hulls.Add(furniture.hull);
+                Game1.penumbra.Hulls.Add(furniture.hull);
 
+                // Update furniture hulls (hunter only)
+                /*if (player.GetType() == typeof(Hunter))
+                {*/
+                    //Hunter hunter = (player as Hunter);
                     // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
                     if (isInside(furniture, player))
                     {
-                        if (!hunter.tool.light.IgnoredHulls.Contains(furniture.hull))
+                        if(player.GetType() == typeof(Hunter))
                         {
-                            hunter.tool.light.IgnoredHulls.Add(furniture.hull);
+                            Hunter hunter = player as Hunter;
+                            if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
+                            {
+                                hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
+                            }
+                        }
+                        else
+                        {
+                            Ghost ghost = player as Ghost;
+                            if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
+                            {
+                                ghost.light.IgnoredHulls.Add(furniture.hull);
+                            }
                         }
                     }
                     else
                     {
-                        hunter.tool.light.IgnoredHulls.Remove(furniture.hull);
-                    }
+                        if (player.GetType() == typeof(Hunter))
+                            (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
+                        else
+                            (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
                 }
+                //}
+            }
+
+            // Update lanterns
+            foreach (Lantern lantern in this.lanternList)
+            {
+                if (lantern.isOn)       
+                {
+                    Game1.penumbra.Lights.Add(lantern.light);
+                }
+
+                lantern.Update(gameTime);
             }
         }
 
@@ -132,6 +160,11 @@ namespace _13thHauntedStreet
                 ghost.Draw(spriteBatch);
             }
 
+            // Draw Lanterns
+            foreach (Lantern lantern in this.lanternList)
+            {
+                lantern.Draw(spriteBatch);
+            }
 
             // draw collision box
             //spriteBatch.Draw(Game1.defaultTexture, this.walls, null, Color.Purple * 0.5f);

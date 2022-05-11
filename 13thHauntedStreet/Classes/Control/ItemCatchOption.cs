@@ -19,8 +19,6 @@ namespace _13thHauntedStreet
     {
         public ItemCatchOption(SpriteFont font, List<string> values) : base(font, null)
         {
-            this._font = font;
-
             this.listValue = values;
         }
         

@@ -33,7 +33,7 @@ namespace _13thHauntedStreet
 
         public float Scale { get; set; }
 
-        protected SpriteFont _font;
+        protected static SpriteFont _font;
 
         protected float _currentTime;
 
@@ -56,7 +56,7 @@ namespace _13thHauntedStreet
 
             // Draw the text 
             string temp = this.GetValue();
-            spriteBatch.DrawString(this._font, this.GetValue(), new Vector2(Alignement(), this.Position.Y), this.FontColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
+            spriteBatch.DrawString(_font, this.GetValue(), new Vector2(Alignement(), this.Position.Y), this.FontColor, 0f, Vector2.Zero, this.Scale, SpriteEffects.None, 1f);
         }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace _13thHauntedStreet
             {
                 // Align Center
                 case AlignItem.Center:
-                    x = this.Position.X - this._font.MeasureString(this.GetValue()).X * this.Scale / 2;
+                    x = this.Position.X - _font.MeasureString(this.GetValue()).X * this.Scale / 2;
                     break;
 
                 // Align Right
                 case AlignItem.Right:
-                    x = this.Position.X - this._font.MeasureString(this.GetValue()).X * this.Scale;
+                    x = this.Position.X - _font.MeasureString(this.GetValue()).X * this.Scale;
                     break;
 
                 // Align Left

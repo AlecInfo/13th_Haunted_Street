@@ -19,7 +19,7 @@ namespace _13thHauntedStreet
     {
         public ItemLineOption(SpriteFont font, List<string> values) : base(font, null)
         {
-            this._font = font;
+            _font = font;
 
             this.listValue = values;
         }

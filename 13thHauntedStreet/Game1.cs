@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Text;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
 using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    public class Game1 : Game
+    public partial class Game1 : Game
     {
         // Graphics, spriteBatch and Penumbra
         public static GraphicsDeviceManager graphics; 
@@ -22,7 +20,8 @@ namespace _13thHauntedStreet
         public static PenumbraComponent penumbra;
 
         private QuitProgram _quit = new QuitProgram();
-        
+
+        public static KnM knm = new KnM();
         public static Input input;
         public enum direction
         {
@@ -44,7 +43,7 @@ namespace _13thHauntedStreet
         public int limitedFps;
 
         public static float previusLimitedFps;
-
+         
         // Sound Volume
         public float sfxVolume;
 
@@ -73,8 +72,12 @@ namespace _13thHauntedStreet
         private Player player;
         public Texture2D crosshair;
         public static Texture2D flashlightIcon;
+        public static Texture2D flashlightFrameIcon;
         public static Texture2D vacuumIconOff;
         public static Texture2D vacuumIconOn;
+        public static Texture2D vacuumFrameIcon;
+        public static Texture2D uiFrame;
+        public static Texture2D uiSmallFrame;
 
         // Furnitures
         private Texture2D bedTexture;
@@ -87,6 +90,7 @@ namespace _13thHauntedStreet
         private Texture2D ground;
         private Texture2D walls;
         private Map testMap;
+
 
         public Game1()
         {
@@ -162,18 +166,22 @@ namespace _13thHauntedStreet
             crosshair = Content.Load<Texture2D>("TempFiles/crosshair");
             Mouse.SetCursor(MouseCursor.FromTexture2D(crosshair, crosshair.Bounds.Center.X, crosshair.Bounds.Center.Y));
 
-            flashlightIcon = Content.Load<Texture2D>("TempFiles/flashlightIcon");
-            vacuumIconOff = Content.Load<Texture2D>("TempFiles/VacuumOff");
-            vacuumIconOn = Content.Load<Texture2D>("TempFiles/VacuumOn");
+            flashlightIcon = Content.Load<Texture2D>("TempFiles/Ui/Hunter/flashlightIcon");
+            flashlightFrameIcon = Content.Load<Texture2D>("TempFiles/Ui/Hunter/flashlightFrameIcon");
+            vacuumIconOff = Content.Load<Texture2D>("TempFiles/Ui/Hunter/vacuumOff");
+            vacuumIconOn = Content.Load<Texture2D>("TempFiles/Ui/Hunter/vacuumOn");
+            vacuumFrameIcon = Content.Load<Texture2D>("TempFiles/Ui/Hunter/vacuumFrameIcon");
+            uiFrame = Content.Load<Texture2D>("TempFiles/Ui/Hunter/frame");
+            uiSmallFrame = Content.Load<Texture2D>("TempFiles/Ui/Hunter/frame2");
 
             input = Input.GetInstance();
-            input.Left = Keys.A;
-            input.Right = Keys.D;
-            input.Up = Keys.W;
-            input.Down = Keys.S;
-            input.Use1 = Keys.E;
-            input.ItemUp = Keys.Up;
-            input.ItemDown = Keys.Down;
+            input.Left = KnMButtons.A;
+            input.Right = KnMButtons.D;
+            input.Up = KnMButtons.W;
+            input.Down = KnMButtons.S;
+            input.Use1 = KnMButtons.LeftClick;
+            input.ItemUp = KnMButtons.ScrollUp;
+            input.ItemDown = KnMButtons.ScrollDown;
 
             player = new Hunter(
                 new Vector2(500, 500),
@@ -194,14 +202,13 @@ namespace _13thHauntedStreet
 
             testMap = new Map(player,
                 new List<Scene>() {
-                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList),
-                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>())
+                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
+                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
                 }
             );
 
             testMap.doorList.Add(new Door(direction.up, testMap.listScenes[0]));
             testMap.doorList.Add(new Door(direction.down, testMap.listScenes[1]));
-            //testMap.doorList[0].connectedDoor = testMap.doorList[1];
             Door.connectDoors(testMap.doorList[0], testMap.doorList[1]);
 
 
@@ -250,6 +257,8 @@ namespace _13thHauntedStreet
 
                 testMap.Update(gameTime);
             }
+
+            knm.Update();
 
             base.Update(gameTime);
         }

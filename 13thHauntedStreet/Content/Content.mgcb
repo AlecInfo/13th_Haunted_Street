@@ -85,18 +85,6 @@
 /processorParam:TextureFormat=Color
 /build:TempFiles/crosshair.png
 
-#begin TempFiles/flashlightIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:TempFiles/flashlightIcon.png
-
 #begin TempFiles/Furniture/bed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -584,7 +572,7 @@
 /processorParam:TextureFormat=Compressed
 /build:TempFiles/theFont.spritefont
 
-#begin TempFiles/VacuumOff.png
+#begin TempFiles/Ui/Hunter/flashlightFrameIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -594,9 +582,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TempFiles/VacuumOff.png
+/build:TempFiles/Ui/Hunter/flashlightFrameIcon.png
 
-#begin TempFiles/VacuumOn.png
+#begin TempFiles/Ui/Hunter/flashlightIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -606,7 +594,67 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TempFiles/VacuumOn.png
+/build:TempFiles/Ui/Hunter/flashlightIcon.png
+
+#begin TempFiles/Ui/Hunter/frame.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Ui/Hunter/frame.png
+
+#begin TempFiles/Ui/Hunter/frame2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Ui/Hunter/frame2.png
+
+#begin TempFiles/Ui/Hunter/vacuumFrameIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Ui/Hunter/vacuumFrameIcon.png
+
+#begin TempFiles/Ui/Hunter/vacuumOff.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Ui/Hunter/vacuumOff.png
+
+#begin TempFiles/Ui/Hunter/vacuumOn.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TempFiles/Ui/Hunter/vacuumOn.png
 
 #begin TempFiles/Walls.png
 /importer:TextureImporter

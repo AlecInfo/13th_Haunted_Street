@@ -25,27 +25,26 @@ namespace _13thHauntedStreet
         // Dictionary with the default values
         private static Dictionary<string, string> _defaultValues = new Dictionary<string, string>()
         {
-            { Settings.GetTitleFullscreen(), "Enabled" },
-            { Settings.GetTitleRefreshRate(), "60" },
-            { Settings.GetTitleRefreshRateDisplay(), "Disabled" },
-            { Settings.GetTitleSFXVolume(), "7" },
-            { Settings.GetTitleMusicVolume(), "7" },
+            { GetTitleFullscreen(), "Enabled" },
+            { GetTitleRefreshRate(), "60" },
+            { GetTitleRefreshRateDisplay(), "Disabled" },
+            { GetTitleSFXVolume(), "7" },
+            { GetTitleMusicVolume(), "7" },
         };
 
 
         // Dictionary with the list of the controls
         public static Dictionary<string, string> listControls = new Dictionary<string, string>()
         {
-            { Settings.GetTitleMoveUp(), "W" },
-            { Settings.GetTitleMoveLeft(), "A" },
-            { Settings.GetTitleMoveDown(), "S" },
-            { Settings.GetTitleMoveRight(), "D" },
-            { Settings.GetTitleChangeWeapons(), "Scroll mouse" },
-            { Settings.GetTitleWeaponOne(), "1" },
-            { Settings.GetTitleWeaponTwo(), "2" },
-            { Settings.GetTitleAttack(), "Left click" },
-            { Settings.GetTitleTransform(), "Right click" },
-            { Settings.GetTitleDetransform(), "Left click" },
+            { GetTitleMoveUp(), Game1.input.Up.ToString() },
+            { GetTitleMoveLeft(), Game1.input.Left.ToString() },
+            { GetTitleMoveDown(), Game1.input.Down.ToString() },
+            { GetTitleMoveRight(), Game1.input.Right.ToString() },
+            { GetTitleWeaponOne(), Game1.input.ItemUp.ToString() },
+            { GetTitleWeaponTwo(), Game1.input.ItemDown.ToString() },
+            { GetTitleAttack(), Game1.input.Use1.ToString() },
+            { GetTitleTransform(), Game1.input.Use1.ToString() },
+            { GetTitleDetransform(), Game1.input.Use2.ToString() },
         };
 
         #endregion
@@ -61,27 +60,6 @@ namespace _13thHauntedStreet
         private static string _sfxVolume;
 
         private static string _musicVolume;
-
-
-        private static string _moveUp;
-
-        private static string _moveLeft;
-
-        private static string _moveDown;
-
-        private static string _moveRight;
-
-        private static string _changeWeapon;
-
-        private static string _weaponOne;
-
-        private static string _weaponTwo;
-
-        private static string _attack;
-
-        private static string _transform;
-
-        private static string _detrasform;
 
         #endregion
 
@@ -167,46 +145,6 @@ namespace _13thHauntedStreet
                     _musicVolume = item.Value;
                     MusicVolumeAction(item.Value);
                 }
-                else if (item.Key == Settings.GetTitleMoveUp())
-                {
-                    _moveUp = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleMoveLeft())
-                {
-                    _moveLeft = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleMoveDown())
-                {
-                    _moveDown = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleMoveRight())
-                {
-                    _moveRight = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleChangeWeapons())
-                {
-                    _changeWeapon = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleWeaponOne())
-                {
-                    _weaponOne = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleWeaponTwo())
-                {
-                    _weaponTwo = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleAttack())
-                {
-                    _attack = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleTransform())
-                {
-                    _transform = item.Value;
-                }
-                else if (item.Key == Settings.GetTitleDetransform())
-                {
-                    _detrasform = item.Value;
-                }
             }
         }
 
@@ -255,9 +193,10 @@ namespace _13thHauntedStreet
                 MusicVolumeAction(state);
             }
 
-            if (button == "ControlPages")
+            // The action of the change pages button
+            if (button == GetTitlePagesButton())
             {
-
+                SettingsMenu.ChangePage(Convert.ToInt32(state) - 1);
             }
         }
 
@@ -552,6 +491,10 @@ namespace _13thHauntedStreet
         #endregion
 
         #region Get the control title
+        public static string GetTitlePagesButton()
+        {
+            return "Pages Control";
+        }
 
         public static string GetTitleMoveUp()
         {
@@ -569,17 +512,13 @@ namespace _13thHauntedStreet
         {
             return "Move right";
         }
-        public static string GetTitleChangeWeapons()
-        {
-            return "Change weapons";
-        }
         public static string GetTitleWeaponOne()
         {
-            return "Equip weapon one";
+            return "Weapon one";
         }
         public static string GetTitleWeaponTwo()
         {
-            return "Equip weapon two";
+            return "Weapon two";
         }
         public static string GetTitleAttack()
         {
@@ -593,12 +532,8 @@ namespace _13thHauntedStreet
         {
             return "Detransform";
         }
-
-        public static void SetPagesSettingsControls()
-        {
-
-        }
-
         #endregion
+
+
     }
 }

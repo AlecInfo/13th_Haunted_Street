@@ -31,7 +31,7 @@ namespace _13thHauntedStreet
         // Ctor
         public ItemOption(SpriteFont font, List<string> values) : base(font, "")
         {
-            this._font = font;
+            _font = font;
 
             this.listValue = values;
         }
