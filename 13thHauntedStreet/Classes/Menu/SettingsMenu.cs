@@ -368,6 +368,13 @@ namespace _13thHauntedStreet
             };
         }
 
+        /// <summary>
+        /// Under development
+        /// Allows you to get the keyboard and mouse state
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="font"></param>
+        /// <returns></returns>
         static ItemCatchOption NewCatch(List<string> values, SpriteFont font)
         {
             return new ItemCatchOption(font, values) { };

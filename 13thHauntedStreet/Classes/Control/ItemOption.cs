@@ -45,6 +45,10 @@ namespace _13thHauntedStreet
             return listValue[Id];
         }
 
+        /// <summary>
+        /// For the serialization
+        /// </summary>
+        /// <param name="parameters"></param>
         public override void ConstructParameterList(ref Dictionary<string, string> parameters)
         {
             parameters.Add(Name, GetValue());

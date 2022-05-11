@@ -1,6 +1,7 @@
 ﻿/********************************
  * Project : 13th Haunted Street
- * Description : 
+ * Description : Allows you to get the keyboard and mouse state
+ * 
  * Date : 05/05/2022
  * Author : Piette Alec
 *******************************/
@@ -24,7 +25,6 @@ namespace _13thHauntedStreet
         
         public string Catch(bool doThis = false)
         {
-
             return "";
         }
     }

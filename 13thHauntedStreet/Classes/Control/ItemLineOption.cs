@@ -1,6 +1,7 @@
 ﻿/********************************
  * Project : 13th Haunted Street
- * Description : 
+ * Description : When the user click in the button that change the value(ID),
+ *               Create the max range and the user can't go any further.
  * Date : 02/05/2022
  * Author : Piette Alec
 *******************************/
