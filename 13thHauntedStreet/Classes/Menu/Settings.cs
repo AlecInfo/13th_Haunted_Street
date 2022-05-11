@@ -196,6 +196,7 @@ namespace _13thHauntedStreet
             // The action of the change pages button
             if (button == GetTitlePagesButton())
             {
+                // Changes page according to state which is the page number given in parameter
                 SettingsMenu.ChangePage(Convert.ToInt32(state) - 1);
             }
         }
@@ -491,49 +492,110 @@ namespace _13thHauntedStreet
         #endregion
 
         #region Get the control title
-        public static string GetTitlePagesButton()
-        {
-            return "Pages Control";
-        }
 
+        /// <summary>
+        /// This method allows to return the title text of the button move up
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveUp()
         {
             return "Move up";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button move left
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveLeft()
         {
             return "Move left";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button move down
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveDown()
         {
             return "Move down";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button move right
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveRight()
         {
             return "Move right";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button weapon one
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleWeaponOne()
         {
             return "Weapon one";
         }
+        /// <summary>
+        /// This method allows to return the title text of the button weapon two
+        /// </summary>
+        /// <returns></returns>
+
         public static string GetTitleWeaponTwo()
         {
             return "Weapon two";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button attack
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleAttack()
         {
             return "Attack";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button transform
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleTransform()
         {
             return "Transform";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button detransform
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleDetransform()
         {
             return "Detransform";
         }
         #endregion
 
+        #region Get the different value of the nav button between pages
+
+        /// <summary>
+        /// This method allows you to get to retrieve the name of the buttons that allow you to change the page
+        /// </summary>
+        /// <returns></returns>
+        public static string GetTitlePagesButton()
+        {
+            return "Pages Control";
+        }
+
+        /// <summary>
+        /// This method allows you to get the number of elements in a page in the contorl menu
+        /// </summary>
+        /// <returns></returns>
+        public static int GetNumberElementsInPage()
+        {
+            return 6;
+        }
+
+        #endregion
 
     }
 }

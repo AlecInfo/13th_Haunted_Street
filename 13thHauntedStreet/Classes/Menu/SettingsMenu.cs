@@ -1,7 +1,9 @@
 ﻿/********************************
  * Project : 13th Haunted Street
  * Description : This class SettingsMenu allows you to create a parameter menu 
- *               with all the actions and display
+ *               with all the actions and display:
+ *               - the menu gameplay (refresh rate, fullscreen, display refresh rate and the volume)
+ *               - the menu control (all control the game uses)
  * Date : 13/04/2022
  * Author : Piette Alec
 *******************************/
@@ -10,15 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-using PostSharp.Serialization.Serializers;
-using Rebus.Serialization;
-using SharpYaml.Serialization.Serializers;
 
 namespace _13thHauntedStreet
 {
@@ -63,12 +59,13 @@ namespace _13thHauntedStreet
             // Create the button control
             Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
-            // Action of the back button,
-            // which replay the animation and going back to the main menu
+            // Action of the Back button,
             callback = () =>
             {
+                // Which replay the animation and going back to the main menu
                 MainMenu.animationStarted = true;
 
+                // Send the dictionnary to the serialise class
                 Dictionary<string, string> parameterList = new Dictionary<string, string>();
                 this.ConstructParameterList(ref parameterList);
 
@@ -104,37 +101,53 @@ namespace _13thHauntedStreet
 
             float posX = Screen.OriginalScreenSize.Y / 2.2f;
 
+            // Allows you to count the element in to the page
             int elementsNumber = 1;
+
+            // Get the list of controls and create the list with pages, all pages have at most six elements
             foreach (var item in Settings.listControls)
             {
+                // Add the element
                 LineOptionControl(Game1.self._controlButton, item.Key, posX, item.Value, _listPageElements);
 
+                // change the x position so that the next one is below
                 posX += 70;
 
-                if (((elementsNumber % 6) == 0 && elementsNumber > 0) || elementsNumber == Settings.listControls.Count)
+                // If the page contains six elements or if the element is the last
+                if ((elementsNumber % Settings.GetNumberElementsInPage()) == 0 || elementsNumber == Settings.listControls.Count)
                 {
+                    // add the page to the list of pages
                     listPages.Add(_listPageElements);
 
+                    // Reset the x position so that it is at the beginning of the page
                     posX = Screen.OriginalScreenSize.Y / 2.2f;
+                    // Reset the list elements
                     _listPageElements = new ItemsMenu();
                 }
                 elementsNumber += 1;
             }
 
+            // Add in to the menu control page the all element of the page one
             foreach (var item in listPages[0].listItems)
             { 
                 menuControlPage.listItems.Add(item);
             }
 
-
-            List<string> listPagesNumber = new List<string>();
-
-            for (int pageNumber = 1; pageNumber <= listPages.Count; pageNumber++)
+            // If the list of pages is bigger than one, create the button who allows you to change the pages
+            if (listPages.Count > 1)
             {
-                listPagesNumber.Add(pageNumber.ToString());
+                // Create a list with the all page number
+                List<string> listPagesNumber = new List<string>();
+
+                for (int pageNumber = 1; pageNumber <= listPages.Count; pageNumber++)
+                {
+                    listPagesNumber.Add(pageNumber.ToString());
+                }
+
+                // Create the button
+                LineOption(buttonTexture, listPagesNumber, 981, 0, _menuControl, Settings.GetTitlePagesButton());
             }
 
-            LineOption(buttonTexture, listPagesNumber, 981, 0, _menuControl, Settings.GetTitlePagesButton());
         }
 
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
@@ -215,6 +228,14 @@ namespace _13thHauntedStreet
             addingOption.Add(SettingsMenu.NewButton("", _font, new Vector2(posX + 170, positionY), buttonTexture, Color.White, scale, SpriteEffects.FlipHorizontally, callback, enabledButton, false, scale));
         }
 
+        /// <summary>
+        /// Create a line of item with a title and one button, the button as a value 
+        /// </summary>
+        /// <param name="buttonTexture"></param>
+        /// <param name="titleOption"></param>
+        /// <param name="positionY"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="addingOption"></param>
         private void LineOptionControl(Texture2D buttonTexture, string titleOption, float positionY, string defaultValue, ItemsMenu addingOption)
         {
             // The scale text
@@ -238,10 +259,16 @@ namespace _13thHauntedStreet
             
         }
 
+        /// <summary>
+        /// this method allows you to change the page in the control menu
+        /// </summary>
+        /// <param name="pageNumber"></param>
         public static void ChangePage(int pageNumber)
         {
+            // Get the last x position 
             float posX = menuControlPage.listItems[1].Position.X;
 
+            // Remove the all element in the list
             for (int i = menuControlPage.listItems.Count - 1; i >= 0; i--)
             {
                 menuControlPage.listItems.RemoveAt(i);
@@ -249,6 +276,7 @@ namespace _13thHauntedStreet
 
             int cpt = 0;
 
+            // Add all element of the new page to the menuControlPage 
             foreach (var item in listPages[pageNumber].listItems)
             {
                 if (cpt % 2 == 0)
