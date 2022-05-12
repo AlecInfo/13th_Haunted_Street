@@ -13,7 +13,7 @@ using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    class Furniture : GameObject
+    public class Furniture : GameObject
     {
         // Properties
         public Rectangle collisionBox;

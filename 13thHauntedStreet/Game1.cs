@@ -5,6 +5,9 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 using Penumbra;
 
 namespace _13thHauntedStreet
@@ -67,9 +70,9 @@ namespace _13thHauntedStreet
         public static Texture2D defaultTexture;
 
         // Players
-        private GhostAnimationManager ghostAM = new GhostAnimationManager();
-        private HunterAnimationManager hunterAM = new HunterAnimationManager();
-        private Player player;
+        public static GhostAnimationManager ghostAM = new GhostAnimationManager();
+        public static HunterAnimationManager hunterAM = new HunterAnimationManager();
+        public static Player player;
         public Texture2D crosshair;
         public static Texture2D flashlightIcon;
         public static Texture2D flashlightFrameIcon;
@@ -90,6 +93,12 @@ namespace _13thHauntedStreet
         private Texture2D ground;
         private Texture2D walls;
         private Map testMap;
+
+        // Server
+        private int id = 1;
+        public static Client client;
+        public static dataPlayer dataPlayer;
+        public DateTime clientLastUpdate;
 
 
         public Game1()
@@ -149,18 +158,18 @@ namespace _13thHauntedStreet
 
 
             // Ghost
-            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/ghostLeft", 3);
-            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/ghostRight", 3);
+            ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/left/ghostLeft", 3);
+            ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/right/ghostRight", 3);
 
             // Hunter
             hunterAM.walkingLeft = multipleTextureLoader("TempFiles/HunterSprites/walking_left/walking_left", 6);
             hunterAM.walkingRight = multipleTextureLoader("TempFiles/HunterSprites/walking_right/walking_right", 6);
             hunterAM.walkingUp = multipleTextureLoader("TempFiles/HunterSprites/walking_up/walking_up", 6);
             hunterAM.walkingDown = multipleTextureLoader("TempFiles/HunterSprites/walking_down/walking_down", 6);
-            hunterAM.idleLeft.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_left"));
-            hunterAM.idleRight.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_right"));
-            hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_up"));
-            hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_down"));
+            hunterAM.idleLeft.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle_left/idle_left"));
+            hunterAM.idleRight.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle_right/idle_right"));
+            hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle_up/idle_up"));
+            hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle_down/idle_down"));
 
             // Player
             crosshair = Content.Load<Texture2D>("TempFiles/crosshair");
@@ -183,9 +192,9 @@ namespace _13thHauntedStreet
             input.ItemUp = KnMButtons.ScrollUp;
             input.ItemDown = KnMButtons.ScrollDown;
 
-            player = new Hunter(
+            player = new Ghost(
                 new Vector2(500, 500),
-                hunterAM
+                ghostAM
             );
 
             // Furniture
@@ -210,6 +219,9 @@ namespace _13thHauntedStreet
             testMap.doorList.Add(new Door(direction.up, testMap.listScenes[0]));
             testMap.doorList.Add(new Door(direction.down, testMap.listScenes[1]));
             Door.connectDoors(testMap.doorList[0], testMap.doorList[1]);
+
+            // Client
+            dataPlayer = new dataPlayer();
 
 
             // method that loads every texture of an animation
@@ -256,6 +268,34 @@ namespace _13thHauntedStreet
                 penumbra.Lights.Clear();
 
                 testMap.Update(gameTime);
+
+                TimeSpan ts = DateTime.Now - clientLastUpdate;
+                if (ts.Milliseconds >= 62)
+                {
+                    string texturePath = player.texture.ToString();
+                    if (player.movement.X != 0 || player.movement.Y != 0 || dataPlayer.Texture != texturePath)
+                    {
+                        dataPlayer.Id = player.id;
+                        dataPlayer.Texture = texturePath;
+                        dataPlayer.Position = player.position.ToString();
+
+                        dataPlayer.PlayerType = player.GetType().ToString();
+                        string[] nameSplit = player.texture.Name.Split('/', '\\');
+                        dataPlayer.AnimName = nameSplit[nameSplit.Length - 2];
+                        if (player.GetType() == typeof(Hunter))
+                        {
+                            dataPlayer.AnimFrame = (player as Hunter).animManager.currentAnim.FindIndex(item => item == player.texture);
+                        }
+                        else
+                        {
+                            dataPlayer.AnimFrame = (player as Ghost).animManager.currentAnim.FindIndex(item => item == player.texture);
+                        }
+
+                        string serializeToStringPlayer;
+                        serializeToStringPlayer = SerializeObject();
+                        client.envoieMessage(serializeToStringPlayer);
+                    }
+                }
             }
 
             knm.Update();
@@ -317,6 +357,7 @@ namespace _13thHauntedStreet
             _spriteBatch.End();
 
 
+
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
@@ -326,6 +367,48 @@ namespace _13thHauntedStreet
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        // Server Methods
+        /// <summary>
+        /// Serializes dataPlayer
+        /// </summary>
+        /// <returns>serialized dataPlayer</returns>
+        public static string SerializeObject()
+        {
+            string xmlStr = string.Empty;
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = true;
+            settings.NewLineChars = string.Empty;
+            settings.NewLineHandling = NewLineHandling.None;
+
+            using (StringWriter stringWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
+                {
+                    XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+                    namespaces.Add(string.Empty, string.Empty);
+
+                    XmlSerializer serializer = new XmlSerializer(dataPlayer.GetType());
+                    serializer.Serialize(xmlWriter, dataPlayer, namespaces);
+
+                    xmlStr = stringWriter.ToString();
+                    xmlWriter.Close();
+                }
+
+                stringWriter.Close();
+            }
+
+            return xmlStr;
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+
+            client.envoieMessage("Je me deconnecte :" + Game1.player.id);
         }
     }
 }

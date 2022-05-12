@@ -18,7 +18,7 @@ namespace _13thHauntedStreet
         // Properties
         private const float MOVEMENTSPEED = 0.4f;
 
-        private GhostAnimationManager _animManager;
+        public GhostAnimationManager animManager;
 
         private float _floatTimer;
         private const int FLOATSPEED = 4;
@@ -31,9 +31,9 @@ namespace _13thHauntedStreet
             this.position = initialPos;
             this.scale = 1.5f;
 
-            this._animManager = animationManager;
-            this._animManager.currentAnim = this._animManager.animationRight;
-            this.texture = this._animManager.currentAnim[0];
+            this.animManager = animationManager;
+            this.animManager.currentAnim = this.animManager.animationRight;
+            this.texture = this.animManager.currentAnim[0];
 
             this.light = new PointLight
             {
@@ -56,14 +56,14 @@ namespace _13thHauntedStreet
             this.ReadInput();
 
             // if the player is not moving in the y axis, make the ghost float
-            if (this._movement.Y == 0)
+            if (this.movement.Y == 0)
             {
                 this._floatTimer += (float)this._gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
-                this._movement.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
+                this.movement.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
             }
             
             // if player has moved update position
-            if (this._movement.X != 0 || this._movement.Y != 0)
+            if (this.movement.X != 0 || this.movement.Y != 0)
             {
                 this.UpdatePosition();
             }
@@ -73,7 +73,7 @@ namespace _13thHauntedStreet
 
         public override void UpdatePosition()
         {
-            Vector2 distance = this._movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
+            Vector2 distance = this.movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
             this.WallCollision(ref distance);
 
@@ -88,16 +88,16 @@ namespace _13thHauntedStreet
         /// </summary>
         private void UpdateAnim()
         {
-            if (this._movement.X > 0)
+            if (this.movement.X > 0)
             {
-                this._animManager.currentAnim = this._animManager.animationRight;
+                this.animManager.currentAnim = this.animManager.animationRight;
             }
-            else if (this._movement.X < 0)
+            else if (this.movement.X < 0)
             {
-                this._animManager.currentAnim = this._animManager.animationLeft;
+                this.animManager.currentAnim = this.animManager.animationLeft;
             }
 
-            this.PlayAnim(this._animManager.currentAnim, ref this.texture);
+            this.PlayAnim(this.animManager.currentAnim, ref this.texture);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

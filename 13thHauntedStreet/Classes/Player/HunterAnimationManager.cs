@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class HunterAnimationManager
+    public class HunterAnimationManager
     {
         public List<Texture2D> walkingLeft = new List<Texture2D>();
         public List<Texture2D> walkingRight = new List<Texture2D>();

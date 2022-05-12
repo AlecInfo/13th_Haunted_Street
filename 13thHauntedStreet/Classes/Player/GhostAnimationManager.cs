@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class GhostAnimationManager
+    public class GhostAnimationManager
     {
         public List<Texture2D> animationLeft = new List<Texture2D>();
         public List<Texture2D> animationRight = new List<Texture2D>();
