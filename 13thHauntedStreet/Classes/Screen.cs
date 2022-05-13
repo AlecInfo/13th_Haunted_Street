@@ -20,20 +20,21 @@ namespace _13thHauntedStreet
 
         #region Variables
 
-        private static Screen instance;
+        private static Screen _instance;
 
         private GameWindow _window;
-
-        private RenderTarget2D _renderTarget;
-        public RenderTarget2D RenderTarget { 
-            get => _renderTarget;
-        }
 
         private const float _SCREENDIFFERENCE = 1.5f;
         private const int _MINSCREENSIZE = 640;
         private const int _ORIGINALSIZE_X = 1920;
         private const int _ORIGINALSIZE_Y = 1080;
 
+        private bool _windowsIsChanged = false;
+
+        private RenderTarget2D _renderTarget;
+        public RenderTarget2D RenderTarget { 
+            get => _renderTarget;
+        }
         public static Vector2 OriginalScreenSize
         {
             get => new Vector2(_ORIGINALSIZE_X, _ORIGINALSIZE_Y);
@@ -63,7 +64,6 @@ namespace _13thHauntedStreet
             set => _editSize = value;
         }
 
-        private bool _windowsIsChanged = false;
 
         #endregion
 
@@ -77,11 +77,11 @@ namespace _13thHauntedStreet
         public static Screen Instance(float x, float y, GameWindow window)
         {
             // Create a Singleton to avoid duplicates
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = new Screen(new Vector2(x, y), window);
+                _instance = new Screen(new Vector2(x, y), window);
             }
-            return instance;
+            return _instance;
         }
 
         // Methods

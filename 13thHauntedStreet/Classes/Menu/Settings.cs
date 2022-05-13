@@ -23,13 +23,28 @@ namespace _13thHauntedStreet
         public static string fileSave = "BackupMenu.xml";
 
         // Dictionary with the default values
-        private static Dictionary<string, string> defaultValues = new Dictionary<string, string>()
+        private static Dictionary<string, string> _defaultValues = new Dictionary<string, string>()
         {
-            { Settings.GetTitleFullscreen(), "Enabled" },
-            { Settings.GetTitleRefreshRate(), "60" },
-            { Settings.GetTitleRefreshRateDisplay(), "Disabled" },
-            { Settings.GetTitleSFXVolume(), "7" },
-            { Settings.GetTitleMusicVolume(), "7" },
+            { GetTitleFullscreen(), "Enabled" },
+            { GetTitleRefreshRate(), "60" },
+            { GetTitleRefreshRateDisplay(), "Disabled" },
+            { GetTitleSFXVolume(), "7" },
+            { GetTitleMusicVolume(), "7" },
+        };
+
+
+        // Dictionary with the list of the controls
+        public static Dictionary<string, string> listControls = new Dictionary<string, string>()
+        {
+            { GetTitleMoveUp(), Game1.input.Up.ToString() },
+            { GetTitleMoveLeft(), Game1.input.Left.ToString() },
+            { GetTitleMoveDown(), Game1.input.Down.ToString() },
+            { GetTitleMoveRight(), Game1.input.Right.ToString() },
+            { GetTitleWeaponOne(), Game1.input.ItemUp.ToString() },
+            { GetTitleWeaponTwo(), Game1.input.ItemDown.ToString() },
+            { GetTitleAttack(), Game1.input.Use1.ToString() },
+            { GetTitleTransform(), Game1.input.Use1.ToString() },
+            { GetTitleDetransform(), Game1.input.Use2.ToString() },
         };
 
         #endregion
@@ -47,8 +62,6 @@ namespace _13thHauntedStreet
         private static string _musicVolume;
 
         #endregion
-        
-
 
         /// <summary>
         /// This method allows to return the id from the default value according to the list of value,
@@ -97,7 +110,7 @@ namespace _13thHauntedStreet
             else
             {
                 // Apply the default values 
-                ChangeValues(defaultValues);
+                ChangeValues(_defaultValues);
             }
 
         }
@@ -179,6 +192,13 @@ namespace _13thHauntedStreet
                 // Get the value and apply the volume
                 MusicVolumeAction(state);
             }
+
+            // The action of the change pages button
+            if (button == GetTitlePagesButton())
+            {
+                // Changes page according to state which is the page number given in parameter
+                SettingsMenu.ChangePage(Convert.ToInt32(state) - 1);
+            }
         }
 
         #endregion
@@ -202,7 +222,7 @@ namespace _13thHauntedStreet
         /// This method allows to return the title text of the button full screen
         /// </summary>
         /// <returns></returns>
-        public static string GetTitleFullscreen() 
+        public static string GetTitleFullscreen()
         {
             // Return the title
             return "Full Screen";
@@ -340,7 +360,7 @@ namespace _13thHauntedStreet
         /// This method is the action after clicking the button, it changes whether or not it displays fps
         /// </summary>
         /// <param name="state"></param>
-        public static void RefreshRateDisplayAction(string state)
+        private static void RefreshRateDisplayAction(string state)
         {
             // Display the rifresh rate 
             if (state == "Enabled")
@@ -473,47 +493,109 @@ namespace _13thHauntedStreet
 
         #region Get the control title
 
+        /// <summary>
+        /// This method allows to return the title text of the button move up
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveUp()
         {
-            return "Move Up";
+            return "Move up";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button move left
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveLeft()
         {
-            return "Move Left";
+            return "Move left";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button move down
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveDown()
         {
             return "Move down";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button move right
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleMoveRight()
         {
             return "Move right";
         }
-        public static string GetTitleChangeWeapons()
-        {
-            return "Change weapons";
-        }
+
+        /// <summary>
+        /// This method allows to return the title text of the button weapon one
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleWeaponOne()
         {
-            return "Equip weapon one";
+            return "Weapon one";
         }
+        /// <summary>
+        /// This method allows to return the title text of the button weapon two
+        /// </summary>
+        /// <returns></returns>
+
         public static string GetTitleWeaponTwo()
         {
-            return "Equip weapon two";
+            return "Weapon two";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button attack
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleAttack()
         {
             return "Attack";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button transform
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleTransform()
         {
             return "Transform";
         }
+
+        /// <summary>
+        /// This method allows to return the title text of the button detransform
+        /// </summary>
+        /// <returns></returns>
         public static string GetTitleDetransform()
         {
             return "Detransform";
         }
+        #endregion
+
+        #region Get the different value of the nav button between pages
+
+        /// <summary>
+        /// This method allows you to get to retrieve the name of the buttons that allow you to change the page
+        /// </summary>
+        /// <returns></returns>
+        public static string GetTitlePagesButton()
+        {
+            return "Pages Control";
+        }
+
+        /// <summary>
+        /// This method allows you to get the number of elements in a page in the contorl menu
+        /// </summary>
+        /// <returns></returns>
+        public static int GetNumberElementsInPage()
+        {
+            return 6;
+        }
 
         #endregion
+
     }
 }

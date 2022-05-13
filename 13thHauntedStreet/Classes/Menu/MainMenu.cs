@@ -38,7 +38,7 @@ namespace _13thHauntedStreet
 
             this._background = background;
 
-            this._font = font;
+            _font = font;
 
             this._backgroudScale = Screen.OriginalScreenSize.Y / background.Height;
 

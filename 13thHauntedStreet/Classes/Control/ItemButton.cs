@@ -56,7 +56,7 @@ namespace _13thHauntedStreet
 
             this._texture = texture;
 
-            this._font = font;
+            _font = font;
 
             this.FontColor = Color.Black;
 
@@ -142,7 +142,7 @@ namespace _13thHauntedStreet
             {
                 // Create the rectagle
                 Rectangle rectangle = new Rectangle((int)(Position.X - 20), (int)Position.X, 10, 10);
-                rectangle.Y = (int)(Position.Y + (this._font.MeasureString(this.Text).Y * this.Scale) / 2 - rectangle.Height / 2);
+                rectangle.Y = (int)(Position.Y + (_font.MeasureString(this.Text).Y * this.Scale) / 2 - rectangle.Height / 2);
 
                 // Display this
                 spriteBatch.Draw(this._defaultTexture, rectangle, null, this.FontColor, 0f, Vector2.Zero, this.Effect, 0f);
@@ -152,10 +152,10 @@ namespace _13thHauntedStreet
             if (!string.IsNullOrEmpty(this.Text))
             {
                 // The position will be in the center of the button
-                float x = (this.Rectangle.X + (this.Rectangle.Width / 2)) - (this._font.MeasureString(Text).X * this.ScaleText / 2);
-                float y = (this.Rectangle.Y + (this.Rectangle.Height / 2)) - (this._font.MeasureString(Text).Y * this.ScaleText / 2);
+                float x = (this.Rectangle.X + (this.Rectangle.Width / 2)) - (_font.MeasureString(Text).X * this.ScaleText / 2);
+                float y = (this.Rectangle.Y + (this.Rectangle.Height / 2)) - (_font.MeasureString(Text).Y * this.ScaleText / 2);
                 // Display the text in the button
-                spriteBatch.DrawString(this._font, this.Text, new Vector2(x, y), this.FontColor, 0f, Vector2.Zero, this.ScaleText, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(_font, this.Text, new Vector2(x, y), this.FontColor, 0f, Vector2.Zero, this.ScaleText, SpriteEffects.None, 1f);
             }
         }
 

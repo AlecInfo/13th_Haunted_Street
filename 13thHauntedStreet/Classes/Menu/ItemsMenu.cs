@@ -24,10 +24,17 @@ namespace _13thHauntedStreet
         public override void Update(GameTime gameTime, Screen screen, ref Vector2 changePosition)
         {
             // Browse all item in the list and uptade
-            foreach (var item in this.listItems)
+            try
             {
-                item.Update(gameTime, screen, ref changePosition);
+                foreach (var item in this.listItems)
+                {
+                    item.Update(gameTime, screen, ref changePosition);
+                }
             }
+            catch (Exception)
+            {
+            }
+            
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

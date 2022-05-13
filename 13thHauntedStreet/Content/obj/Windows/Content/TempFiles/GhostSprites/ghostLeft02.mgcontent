@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft02.png</SourceFile>
-  <SourceTime>2022-03-28T12:55:10.1923265+02:00</SourceTime>
-  <DestFile>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/bin/Windows/Content/TempFiles/GhostSprites/ghostLeft02.xnb</DestFile>
-  <DestTime>2022-05-02T11:29:56.8973269+02:00</DestTime>
+  <SourceFile>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/TempFiles/GhostSprites/ghostLeft02.png</SourceFile>
+  <SourceTime>2022-04-11T13:56:50.7665409+02:00</SourceTime>
+  <DestFile>C:/Users/alec.ptt/Desktop/CoursCFPT/3eme/attEntreprise/13th Haunted Street/13th_Haunted_Street/13thHauntedStreet/Content/bin/Windows/Content/TempFiles/GhostSprites/ghostLeft02.xnb</DestFile>
+  <DestTime>2022-05-11T09:27:16.8123932+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

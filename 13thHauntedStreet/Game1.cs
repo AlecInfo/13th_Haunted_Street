@@ -260,7 +260,7 @@ namespace _13thHauntedStreet
                 if (settingsMenu != null)
                 {
                     settingsMenu.Update(gameTime, screen, ref posOri);
-                }
+                 }
             }
             else
             {
