@@ -50,7 +50,7 @@ namespace _13thHauntedStreet
             Console.WriteLine("update");
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             Console.WriteLine("draw");
 

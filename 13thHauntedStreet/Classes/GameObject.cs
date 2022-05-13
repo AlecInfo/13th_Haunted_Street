@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    abstract class GameObject
+    public abstract class GameObject
     {
         // Properties
         public Vector2 position;

@@ -37,12 +37,12 @@ namespace _13thHauntedStreet
             
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             // Browse all item in the list and draw
             foreach (var item in this.listItems)
             {
-                item.Draw(gameTime, spriteBatch);
+                item.Draw(spriteBatch);
             }
         }
 

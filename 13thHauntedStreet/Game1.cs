@@ -62,12 +62,12 @@ namespace _13thHauntedStreet
 
         public Texture2D _controlButton;
 
-        private SpriteFont _font;
+        public SpriteFont font;
 
         public static Texture2D defaultTexture;
 
         // Players
-        private GhostAnimationManager ghostAM = new GhostAnimationManager();
+        public GhostAnimationManager ghostAM = new GhostAnimationManager();
         private HunterAnimationManager hunterAM = new HunterAnimationManager();
         private Player player;
         public Texture2D crosshair;
@@ -82,7 +82,7 @@ namespace _13thHauntedStreet
         // Furnitures
         private Texture2D bedTexture;
         private Texture2D drawerTexture;
-        private List<Furniture> furnitureList = new List<Furniture>();
+        public List<Furniture> furnitureList = new List<Furniture>();
 
         // remove later
         private Texture2D bg;
@@ -140,9 +140,9 @@ namespace _13thHauntedStreet
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
             _arrowButton = Content.Load<Texture2D>("TempFiles/arrow");
             _controlButton = Content.Load<Texture2D>("TempFiles/buttonControl");
-            _font = Content.Load<SpriteFont>("TempFiles/theFont");
+            font = Content.Load<SpriteFont>("TempFiles/theFont");
 
-            _mainMenu = new MainMenu(Vector2.Zero, _backgroundMainMenu, _font);
+            _mainMenu = new MainMenu(Vector2.Zero, _backgroundMainMenu, font);
 
             defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             defaultTexture.SetData(new Color[] { Color.White });
@@ -162,6 +162,12 @@ namespace _13thHauntedStreet
             hunterAM.idleUp.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_up"));
             hunterAM.idleDown.Add(Content.Load<Texture2D>("TempFiles/HunterSprites/idle/idle_down"));
 
+            // Furniture
+            bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
+            drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
+            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture, 1));
+            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture, 1));
+
             // Player
             crosshair = Content.Load<Texture2D>("TempFiles/crosshair");
             Mouse.SetCursor(MouseCursor.FromTexture2D(crosshair, crosshair.Bounds.Center.X, crosshair.Bounds.Center.Y));
@@ -180,19 +186,19 @@ namespace _13thHauntedStreet
             input.Up = KnMButtons.W;
             input.Down = KnMButtons.S;
             input.Use1 = KnMButtons.LeftClick;
+            input.Use2 = KnMButtons.RightClick;
             input.ItemUp = KnMButtons.ScrollUp;
             input.ItemDown = KnMButtons.ScrollDown;
 
-            player = new Hunter(
-                new Vector2(500, 500),
-                hunterAM
-            );
+            //player = new Hunter(
+            //    new Vector2(500, 500),
+            //    hunterAM
+            //);
 
-            // Furniture
-            bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
-            drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
-            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
-            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
+            player = new Ghost(
+                new Vector2(500, 500),
+                ghostAM
+                );
 
             // Map
             bg = Content.Load<Texture2D>("TempFiles/bg");
@@ -275,13 +281,13 @@ namespace _13thHauntedStreet
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 
                 // Display the main menu
-                _mainMenu.Draw(gameTime, _spriteBatch);
+                _mainMenu.Draw(_spriteBatch);
 
                 // If the gameplay menu is instantiated
                 if (settingsMenu != null)
                 {
                     // Display the gameplay menu
-                    settingsMenu.Draw(gameTime, _spriteBatch);
+                    settingsMenu.Draw(_spriteBatch);
                 }
                 _spriteBatch.End();
             }
@@ -307,7 +313,7 @@ namespace _13thHauntedStreet
 
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
 
-                _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                _spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }
 
             if (!displayMainMenu)

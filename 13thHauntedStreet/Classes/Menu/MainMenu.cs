@@ -28,7 +28,7 @@ namespace _13thHauntedStreet
 
         private bool _isOnTheLeftWall = true;
 
-        Action callback;
+        Action<int> callback;
         #endregion
 
         // Ctor
@@ -47,12 +47,12 @@ namespace _13thHauntedStreet
             
             // Button of the menu
             // Action of new game
-            callback = () => { animationStarted = true; Game1.self.displayMainMenu = false;  };
+            callback = (i) => { animationStarted = true; Game1.self.displayMainMenu = false;  };
             // Create the button new game
             Add(MainMenu.NewButton("New game", _font, new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f), callback, false));
             
             // Action of settings
-            callback = () => { 
+            callback = (i) => { 
                 animationStarted = true; 
                 Settings.SetDefautlValue();
                 Game1.self.settingsMenu = new SettingsMenu( position,  background, Game1.self._arrowButton, font);
@@ -61,12 +61,12 @@ namespace _13thHauntedStreet
             Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback, false));
 
             // Action of quit
-            callback = () => { QuitProgram.isQuit = true; };
+            callback = (i) => { QuitProgram.isQuit = true; };
             // Create the button quit
             Add(MainMenu.NewButton("Quit", _font, GetButtonPosition(), callback, false));
             
             // Action of join
-            callback = () => { animationStarted = true; };
+            callback = (i) => { animationStarted = true; };
             // Create the button join
             Add(MainMenu.NewButton("Join", _font, new Vector2(Screen.OriginalScreenSize.X / 3.05f, Screen.OriginalScreenSize.Y / 1.46f), callback, false));
         }
@@ -103,12 +103,12 @@ namespace _13thHauntedStreet
             base.Update(gameTime, screen,ref changePosition);
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             // Display the background of the menu
             spriteBatch.Draw(this._background, this._backgroundPosition, null, Color.White, 0f, Vector2.Zero, _backgroudScale, SpriteEffects.None, 0f);
 
-            base.Draw(gameTime, spriteBatch);
+            base.Draw(spriteBatch);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace _13thHauntedStreet
         /// <param name="position"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        static ItemButton NewButton(string text, SpriteFont font, Vector2 position, Action callback, bool DrawImageText)
+        static ItemButton NewButton(string text, SpriteFont font, Vector2 position, Action<int> callback, bool DrawImageText)
         {
             Texture2D buttonTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
 

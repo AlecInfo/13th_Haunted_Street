@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Hunter class (inherits from player abstract class)
  */
@@ -177,7 +177,7 @@ namespace _13thHauntedStreet
         {
             spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this.scale, SpriteEffects.None, 1f);
 
-            //this.drawCollisionBox(spriteBatch);
+            //this.DrawCollisionBox(spriteBatch);
         }
 
         public override void DrawUI(SpriteBatch spriteBatch)

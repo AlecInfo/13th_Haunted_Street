@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Furniture class
  */
@@ -13,18 +13,19 @@ using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    class Furniture : GameObject
+    public class Furniture : GameObject
     {
         // Properties
         public Rectangle collisionBox;
         public Hull hull;
-
+        public float scale;
 
         // Ctor
-        public Furniture(Vector2 position, Texture2D texture)
+        public Furniture(Vector2 position, Texture2D texture, float scale)
         {
             this.position = position;
             this.texture = texture;
+            this.scale = scale;
 
             this.collisionBox = new Rectangle(
                 (int)this.position.X, (int)(this.position.Y + this.texture.Height / 3.5f),

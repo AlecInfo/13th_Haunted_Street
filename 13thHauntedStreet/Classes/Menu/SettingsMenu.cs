@@ -33,7 +33,7 @@ namespace _13thHauntedStreet
 
         private ItemsMenu _listPageElements = new ItemsMenu();
 
-        Action callback;
+        Action<int> callback;
         #endregion
 
         // Ctor
@@ -48,19 +48,19 @@ namespace _13thHauntedStreet
             // Button of the global menu settings
             // Action of the gameplay button,
             // which displays all gameplay parameters
-            callback = () => { _displayMenuGameplay = true; };
+            callback = (i) => { _displayMenuGameplay = true; };
             Func<bool> func = () => false;
             // Create the button gameplay
             Add(SettingsMenu.NewButton("Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.6f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Action of the control button,
             // which display all gameplay parameters
-            callback = () => { _displayMenuGameplay = false; };
+            callback = (i) => { _displayMenuGameplay = false; };
             // Create the button control
             Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Action of the Back button,
-            callback = () =>
+            callback = (i) =>
             {
                 // Which replay the animation and going back to the main menu
                 MainMenu.animationStarted = true;
@@ -160,19 +160,19 @@ namespace _13thHauntedStreet
             menuControlPage.Update(gameTime, screen, ref changePosition);
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(gameTime, spriteBatch);
+            base.Draw(spriteBatch);
 
             // Display the menu gameplay or the menu control
             if (_displayMenuGameplay)
             {
-                _menuGameplay.Draw(gameTime, spriteBatch);
+                _menuGameplay.Draw(spriteBatch);
             }
             else
             {
-                _menuControl.Draw(gameTime, spriteBatch);
-                menuControlPage.Draw(gameTime, spriteBatch);
+                _menuControl.Draw(spriteBatch);
+                menuControlPage.Draw(spriteBatch);
             }
         }
 
@@ -199,7 +199,7 @@ namespace _13thHauntedStreet
 
             // Left button 
             // The action of this
-            Action callback = () => { 
+            Action<int> callback = (i) => { 
                 typeScreen.Left(); 
                 Settings.ButtonAction(titleOption, typeScreen.GetValue()); 
             };
@@ -219,7 +219,7 @@ namespace _13thHauntedStreet
 
             // Right button
             // The action of this
-            callback = () => { 
+            callback = (i) => { 
                 typeScreen.Right(); 
                 Settings.ButtonAction(titleOption, typeScreen.GetValue()); 
             };
@@ -252,7 +252,7 @@ namespace _13thHauntedStreet
 
             // The button
             // The action of this
-            Action callback = () => { buttonAction.Catch(); };
+            Action<int> callback = (i) => { buttonAction.Catch(); };
             Func<bool> enabledButton = () => false;
             addingOption.Add(SettingsMenu.NewButton(defaultValue, _font, new Vector2(posX, positionY), buttonTexture, Color.Black, scaleButton, SpriteEffects.None, callback, enabledButton, true, scaleText));
 
@@ -317,7 +317,7 @@ namespace _13thHauntedStreet
         /// <param name="callback"></param>
         /// <param name="enabledButton"></param>
         /// <returns> itemButtonOption </returns>
-        static ItemButtonOption NewButton(string text, SpriteFont font, Vector2 position, Texture2D texture, Color color, float scale, SpriteEffects spriteEffect, Action callback, Func<bool> enabledButton, bool DrawImageText, float ScaleText)
+        static ItemButtonOption NewButton(string text, SpriteFont font, Vector2 position, Texture2D texture, Color color, float scale, SpriteEffects spriteEffect, Action<int> callback, Func<bool> enabledButton, bool DrawImageText, float ScaleText)
         {
             return new ItemButtonOption(texture, font, callback, enabledButton, DrawImageText)
             {
