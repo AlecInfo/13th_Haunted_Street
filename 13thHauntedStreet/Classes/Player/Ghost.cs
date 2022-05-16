@@ -23,8 +23,6 @@ namespace _13thHauntedStreet
 
         private float movementSpeed = MOVEMENTSPEED_GHOST;
 
-        private Rectangle _collisionBox;
-
         public GhostAnimationManager animManager;
 
         private List<ItemButton> _listButton = new List<ItemButton>();
@@ -134,22 +132,23 @@ namespace _13thHauntedStreet
         {
             Vector2 distance = this.movement * this.movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
-
-            this.WallCollision(ref distance);
-
-            this.position += distance;
-            this.light.Position = this.position;
-
-            if (isObject)
+            if (isObject) 
             {
                 this.collisionBox = new Rectangle((int)(
                     this.position.X - this.texture.Width / 2), (int)(this.position.Y - this.texture.Height / 2 + this.texture.Height / 3.5f), 
                     (int)this.texture.Width, (int)(this.texture.Height - this.texture.Height / 3.5f));
+                
+                this.ObjectCollision(ref distance);
             }
             else
             {
                 this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
             }
+
+            this.WallCollision(ref distance);
+
+            this.position += distance;
+            this.light.Position = this.position;
         }
 
         /// <summary>
