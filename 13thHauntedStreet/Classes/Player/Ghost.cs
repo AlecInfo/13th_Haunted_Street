@@ -23,6 +23,8 @@ namespace _13thHauntedStreet
 
         private float movementSpeed = MOVEMENTSPEED_GHOST;
 
+        private Rectangle _collisionBox;
+
         public GhostAnimationManager animManager;
 
         private List<ItemButton> _listButton = new List<ItemButton>();
@@ -114,6 +116,10 @@ namespace _13thHauntedStreet
                 this._floatOffset.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
 
             }
+            else
+            {
+                this._floatOffset.Y = 0;
+            }
             
             // if player has moved update position
             if (this.movement.X != 0 || this.movement.Y != 0)
@@ -134,7 +140,16 @@ namespace _13thHauntedStreet
             this.position += distance;
             this.light.Position = this.position;
 
-            this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
+            if (isObject)
+            {
+                this.collisionBox = new Rectangle((int)(
+                    this.position.X - this.texture.Width / 2), (int)(this.position.Y - this.texture.Height / 2 + this.texture.Height / 3.5f), 
+                    (int)this.texture.Width, (int)(this.texture.Height - this.texture.Height / 3.5f));
+            }
+            else
+            {
+                this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
+            }
         }
 
         /// <summary>
@@ -176,6 +191,9 @@ namespace _13thHauntedStreet
         {
             this.animManager.currentAnim = this.animManager.furniture;
             this.texture = this.animManager.furniture[indexButton];
+
+            Vector2 distance = this.movement * movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
+            ObjectCollision(ref distance);
 
             foreach (ItemButton item in this._listButton)
             {
