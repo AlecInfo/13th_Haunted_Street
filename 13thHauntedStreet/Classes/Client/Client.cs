@@ -362,8 +362,6 @@ namespace _13thHauntedStreet
 
             // ReceiveMessage();
             // connectionServeur = true;
-
-
         }
 
 
