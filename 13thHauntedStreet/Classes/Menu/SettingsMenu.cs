@@ -48,14 +48,19 @@ namespace _13thHauntedStreet
             // Button of the global menu settings
             // Action of the gameplay button,
             // which displays all gameplay parameters
-            callback = (i) => { _displayMenuGameplay = true; };
+            callback = (i) => { 
+                _displayMenuGameplay = true;
+                var y = listItems[i].GetValue();
+            };
             Func<bool> func = () => false;
             // Create the button gameplay
             Add(SettingsMenu.NewButton("Gameplay", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.6f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Action of the control button,
             // which display all gameplay parameters
-            callback = (i) => { _displayMenuGameplay = false; };
+            callback = (i) => { 
+                _displayMenuGameplay = false; 
+            };
             // Create the button control
             Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 

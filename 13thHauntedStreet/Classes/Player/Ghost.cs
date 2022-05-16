@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Ghost class (inherits from player abstract class)
  */
@@ -21,11 +21,9 @@ namespace _13thHauntedStreet
         private const float MOVEMENTSPEED_GHOST = 0.4f;
         private const float MOVEMENTSPEED_OBJECT = 0.2f;
 
-        private bool _isObject = false;
-
         private float movementSpeed = MOVEMENTSPEED_GHOST;
 
-        private GhostAnimationManager _animManager;
+        public GhostAnimationManager animManager;
 
         private List<ItemButton> _listButton = new List<ItemButton>();
 
@@ -41,15 +39,17 @@ namespace _13thHauntedStreet
         private bool _previusMouse;
         private bool _currentMouse;
 
+        //public bool isObject = false;
+
         // Ctor
         public Ghost(Vector2 initialPos, GhostAnimationManager animationManager)
         {
             this.position = initialPos;
             this.scale = DEFAULTSCALE;
 
-            this._animManager = animationManager;
-            this._animManager.currentAnim = this._animManager.animationRight;
-            this.texture = this._animManager.currentAnim[0];
+            this.animManager = animationManager;
+            this.animManager.currentAnim = this.animManager.animationRight;
+            this.texture = this.animManager.currentAnim[0];
 
             this.light = new PointLight
             {
@@ -67,7 +67,7 @@ namespace _13thHauntedStreet
 
                 Action<int> callback = (indexButton) => 
                 {
-                    if (!this._isObject || this._animManager.currentAnim[0] != item.texture)
+                    if (!isObject || this.texture != item.texture)
                     {
                         Transform(indexButton, item);
                     }
@@ -94,7 +94,7 @@ namespace _13thHauntedStreet
             this._previusMouse = this._currentMouse;
             this._currentMouse = Game1.knm.isButtonPressed(Game1.input.Use2);
 
-            if (this._currentMouse && !this._previusMouse)
+            if (this._currentMouse && !this._previusMouse && isObject)
             {
                 Detransform();
             }
@@ -108,14 +108,15 @@ namespace _13thHauntedStreet
             this.ReadInput();
 
             // if the player is not moving in the y axis, make the ghost float
-            if (this._movement.Y == 0 && !this._isObject)
+            if (this.movement.Y == 0 && !isObject)
             {
                 this._floatTimer += (float)this._gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
                 this._floatOffset.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
+
             }
             
             // if player has moved update position
-            if (this._movement.X != 0 || this._movement.Y != 0)
+            if (this.movement.X != 0 || this.movement.Y != 0)
             {
                 this.UpdatePosition();
             }
@@ -125,7 +126,8 @@ namespace _13thHauntedStreet
 
         public override void UpdatePosition()
         {
-            Vector2 distance = this._movement * this.movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
+            Vector2 distance = this.movement * this.movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
+
 
             this.WallCollision(ref distance);
 
@@ -140,19 +142,20 @@ namespace _13thHauntedStreet
         /// </summary>
         private void UpdateAnim()
         {
-            if (this._animManager.animationLeft.Count > 0 && this._animManager.animationRight.Count > 0)
+            if (!isObject)
             {
-                if (this._movement.X > 0)
+                if (this.movement.X > 0)
                 {
-                    this._animManager.currentAnim = this._animManager.animationRight;
+                    this.animManager.currentAnim = this.animManager.animationRight;
                 }
-                else if (this._movement.X < 0)
+                else if (this.movement.X < 0)
                 {
-                    this._animManager.currentAnim = this._animManager.animationLeft;
+                    this.animManager.currentAnim = this.animManager.animationLeft;
                 }
+                
+                this.PlayAnim(this.animManager.currentAnim, ref this.texture);
             }
 
-            this.PlayAnim(this._animManager.currentAnim, ref this.texture);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -171,8 +174,8 @@ namespace _13thHauntedStreet
 
         private void Transform(int indexButton, Furniture furniture)
         {
-            this._animManager = new GhostAnimationManager();
-            this._animManager.currentAnim.Add(furniture.texture);
+            this.animManager.currentAnim = this.animManager.furniture;
+            this.texture = this.animManager.furniture[indexButton];
 
             foreach (ItemButton item in this._listButton)
             {
@@ -183,28 +186,24 @@ namespace _13thHauntedStreet
             this.movementSpeed = MOVEMENTSPEED_OBJECT;
             this.scale = furniture.scale;
 
-            this._isObject = true;
+            isObject = true;
         }
 
         private void Detransform()
         {
-            this._animManager = new GhostAnimationManager();
-
-            this._animManager.animationLeft = Game1.self.ghostAM.animationLeft;
-            this._animManager.animationRight = Game1.self.ghostAM.animationRight;
-
-            this._animManager.currentAnim = this._animManager.animationRight;
-            this.texture = this._animManager.currentAnim[0];
+            this.animManager.currentAnim = this.animManager.animationRight;
+            this.texture = this.animManager.currentAnim[0];
 
             foreach (ItemButton item in this._listButton)
             {
                 item.IsOn = false;
             }
 
-            this.movementSpeed = MOVEMENTSPEED_GHOST;
             this.scale = DEFAULTSCALE;
 
-            this._isObject = false;
+            isObject = false;
+            
+            this.movementSpeed = MOVEMENTSPEED_GHOST;
         }
 
         static ItemButton NewButton(SpriteFont font, Vector2 position, Texture2D texture, Action<int> callback, int parameterCallback, bool DrawImageText = true)

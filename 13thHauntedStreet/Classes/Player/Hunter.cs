@@ -24,12 +24,11 @@ namespace _13thHauntedStreet
 
         private const float MOVEMENTSPEED = 0.3f;
 
-        private HunterAnimationManager _animManager;
+        public HunterAnimationManager animManager;
 
         private Game1.direction _currentDirection = Game1.direction.down;
 
         public Tool currentTool { get { return this.tools[this.currentToolNb]; } }
-
 
         // Ctor
         public Hunter(Vector2 initialPos, HunterAnimationManager animationManager)
@@ -37,9 +36,9 @@ namespace _13thHauntedStreet
             this.position = initialPos;
             this.scale = 3f;
 
-            this._animManager = animationManager;
-            this._animManager.currentAnim = this._animManager.walkingDown;
-            this.texture = this._animManager.currentAnim[0];
+            this.animManager = animationManager;
+            this.animManager.currentAnim = this.animManager.walkingDown;
+            this.texture = this.animManager.currentAnim[0];
 
             // Collision box
             this.collisionBox = new Rectangle(
@@ -72,7 +71,7 @@ namespace _13thHauntedStreet
             this.ReadItemChangingKey();
 
             // if player has moved update position
-            if (this._movement.X != 0 || this._movement.Y != 0)
+            if (this.movement.X != 0 || this.movement.Y != 0)
             {
                 this.UpdatePosition();
             }
@@ -84,7 +83,7 @@ namespace _13thHauntedStreet
 
         public override void UpdatePosition()
         {
-            Vector2 distance = this._movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
+            Vector2 distance = this.movement * MOVEMENTSPEED * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
             this.ObjectCollision(ref distance);
 
@@ -102,28 +101,28 @@ namespace _13thHauntedStreet
         private void UpdateAnim()
         {
             // if is moving
-            if (this._movement.X != 0 || this._movement.Y != 0)
+            if (this.movement.X != 0 || this.movement.Y != 0)
             {
-                if (this._movement.X < 0)
+                if (this.movement.X < 0)
                 {
-                    this._animManager.currentAnim = this._animManager.walkingLeft;
+                    this.animManager.currentAnim = this.animManager.walkingLeft;
                     this._currentDirection = Game1.direction.left;
                 }
-                else if (this._movement.X > 0)
+                else if (this.movement.X > 0)
                 {
-                    this._animManager.currentAnim = this._animManager.walkingRight;
+                    this.animManager.currentAnim = this.animManager.walkingRight;
                     this._currentDirection = Game1.direction.right;
                 }
                 else
                 {
-                    if (this._movement.Y < 0)
+                    if (this.movement.Y < 0)
                     {
-                        this._animManager.currentAnim = this._animManager.walkingUp;
+                        this.animManager.currentAnim = this.animManager.walkingUp;
                         this._currentDirection = Game1.direction.up;
                     }
-                    else if (this._movement.Y > 0)
+                    else if (this.movement.Y > 0)
                     {
-                        this._animManager.currentAnim = this._animManager.walkingDown;
+                        this.animManager.currentAnim = this.animManager.walkingDown;
                         this._currentDirection = Game1.direction.down;
                     }
                 }
@@ -133,30 +132,30 @@ namespace _13thHauntedStreet
                 switch (this._currentDirection)
                 {
                     case Game1.direction.left:
-                        this._animManager.currentAnim = this._animManager.idleLeft;
+                        this.animManager.currentAnim = this.animManager.idleLeft;
                         break;
 
                     case Game1.direction.right:
-                        this._animManager.currentAnim = this._animManager.idleRight;
+                        this.animManager.currentAnim = this.animManager.idleRight;
                         break;
 
                     case Game1.direction.up:
-                        this._animManager.currentAnim = this._animManager.idleUp;
+                        this.animManager.currentAnim = this.animManager.idleUp;
                         break;
 
                     case Game1.direction.down:
-                        this._animManager.currentAnim = this._animManager.idleDown;
+                        this.animManager.currentAnim = this.animManager.idleDown;
                         break;
                 }
             }
 
-            this.PlayAnim(this._animManager.currentAnim, ref this.texture);
+            this.PlayAnim(this.animManager.currentAnim, ref this.texture);
         }
 
         /// <summary>
         /// Read keys that change the tool that is currently being used
         /// </summary>
-        /// <remarks>Differs from ReakKey() because this method is Hunter only</remarks>
+        /// <remarks>Differs from ReadKey() because this method is Hunter only</remarks>
         private void ReadItemChangingKey()
         {
             // Item Up or Down Key

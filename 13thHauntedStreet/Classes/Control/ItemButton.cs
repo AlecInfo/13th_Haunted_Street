@@ -39,7 +39,7 @@ namespace _13thHauntedStreet
         /// <summary>
         /// permet d'afficher un carré à côté du bouton
         /// </summary>
-        public bool IsSelected { get; set; }
+        public static bool IsSelected { get; set; }
 
         public Rectangle Rectangle { get; set; }
 
@@ -74,7 +74,7 @@ namespace _13thHauntedStreet
 
             this.ScaleText = this.Scale;
 
-            this.IsSelected = false;
+            IsSelected = false;
 
             this._dispalyImageAndText = imageText;
         }
@@ -152,7 +152,7 @@ namespace _13thHauntedStreet
 
             // Create a small square next to the text clicked beforehand
             // so that the user knows in which menu he is
-            if (this.IsSelected)
+            if (IsSelected)
             {
                 // Create the rectagle
                 Rectangle rectangle = new Rectangle((int)(Position.X - 20), (int)Position.X, 10, 10);

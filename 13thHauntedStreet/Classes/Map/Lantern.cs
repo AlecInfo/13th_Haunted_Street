@@ -13,7 +13,7 @@ using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    class Lantern : GameObject
+    public class Lantern : GameObject
     {
         // Attributs
         private float scale;

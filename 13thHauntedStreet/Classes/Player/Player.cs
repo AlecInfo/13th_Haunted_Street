@@ -1,11 +1,12 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Player abstract class
  */
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,15 +14,18 @@ using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    abstract class Player : GameObject
+    public abstract class Player : GameObject
     {
         // Properties
-        //protected Input _input;
+        public int id;
+
+        public bool isObject = false;
+
         protected GameTime _gameTime;
         public Scene currentScene;
         public Light light;
 
-        protected Vector2 _movement;
+        public Vector2 movement;
         public float scale;
         public Rectangle collisionBox;
 
@@ -67,34 +71,34 @@ namespace _13thHauntedStreet
         /// </summary>
         protected void ReadInput()
         {
-            this._movement = Vector2.Zero;
+            this.movement = Vector2.Zero;
 
             // X
             if (Game1.knm.isButtonPressed(Game1.input.Left))
             {
-                this._movement.X += -1;
+                this.movement.X += -1;
             }
 
             if (Game1.knm.isButtonPressed(Game1.input.Right))
             {
-                this._movement.X += 1;
+                this.movement.X += 1;
             }
 
             // Y
             if (Game1.knm.isButtonPressed(Game1.input.Up))
             {
-                this._movement.Y += -1;
+                this.movement.Y += -1;
             }
 
             if (Game1.knm.isButtonPressed(Game1.input.Down))
             {
-                this._movement.Y += 1;
+                this.movement.Y += 1;
             }
 
             // diagonal fix
-            if (this._movement.X != 0 && this._movement.Y != 0) // if is moving diagonally
+            if (this.movement.X != 0 && this.movement.Y != 0) // if is moving diagonally
             {
-                this._movement /= 1.4f;
+                this.movement /= 1.4f;
             }
         }
 

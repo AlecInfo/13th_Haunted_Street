@@ -47,7 +47,10 @@ namespace _13thHauntedStreet
             
             // Button of the menu
             // Action of new game
-            callback = (i) => { animationStarted = true; Game1.self.displayMainMenu = false;  };
+            callback = (i) => {
+                Game1.client = new Client();
+                Game1.self.displayMainMenu = false;  
+            };
             // Create the button new game
             Add(MainMenu.NewButton("New game", _font, new Vector2(Screen.OriginalScreenSize.X / 7, Screen.OriginalScreenSize.Y / 1.8f), callback, false));
             
@@ -58,6 +61,7 @@ namespace _13thHauntedStreet
                 Game1.self.settingsMenu = new SettingsMenu( position,  background, Game1.self._arrowButton, font);
             };
             // Create the button new game
+
             Add(MainMenu.NewButton("Settings", _font, GetButtonPosition(), callback, false));
 
             // Action of quit

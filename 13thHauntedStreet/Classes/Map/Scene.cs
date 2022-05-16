@@ -14,7 +14,7 @@ using Penumbra;
 
 namespace _13thHauntedStreet
 {
-    class Scene
+    public class Scene
     {
         // Properties
         private Texture2D _ground;
@@ -59,37 +59,33 @@ namespace _13thHauntedStreet
                 Game1.penumbra.Hulls.Add(furniture.hull);
 
                 // Update furniture hulls (hunter only)
-                /*if (player.GetType() == typeof(Hunter))
-                {*/
-                    //Hunter hunter = (player as Hunter);
-                    // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
-                    if (isInside(furniture, player))
+                // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
+                if (isInside(furniture, player))
+                {
+                    if(player.GetType() == typeof(Hunter))
                     {
-                        if(player.GetType() == typeof(Hunter))
+                        Hunter hunter = player as Hunter;
+                        if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
                         {
-                            Hunter hunter = player as Hunter;
-                            if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
-                            {
-                                hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
-                            }
-                        }
-                        else
-                        {
-                            Ghost ghost = player as Ghost;
-                            if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
-                            {
-                                ghost.light.IgnoredHulls.Add(furniture.hull);
-                            }
+                            hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
                         }
                     }
                     else
                     {
-                        if (player.GetType() == typeof(Hunter))
-                            (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
-                        else
-                            (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
+                        Ghost ghost = player as Ghost;
+                        if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
+                        {
+                            ghost.light.IgnoredHulls.Add(furniture.hull);
+                        }
+                    }
                 }
-                //}
+                else
+                {
+                    if (player.GetType() == typeof(Hunter))
+                        (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
+                    else
+                        (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
+                }
             }
 
             // Update lanterns
@@ -135,6 +131,16 @@ namespace _13thHauntedStreet
             List<GameObject> ghostList = new List<GameObject>();
 
             gameObjectList.AddRange(furnitureList);
+
+            List<foreignPlayer> otherPlayersToDraw = new List<foreignPlayer>();
+            foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
+            {
+                if (otherPlayer._id != player.id)
+                {
+                    otherPlayersToDraw.Add(otherPlayer);
+                }
+            }
+            gameObjectList.AddRange(otherPlayersToDraw);
 
             // filter by player type
             if (this.player.GetType() == typeof(Hunter))
