@@ -24,7 +24,7 @@ namespace _13thHauntedStreet
         #endregion
 
         // Ctor
-        public ItemButtonOption(Texture2D texture, SpriteFont font, Action<int> eventButton, Func<bool> enabledButton, bool DrawImageText) : base(texture, font, eventButton, DrawImageText)
+        public ItemButtonOption(Texture2D texture, SpriteFont font, Action<int, GameTime> eventButton, Func<bool> enabledButton, bool DrawImageText) : base(texture, font, eventButton, DrawImageText)
         {
             this.enabledButton = enabledButton;
         }

@@ -47,7 +47,7 @@ namespace _13thHauntedStreet
             foreach (Door door in this.currentSceneDoors)
             {
                 // if player has entered a door
-                if (door.hasEntered(player) && door.connectedDoor != null)
+                if (door.hasEntered() && door.connectedDoor != null)
                 {
                     GoThroughDoor(door);
                 }

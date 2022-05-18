@@ -229,6 +229,7 @@ namespace _13thHauntedStreet
                                             fp._Texture = texturePlayer;
                                             fp._Position = PositionPlayer;
                                             fp.playerType = p.PlayerType;
+                                            fp.IsObject = p.IsObject;
                                             objetJoueurExistant = true;
                                             break;
                                         }

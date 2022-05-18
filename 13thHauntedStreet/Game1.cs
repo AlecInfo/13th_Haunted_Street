@@ -285,7 +285,7 @@ namespace _13thHauntedStreet
                         dataPlayer.PlayerType = player.GetType().ToString();
                         dataPlayer.IsObject = player.isObject;
 
-                        dataPlayer.TextureName = player.texture.Name;
+                        dataPlayer.TextureName = player.texture.Name;   
 
                         string serializeToStringPlayer;
                         serializeToStringPlayer = SerializeObject();

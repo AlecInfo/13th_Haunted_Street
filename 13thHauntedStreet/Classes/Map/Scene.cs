@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Scene Class
  */
@@ -54,38 +54,24 @@ namespace _13thHauntedStreet
             // lights
             Game1.penumbra.Lights.AddRange(player.lights);
 
+            foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
+            {
+                if (otherPlayer.IsObject)
+                {
+                    Furniture ghostObject = new Furniture(otherPlayer.position, otherPlayer.texture, 1);
+
+                    this.furnitureList.Add(ghostObject);
+                }
+            }
+
             foreach (Furniture furniture in this.furnitureList)
             {
+
                 Game1.penumbra.Hulls.Add(furniture.hull);
 
                 // Update furniture hulls (hunter only)
-                // if the player is inside a furniture object, add the furniture hull to the players IgnoredHulls list, else remove it from the list
-                if (isInside(furniture, player))
-                {
-                    if(player.GetType() == typeof(Hunter))
-                    {
-                        Hunter hunter = player as Hunter;
-                        if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
-                        {
-                            hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
-                        }
-                    }
-                    else
-                    {
-                        Ghost ghost = player as Ghost;
-                        if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
-                        {
-                            ghost.light.IgnoredHulls.Add(furniture.hull);
-                        }
-                    }
-                }
-                else
-                {
-                    if (player.GetType() == typeof(Hunter))
-                        (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
-                    else
-                        (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
-                }
+                HunterIgnoreHulls(furniture);
+
             }
 
             // Update lanterns
@@ -121,6 +107,41 @@ namespace _13thHauntedStreet
             return false;
         }
 
+        /// <summary>
+        /// If the player is inside a furniture object, 
+        ///     add the furniture hull to the players IgnoredHulls list, else remove it from the list
+        /// </summary>
+        /// <param name="furniture"></param>
+        private void HunterIgnoreHulls(Furniture furniture)
+        {
+            if (isInside(furniture, player))
+            {
+                if (player.GetType() == typeof(Hunter))
+                {
+                    Hunter hunter = player as Hunter;
+                    if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
+                    {
+                        hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
+                    }
+                }
+                else
+                {
+                    Ghost ghost = player as Ghost;
+                    if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
+                    {
+                        ghost.light.IgnoredHulls.Add(furniture.hull);
+                    }
+                }
+            }
+            else
+            {
+                if (player.GetType() == typeof(Hunter))
+                    (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
+                else
+                    (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             // draw background image
@@ -149,8 +170,15 @@ namespace _13thHauntedStreet
             }
 
             if(this.player.GetType() == typeof(Ghost))
-            {
-                ghostList.Add(player);
+            { 
+                if (player.isObject)
+                {
+                    gameObjectList.Add(player);
+                }
+                else
+                {
+                    ghostList.Add(player);
+                }
             }
 
 

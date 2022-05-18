@@ -39,7 +39,11 @@ namespace _13thHauntedStreet
         private bool _previusMouse;
         private bool _currentMouse;
 
-        //public bool isObject = false;
+        // For detrasform the ghost
+        private bool _isDetrasform = false;
+        private bool _isStun = false;
+        private float _countDuration = 2f; //every  2s.
+        private float _currentTime = 0f;
 
         // Ctor
         public Ghost(Vector2 initialPos, GhostAnimationManager animationManager)
@@ -65,7 +69,7 @@ namespace _13thHauntedStreet
             {
                 float posX = this._objectBar_xPosition - item.texture.Width / 2;
 
-                Action<int> callback = (indexButton) => 
+                Action<int, GameTime> callback = (indexButton, gameTime) => 
                 {
                     if (!isObject || this.texture != item.texture)
                     {
@@ -73,7 +77,7 @@ namespace _13thHauntedStreet
                     }
                     else
                     {
-                        Detransform();
+                        Detransform(_gameTime);
                     }
                 };
                 this._listButton.Add(NewButton(Game1.self.font, new Vector2(posX, this._objectBar_yPosition), item.texture, callback, indexCount));
@@ -95,7 +99,7 @@ namespace _13thHauntedStreet
             if (isObject)
             {
                 // Object collision box
-                this.collisionBox = new Rectangle((int)(
+                collisionBox = new Rectangle((int)(
                     this.position.X - this.texture.Width / 2), (int)(this.position.Y - this.texture.Height / 2 + this.texture.Height / 3.5f),
                     (int)this.texture.Width, (int)(this.texture.Height - this.texture.Height / 3.5f));
 
@@ -109,13 +113,18 @@ namespace _13thHauntedStreet
                 // The ghost can detransform with the right click
                 if (this._currentMouse && !this._previusMouse)
                 {
-                    Detransform();
+                    Detransform(gameTime);
+                }
+
+                if (!this._isStun && this._isDetrasform)
+                {
+                    //Stun();
                 }
             }
             else
             {
                 // Ghost collision box
-                this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
+                collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
 
                 // if the player is not moving in the y axis, make the ghost float
                 if (this.movement.Y == 0)
@@ -141,8 +150,6 @@ namespace _13thHauntedStreet
             {
                 this.UpdatePosition();
             }
-
-
         }
 
         public override void UpdatePosition()
@@ -193,6 +200,11 @@ namespace _13thHauntedStreet
 
         private void Transform(int indexButton, Furniture furniture)
         {
+            // Object collision box
+            collisionBox = new Rectangle((int)(
+                this.position.X - furniture.texture.Width / 2), (int)(this.position.Y - furniture.texture.Height / 2 + furniture.texture.Height / 3.5f),
+                (int)furniture.texture.Width, (int)(furniture.texture.Height - furniture.texture.Height / 3.5f));
+
 
             Vector2 distance = this.movement * movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
             if (!PlayerIsCollide(ref distance))
@@ -213,7 +225,7 @@ namespace _13thHauntedStreet
             }
         }
 
-        private void Detransform()
+        private void Detransform(GameTime gameTime)
         {
             this.animManager.currentAnim = this.animManager.animationRight;
             this.texture = this.animManager.currentAnim[0];
@@ -226,11 +238,24 @@ namespace _13thHauntedStreet
             this.scale = DEFAULTSCALE;
 
             isObject = false;
-            
-            this.movementSpeed = MOVEMENTSPEED_GHOST;
+            isObject = false;
+            this._isDetrasform = true;
         }
 
-        static ItemButton NewButton(SpriteFont font, Vector2 position, Texture2D texture, Action<int> callback, int parameterCallback, bool DrawImageText = true)
+        private void Stun()
+        {
+            _currentTime += (float)_gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (_currentTime >= _countDuration)
+            {
+                _currentTime = 0;
+                this._isStun = true;
+                this._isDetrasform = false;
+                this.movementSpeed = MOVEMENTSPEED_GHOST;
+            }
+        }
+
+        static ItemButton NewButton(SpriteFont font, Vector2 position, Texture2D texture, Action<int, GameTime> callback, int parameterCallback, bool DrawImageText = true)
         {
             return new ItemButton(texture, font, callback, DrawImageText)
             {

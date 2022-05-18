@@ -29,6 +29,9 @@ namespace _13thHauntedStreet
             get { return texture; }   // get method
             set { texture = value; }
         }
+
+        public bool IsObject { get; set; }
+
         public foreignPlayer(Vector2 Position, Texture2D Texture, string playerType)
         {
             this._Position = Position;

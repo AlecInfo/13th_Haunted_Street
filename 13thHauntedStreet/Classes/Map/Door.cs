@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Door class
  */
@@ -33,19 +33,19 @@ namespace _13thHauntedStreet
                 switch (directionNb)
                 {
                     case 1: // left
-                        offset.X = SPAWNOFFSET;
+                        offset.X = SPAWNOFFSET + Player.collisionBox.Width;
                         break;
 
                     case 2: // right
-                        offset.X = -SPAWNOFFSET;
+                        offset.X = -SPAWNOFFSET - Player.collisionBox.Width;
                         break;
 
                     case 3: // up
-                        offset.Y = SPAWNOFFSET;
+                        offset.Y = SPAWNOFFSET + Player.collisionBox.Height;
                         break;
 
                     case 4: // down
-                        offset.Y = -SPAWNOFFSET;
+                        offset.Y = -SPAWNOFFSET - Player.collisionBox.Height;
                         break;
                 }
 
@@ -88,12 +88,12 @@ namespace _13thHauntedStreet
         /// </summary>
         /// <param name="player"></param>
         /// <returns>true if inside door area, else false</returns>
-        public bool hasEntered(Player player)
+        public bool hasEntered()
         {
-            if (player.collisionBox.Right >= this.area.Left &&
-                player.collisionBox.Left <= this.area.Right &&
-                player.collisionBox.Bottom >= this.area.Top &&
-                player.collisionBox.Top <= this.area.Bottom)
+            if (Player.collisionBox.Right >= this.area.Left &&
+                Player.collisionBox.Left <= this.area.Right &&
+                Player.collisionBox.Bottom >= this.area.Top &&
+                Player.collisionBox.Top <= this.area.Bottom)
             {
                 return true;
             }
