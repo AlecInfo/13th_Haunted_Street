@@ -290,7 +290,7 @@ namespace _13thHauntedStreet
                         string serializeToStringPlayer;
                         serializeToStringPlayer = SerializeObject();
                         System.Diagnostics.Debug.WriteLine(serializeToStringPlayer);
-                        client.envoieMessage(serializeToStringPlayer);
+                        //client.envoieMessage(serializeToStringPlayer);
                     }
                 }
             }
@@ -405,7 +405,7 @@ namespace _13thHauntedStreet
         {
             base.OnExiting(sender, args);
 
-            client.envoieMessage("Je me deconnecte :" + Game1.player.id);
+            //client.envoieMessage("Je me deconnecte :" + Game1.player.id);
         }
     }
 }

@@ -91,14 +91,43 @@ namespace _13thHauntedStreet
             this._furnitureList = furnitureList;
             this.currentScene = scene;
 
-            this._previusMouse = this._currentMouse;
-            this._currentMouse = Game1.knm.isButtonPressed(Game1.input.Use2);
-
-            if (this._currentMouse && !this._previusMouse && isObject)
+            // If the ghost was trasformed in object or not
+            if (isObject)
             {
-                Detransform();
+                // Object collision box
+                this.collisionBox = new Rectangle((int)(
+                    this.position.X - this.texture.Width / 2), (int)(this.position.Y - this.texture.Height / 2 + this.texture.Height / 3.5f),
+                    (int)this.texture.Width, (int)(this.texture.Height - this.texture.Height / 3.5f));
+
+                // Reset the ghost float 
+                this._floatOffset.Y = 0;
+
+                // Get the mouse state
+                this._previusMouse = this._currentMouse;
+                this._currentMouse = Game1.knm.isButtonPressed(Game1.input.Use2);
+
+                // The ghost can detransform with the right click
+                if (this._currentMouse && !this._previusMouse)
+                {
+                    Detransform();
+                }
+            }
+            else
+            {
+                // Ghost collision box
+                this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
+
+                // if the player is not moving in the y axis, make the ghost float
+                if (this.movement.Y == 0)
+                {
+                    this._floatTimer += (float)this._gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
+                    this._floatOffset.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
+                }
+
+                this.UpdateAnim();
             }
 
+            // Update the button who allows to you transform the ghost
             foreach (ItemButton item in this._listButton)
             {
                 Vector2 changePosition = Vector2.Zero;
@@ -107,25 +136,13 @@ namespace _13thHauntedStreet
 
             this.ReadInput();
 
-            // if the player is not moving in the y axis, make the ghost float
-            if (this.movement.Y == 0 && !isObject)
-            {
-                this._floatTimer += (float)this._gameTime.ElapsedGameTime.TotalSeconds * FLOATSPEED;
-                this._floatOffset.Y += (float)Math.Sin(this._floatTimer) * FLOATSIZE;
-
-            }
-            else
-            {
-                this._floatOffset.Y = 0;
-            }
-            
             // if player has moved update position
             if (this.movement.X != 0 || this.movement.Y != 0)
             {
                 this.UpdatePosition();
             }
 
-            this.UpdateAnim();
+
         }
 
         public override void UpdatePosition()
@@ -134,15 +151,7 @@ namespace _13thHauntedStreet
 
             if (isObject) 
             {
-                this.collisionBox = new Rectangle((int)(
-                    this.position.X - this.texture.Width / 2), (int)(this.position.Y - this.texture.Height / 2 + this.texture.Height / 3.5f), 
-                    (int)this.texture.Width, (int)(this.texture.Height - this.texture.Height / 3.5f));
-                
                 this.ObjectCollision(ref distance);
-            }
-            else
-            {
-                this.collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
             }
 
             this.WallCollision(ref distance);
@@ -156,20 +165,16 @@ namespace _13thHauntedStreet
         /// </summary>
         private void UpdateAnim()
         {
-            if (!isObject)
+            if (this.movement.X > 0)
             {
-                if (this.movement.X > 0)
-                {
-                    this.animManager.currentAnim = this.animManager.animationRight;
-                }
-                else if (this.movement.X < 0)
-                {
-                    this.animManager.currentAnim = this.animManager.animationLeft;
-                }
-                
-                this.PlayAnim(this.animManager.currentAnim, ref this.texture);
+                this.animManager.currentAnim = this.animManager.animationRight;
             }
-
+            else if (this.movement.X < 0)
+            {
+                this.animManager.currentAnim = this.animManager.animationLeft;
+            }
+                
+            this.PlayAnim(this.animManager.currentAnim, ref this.texture);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -188,22 +193,24 @@ namespace _13thHauntedStreet
 
         private void Transform(int indexButton, Furniture furniture)
         {
-            this.animManager.currentAnim = this.animManager.furniture;
-            this.texture = this.animManager.furniture[indexButton];
 
             Vector2 distance = this.movement * movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
-            ObjectCollision(ref distance);
-
-            foreach (ItemButton item in this._listButton)
+            if (!PlayerIsCollide(ref distance))
             {
-                item.IsOn = false;
+                this.animManager.currentAnim = this.animManager.furniture;
+                this.texture = this.animManager.furniture[indexButton];
+
+                foreach (ItemButton item in this._listButton)
+                {
+                    item.IsOn = false;
+                }
+                this._listButton[indexButton].IsOn = true;
+
+                this.movementSpeed = MOVEMENTSPEED_OBJECT;
+                this.scale = furniture.scale;
+
+                isObject = true;
             }
-            this._listButton[indexButton].IsOn = true;
-
-            this.movementSpeed = MOVEMENTSPEED_OBJECT;
-            this.scale = furniture.scale;
-
-            isObject = true;
         }
 
         private void Detransform()

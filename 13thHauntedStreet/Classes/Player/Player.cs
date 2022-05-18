@@ -208,5 +208,39 @@ namespace _13thHauntedStreet
                 distance.Y = 0;
             }
         }
+
+        protected bool PlayerIsCollide(ref Vector2 distance)
+        {
+            foreach (Furniture item in this._furnitureList)
+            {
+                if (((this.collisionBox.Top + distance.Y > item.collisionBox.Top && this.collisionBox.Top + distance.Y < item.collisionBox.Bottom) ||
+                    (this.collisionBox.Bottom + distance.Y > item.collisionBox.Top && this.collisionBox.Bottom + distance.Y < item.collisionBox.Bottom)) && 
+                    ((this.collisionBox.Right + distance.X < item.collisionBox.Right && this.collisionBox.Right + distance.X > item.collisionBox.Left) ||
+                    (this.collisionBox.Left + distance.X > item.collisionBox.Left && this.collisionBox.Left + distance.X < item.collisionBox.Right)))
+                {
+                    return true;
+                }
+            }
+
+            if (this.collisionBox.Left + distance.X < this.currentScene.groundArea.Left) // Left
+            {
+                return true;
+            }
+            else if (this.collisionBox.Right + distance.X > this.currentScene.groundArea.Right) // Right
+            {
+                return true;
+            }
+
+            if (this.collisionBox.Top + distance.Y < this.currentScene.groundArea.Top) // Top
+            {
+                return true;
+            }
+            else if (this.collisionBox.Bottom + distance.Y > this.currentScene.groundArea.Bottom) // Bottom
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
