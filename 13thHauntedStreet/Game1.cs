@@ -65,7 +65,7 @@ namespace _13thHauntedStreet
 
         public Texture2D _controlButton;
 
-        private SpriteFont _font;
+        public SpriteFont font;
 
         public static Texture2D defaultTexture;
 
@@ -73,6 +73,7 @@ namespace _13thHauntedStreet
         public static GhostAnimationManager ghostAM = new GhostAnimationManager();
         public static HunterAnimationManager hunterAM = new HunterAnimationManager();
         public static Player player;
+
         public Texture2D crosshair;
         public static Texture2D flashlightIcon;
         public static Texture2D flashlightFrameIcon;
@@ -85,7 +86,7 @@ namespace _13thHauntedStreet
         // Furnitures
         private Texture2D bedTexture;
         private Texture2D drawerTexture;
-        private List<Furniture> furnitureList = new List<Furniture>();
+        public List<Furniture> furnitureList = new List<Furniture>();
 
         // remove later
         private Texture2D bg;
@@ -149,17 +150,26 @@ namespace _13thHauntedStreet
             _backgroundMainMenu = Content.Load<Texture2D>("TempFiles/BackgroundMenu");
             _arrowButton = Content.Load<Texture2D>("TempFiles/arrow");
             _controlButton = Content.Load<Texture2D>("TempFiles/buttonControl");
-            _font = Content.Load<SpriteFont>("TempFiles/theFont");
+            font = Content.Load<SpriteFont>("TempFiles/theFont");
 
-            _mainMenu = new MainMenu(Vector2.Zero, _backgroundMainMenu, _font);
+            _mainMenu = new MainMenu(Vector2.Zero, _backgroundMainMenu, font);
 
             defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             defaultTexture.SetData(new Color[] { Color.White });
 
+            // Furniture
+            bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
+            drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
+            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
+            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
 
             // Ghost
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/left/ghostLeft", 3);
             ghostAM.animationRight = multipleTextureLoader("TempFiles/GhostSprites/right/ghostRight", 3);
+            foreach (Furniture item in furnitureList)
+            {
+                ghostAM.furniture.Add(item.texture);
+            }
 
             // Hunter
             hunterAM.walkingLeft = multipleTextureLoader("TempFiles/HunterSprites/walking_left/walking_left", 6);
@@ -189,19 +199,14 @@ namespace _13thHauntedStreet
             input.Up = KnMButtons.W;
             input.Down = KnMButtons.S;
             input.Use1 = KnMButtons.LeftClick;
+            input.Use2 = KnMButtons.RightClick;
             input.ItemUp = KnMButtons.ScrollUp;
             input.ItemDown = KnMButtons.ScrollDown;
 
-            player = new Ghost(
+            player = new Hunter(
                 new Vector2(500, 500),
-                ghostAM
+                hunterAM
             );
-
-            // Furniture
-            bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
-            drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
-            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
-            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
 
             // Map
             bg = Content.Load<Texture2D>("TempFiles/bg");
@@ -211,8 +216,8 @@ namespace _13thHauntedStreet
 
             testMap = new Map(player,
                 new List<Scene>() {
-                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
-                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
+                    new Scene(1, bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
+                    new Scene(2, bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
                 }
             );
 
@@ -272,23 +277,70 @@ namespace _13thHauntedStreet
                 TimeSpan ts = DateTime.Now - clientLastUpdate;
                 if (ts.Milliseconds >= 62)
                 {
-                    string texturePath = player.texture.ToString();
-                    if (player.movement.X != 0 || player.movement.Y != 0 || dataPlayer.Texture != texturePath)
+                    // Test if changed, Hunter only
+                    bool hasChangedHunter = false;
+                    do
+                    {
+
+                        if (player.GetType() == typeof(Hunter))
+                        {
+                            Hunter hunter = (player as Hunter);
+                            if (hunter.currentTool.GetType() == typeof(Flashlight))
+                            {
+                                if ((hunter.currentTool as Flashlight).isLit != dataPlayer.IsLightOn)
+                                {
+                                    hasChangedHunter = true;
+                                    break;
+                                }
+                            }
+
+                            if (hunter.currentTool.light.Radius != dataPlayer.Radius)
+                            {
+                                hasChangedHunter = true;
+                                break;
+                            }
+
+                            bool isFlashlight = hunter.currentTool.GetType() == typeof(Flashlight) ? true : false;
+                            if (isFlashlight != dataPlayer.ToolIsFlashlight)
+                            {
+                                hasChangedHunter = true;
+                                break;
+                            }
+                        }
+
+                        break;
+                    } while (false);
+
+                    if (player.movement.X != 0 || player.movement.Y != 0 || dataPlayer.TextureName != player.texture.Name || hasChangedHunter)
                     {
                         dataPlayer.Id = player.id;
-                        dataPlayer.Texture = texturePath;
                         dataPlayer.Position = player.position.ToString();
 
                         dataPlayer.PlayerType = player.GetType().ToString();
-                        string[] nameSplit = player.texture.Name.Split('/', '\\');
-                        dataPlayer.AnimName = nameSplit[nameSplit.Length - 2];
+                        dataPlayer.CurrentScene = testMap.currentScene.id;
+
+                        dataPlayer.IsObject = player.isObject;
+
+                        dataPlayer.TextureName = player.texture.Name;
+
                         if (player.GetType() == typeof(Hunter))
                         {
-                            dataPlayer.AnimFrame = (player as Hunter).animManager.currentAnim.FindIndex(item => item == player.texture);
+                            Hunter hunter = player as Hunter;
+                            if (hunter.currentTool.GetType() == typeof(Flashlight))
+                            {
+                                dataPlayer.IsLightOn = (hunter.currentTool as Flashlight).isLit;
+                            }
+                            else
+                                dataPlayer.IsLightOn = true;
+
+                            dataPlayer.Radius = hunter.currentTool.angle;
+                            dataPlayer.ToolIsFlashlight = hunter.currentTool.GetType() == typeof(Flashlight) ? true : false;
                         }
                         else
                         {
-                            dataPlayer.AnimFrame = (player as Ghost).animManager.currentAnim.FindIndex(item => item == player.texture);
+                            dataPlayer.IsLightOn = false;
+                            dataPlayer.Radius = 0;
+                            dataPlayer.ToolIsFlashlight = false;
                         }
 
                         string serializeToStringPlayer;
@@ -315,13 +367,13 @@ namespace _13thHauntedStreet
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 
                 // Display the main menu
-                _mainMenu.Draw(gameTime, _spriteBatch);
+                _mainMenu.Draw(_spriteBatch);
 
                 // If the gameplay menu is instantiated
                 if (settingsMenu != null)
                 {
                     // Display the gameplay menu
-                    settingsMenu.Draw(gameTime, _spriteBatch);
+                    settingsMenu.Draw(_spriteBatch);
                 }
                 _spriteBatch.End();
             }
@@ -347,7 +399,7 @@ namespace _13thHauntedStreet
 
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
 
-                _spriteBatch.DrawString(_font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                _spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }
 
             if (!displayMainMenu)

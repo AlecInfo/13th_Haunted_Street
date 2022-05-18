@@ -19,6 +19,7 @@ namespace _13thHauntedStreet
         public Texture2D icon;
         public Vector2 position;
         public Light light;
+        public float angle;
 
 
         // Methods

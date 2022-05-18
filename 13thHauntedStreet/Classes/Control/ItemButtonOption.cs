@@ -24,12 +24,12 @@ namespace _13thHauntedStreet
         #endregion
 
         // Ctor
-        public ItemButtonOption(Texture2D texture, SpriteFont font, Action eventButton, Func<bool> enabledButton, bool DrawImageText) : base(texture, font, eventButton, DrawImageText)
+        public ItemButtonOption(Texture2D texture, SpriteFont font, Action<int> eventButton, Func<bool> enabledButton, bool DrawImageText) : base(texture, font, eventButton, DrawImageText)
         {
             this.enabledButton = enabledButton;
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             // Change the color of the button if the value is at maximum
             if (!enabledButton())
@@ -43,7 +43,7 @@ namespace _13thHauntedStreet
             {
                 this.ButtonColor = _disableColor;
             }
-            base.Draw(gameTime, spriteBatch);
+            base.Draw(spriteBatch);
         }
     }
 }

@@ -17,6 +17,8 @@ namespace _13thHauntedStreet
     public class Scene
     {
         // Properties
+        public int id;
+
         private Texture2D _ground;
         public Texture2D walls;
         public Vector2 backgroundScale;
@@ -29,10 +31,11 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList, lanternList) { }
+        public Scene(int id, Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList) : this(id, ground, walls, Vector2.One, groundArea, player, furnitureList, lanternList) { }
 
-        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList)
+        public Scene(int id, Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList)
         {
+            this.id = id;
             this._ground = ground;
             this.walls = walls;
             this.backgroundScale = backgroundScale;
@@ -53,6 +56,21 @@ namespace _13thHauntedStreet
 
             // lights
             Game1.penumbra.Lights.AddRange(player.lights);
+            foreach (foreignPlayer otherPlayer in Client.listOtherPlayer) 
+            {
+                if (otherPlayer._id != player.id && otherPlayer.currentScene == this.id)
+                {
+                    if (otherPlayer.light.Enabled)
+                    {
+                        Game1.penumbra.Lights.Add(otherPlayer.light);
+                    }
+
+                    if (otherPlayer.toolLight.Enabled)
+                    {
+                        Game1.penumbra.Lights.Add(otherPlayer.toolLight);
+                    }
+                }
+            }
 
             foreach (Furniture furniture in this.furnitureList)
             {
@@ -135,7 +153,7 @@ namespace _13thHauntedStreet
             List<foreignPlayer> otherPlayersToDraw = new List<foreignPlayer>();
             foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
             {
-                if (otherPlayer._id != player.id)
+                if (otherPlayer._id != player.id && otherPlayer.currentScene == this.id)
                 {
                     otherPlayersToDraw.Add(otherPlayer);
                 }

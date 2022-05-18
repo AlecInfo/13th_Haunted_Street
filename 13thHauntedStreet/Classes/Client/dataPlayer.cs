@@ -18,11 +18,17 @@ namespace _13thHauntedStreet
         #region Attributs
 
         private string position;
-        private string texturePath;
         private int id;
         private string playerType;
-        private string animName;
-        private int animFrame;
+        private string _textureName;
+        private int currentScene;
+
+        private bool _isObject;
+
+        // light
+        private bool isLightOn;
+        private float radius;
+        private bool toolIsFlashlight;
 
         #endregion
 
@@ -33,12 +39,7 @@ namespace _13thHauntedStreet
             get { return position; }   // get method
             set { position = value; }
         }
-        [XmlElement]
-        public string Texture
-        {
-            get { return texturePath; }   // get method
-            set { texturePath = value; }
-        }
+
         [XmlAttribute]
         public int Id
         {
@@ -51,16 +52,47 @@ namespace _13thHauntedStreet
             set { playerType = value; } 
         }
         [XmlElement]
-        public string AnimName
+        public string TextureName
         {
-            get { return animName; }
-            set { animName = value; }
+            get { return _textureName; }
+            set { _textureName = value; }
         }
+
         [XmlElement]
-        public int AnimFrame
+        public int CurrentScene
         {
-            get { return animFrame; }
-            set { animFrame = value; }
+            get { return currentScene; }
+            set { currentScene = value; }
+        }
+
+        // Ghost
+        [XmlElement]
+        public bool IsObject
+        {
+            get { return _isObject; }
+            set { _isObject = value; }
+        }
+
+        // Light
+        [XmlElement]
+        public bool IsLightOn
+        {
+            get { return isLightOn; }
+            set { isLightOn = value; }
+        }
+
+        [XmlElement]
+        public float Radius
+        {
+            get { return radius; }
+            set { radius = value; }
+        }
+
+        [XmlElement]
+        public bool ToolIsFlashlight
+        {
+            get { return toolIsFlashlight; }
+            set { toolIsFlashlight = value; }
         }
         #endregion
 

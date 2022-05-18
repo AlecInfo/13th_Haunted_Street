@@ -17,12 +17,11 @@ namespace _13thHauntedStreet
     class Flashlight : Tool
     {
         // Properties
-        public float angle;
-
-        private bool _isLit = true;
+        public bool isLit = true;
         private bool _hasReleasedUseKey = true;
 
         public const int POSITIONOFFSET = 50;
+        public const int LIGHTGHEIGHT = 850;
 
 
         // Ctor
@@ -32,7 +31,7 @@ namespace _13thHauntedStreet
 
             this.light = new Spotlight
             {
-                Scale = new Vector2(1000, 850),
+                Scale = new Vector2(1000, LIGHTGHEIGHT),
                 Position = Vector2.Zero,
                 ShadowType = ShadowType.Occluded,
                 Radius = 25,
@@ -46,7 +45,7 @@ namespace _13thHauntedStreet
         {
             // use
             Use();
-            this.light.Enabled = this._isLit;
+            this.light.Enabled = this.isLit;
 
             // find light angle
             MouseState msState = Mouse.GetState();
@@ -62,7 +61,7 @@ namespace _13thHauntedStreet
         {
             if (Game1.knm.isButtonPressed(Game1.input.Use1) && this._hasReleasedUseKey)
             {
-                this._isLit = !this._isLit;
+                this.isLit = !this.isLit;
                 this._hasReleasedUseKey = false;
             }
 
@@ -74,7 +73,7 @@ namespace _13thHauntedStreet
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 playerPosition)
         {
-            spriteBatch.Draw(Game1.flashlightIcon, playerPosition + this.position, null, this._isLit?Color.White:Color.Gray, this.angle, Game1.flashlightIcon.Bounds.Center.ToVector2(), 4, 0, 1f);
+            spriteBatch.Draw(Game1.flashlightIcon, playerPosition + this.position, null, this.isLit?Color.White:Color.Gray, this.angle, Game1.flashlightIcon.Bounds.Center.ToVector2(), 4, 0, 1f);
 
             spriteBatch.Draw(this.icon, Screen.OriginalScreenSize - new Vector2(Hunter.UIFRAMEBORDER), null, Color.White, 0f, Game1.uiFrame.Bounds.Size.ToVector2(), Hunter.UIFRAMESCALE, 0, 0);
         }

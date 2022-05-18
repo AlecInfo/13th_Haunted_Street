@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Furniture class
  */
@@ -18,7 +18,7 @@ namespace _13thHauntedStreet
         // Properties
         public Rectangle collisionBox;
         public Hull hull;
-
+        public const float SCALE = 1;
 
         // Ctor
         public Furniture(Vector2 position, Texture2D texture)
@@ -42,7 +42,7 @@ namespace _13thHauntedStreet
         // Methods
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
+            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, Vector2.Zero, SCALE, 0, 0f);
             //spriteBatch.Draw(Game1.defaultTexture, this.collisionBox, null, Color.Black * 0.5f, 0f, Vector2.Zero, 0, 0f);
         }
     }

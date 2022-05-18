@@ -17,11 +17,10 @@ namespace _13thHauntedStreet
     class Vacuum : Tool
     {
         // Properties
-        public float angle;
-
         public bool _isOn = false;
 
         private const int POSITIONOFFSET = 50;
+        public const int LIGHTGHEIGHT = 300;
 
 
         // Ctor
@@ -31,7 +30,7 @@ namespace _13thHauntedStreet
 
             this.light = new Spotlight
             {
-                Scale = new Vector2(600, 300),
+                Scale = new Vector2(600, LIGHTGHEIGHT),
                 Position = Vector2.Zero,
                 ShadowType = ShadowType.Occluded,
                 Radius = 25,

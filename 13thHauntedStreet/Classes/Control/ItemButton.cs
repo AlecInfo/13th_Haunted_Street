@@ -28,14 +28,18 @@ namespace _13thHauntedStreet
 
         private bool _dispalyImageAndText;
 
-        public Action Click;
+        public Action<int> Click;
+
+        public int ParameterClick { get; set; }
+
+        public bool IsOn { get; set; }
 
         public SpriteEffects Effect { get; set; }
 
         /// <summary>
         /// permet d'afficher un carré à côté du bouton
         /// </summary>
-        public bool IsSelected { get; set; }
+        public static bool IsSelected { get; set; }
 
         public Rectangle Rectangle { get; set; }
 
@@ -46,13 +50,17 @@ namespace _13thHauntedStreet
         #endregion
 
         // Ctor
-        public ItemButton(Texture2D texture, SpriteFont font, Action eventButton, bool imageText)
+        public ItemButton(Texture2D texture, SpriteFont font, Action<int> eventButton, bool imageText)
         {
             // Create a rectangle texture 1 per 1 pixels, color white
             this._defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             this._defaultTexture.SetData(new Color[] { Color.White });
 
             this.Click = eventButton;
+
+            this.ParameterClick = 0;
+
+            this.IsOn = false;
 
             this._texture = texture;
 
@@ -66,7 +74,7 @@ namespace _13thHauntedStreet
 
             this.ScaleText = this.Scale;
 
-            this.IsSelected = false;
+            IsSelected = false;
 
             this._dispalyImageAndText = imageText;
         }
@@ -84,7 +92,7 @@ namespace _13thHauntedStreet
             // Calculate button size based on text
             else
             {
-                this.ButtonColor = Color.White * 0f;
+                //this.ButtonColor = Color.White * 0f;
                 this.Rectangle = new Rectangle((int)(Position.X), (int)Position.Y, (int)(_font.MeasureString(this.Text).X * this.ScaleText), (int)(_font.MeasureString(this.Text).Y * this.ScaleText));
             }
 
@@ -106,39 +114,45 @@ namespace _13thHauntedStreet
                 // If the mouse cliked in the button 
                 if (this._currentMouse.LeftButton == ButtonState.Released && this._previusMouse.LeftButton == ButtonState.Pressed)
                 {
-                    // Call click
-                    this.Click();
+                    // Call click 
+                    this.Click(this.ParameterClick);
                 }
             }
 
-            //zzz ne marche pas ché po pour quoi, quand la souris passe par deçu le bouton alors le bouton devien plus sombre
+            // When the mouse is hovering the button the text color change
             if (isHovering && !string.IsNullOrEmpty(this.Text))
             {
                 this.FontColor = Color.White;
             }
             else
             {
-                this.FontColor = Color.LightGray;
+                this.FontColor = new Color(180,180,180,255);
             }
 
-            //zzz la meme avec lui ché po pour quoi
-            if (isHovering && string.IsNullOrEmpty(this.Text) && !MaxValueReached())
+            if (IsOn && !isHovering)
             {
                 this.ButtonColor = Color.LightGray;
             }
-            else if (!isHovering && string.IsNullOrEmpty(this.Text) && !MaxValueReached())
+            else
             {
-                this.ButtonColor = Color.White;
+                if (isHovering && string.IsNullOrEmpty(this.Text) && !MaxValueReached())
+                {
+                    this.ButtonColor = Color.White;
+                }
+                else if ((!isHovering && string.IsNullOrEmpty(this.Text) && !MaxValueReached()))
+                {
+                    this.ButtonColor = new Color(100,100,100,255);
+                }
             }
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(this._texture, this.Rectangle, null, this.ButtonColor, 0f, Vector2.Zero, this.Effect, 0f);
 
             // Create a small square next to the text clicked beforehand
             // so that the user knows in which menu he is
-            if (this.IsSelected)
+            if (IsSelected)
             {
                 // Create the rectagle
                 Rectangle rectangle = new Rectangle((int)(Position.X - 20), (int)Position.X, 10, 10);

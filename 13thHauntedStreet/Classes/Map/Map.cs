@@ -67,10 +67,10 @@ namespace _13thHauntedStreet
         {
             this.currentScene.Draw(spriteBatch);
 
-            /*foreach (Door door in currentSceneDoors)
-            {
-                spriteBatch.Draw(Game1.defaultTexture, door.area, null, Color.Yellow * 0.5f);
-            }*/
+            //foreach (Door door in currentSceneDoors)
+            //{
+            //    spriteBatch.Draw(Game1.defaultTexture, door.area, null, Color.Yellow * 0.5f);
+            //}
         }
     }
 }

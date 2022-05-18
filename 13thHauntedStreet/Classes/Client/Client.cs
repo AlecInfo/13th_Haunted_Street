@@ -55,12 +55,22 @@ namespace _13thHauntedStreet
             {
 
                 byte[] data = new byte[600];
-                String responseData = string.Empty;
+                string responseData = string.Empty;
+                StringBuilder messageComplete = new StringBuilder();
+                int numberOfBytesRead = 0;
                 if (networkStream.DataAvailable == true)
                 {
-                    Int32 bytes = networkStream.Read(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    //       Int32 bytes = networkStream.Read(data, 0, data.Length);
+                    //     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+                    do
+                    {
+                        numberOfBytesRead = networkStream.Read(data, 0, data.Length);
+                        messageComplete.AppendFormat("{0}", Encoding.ASCII.GetString(data, 0, data.Length));
+                    }
+                    while (networkStream.DataAvailable);
+                    responseData = messageComplete.ToString();
+                    responseData = responseData.Split("|")[0];
 
                     string test = responseData.Split(":")[0].Trim();
                     // permet de donner l'id au joueur ou sinon rajouter un espace vide dans la liste
@@ -128,147 +138,152 @@ namespace _13thHauntedStreet
                             foreach (dataPlayer p in dataOfPlayers)
                             {
                                 if (!(p is null)) { 
-                                string y1 = p.Position.Split("Y:")[1];
-
-                                string y2 = y1.Split("}")[0];
-                                //y2.Replace(",", ".");
-                                y2 = y2.Trim();
-                                string x1 = p.Position.Split("X:")[1];
-                                string x2 = x1.Split("Y")[0];
-                                // x2.Replace(",", ".");
-                                x2 = x2.Trim();
-                                if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
-                                {
-                                    y2 = y2.Replace(".", ",");
-                                    x2 = x2.Replace(".", ",");
-
-                                }
-                                else
-                                {
-                                    y2 = y2.Replace(",", ".");
-                                    x2 = x2.Replace(",", ".");
-                                }
-                                float Y = float.Parse(y2);
-
-                                float X = float.Parse(x2);
-                                PositionPlayer.Y = Y;
-                                PositionPlayer.X = X;
-
-                                // TODO changer 
-                                //   if (p.Texture == "sprite/Ghost1")
-                                // {
-
-                                //listTextureOfPlayers[count] = Game1.player.texture;
-
-                                int frame = p.AnimFrame == -1 ? 0 : p.AnimFrame;
-                                if (p.PlayerType == typeof(Hunter).ToString())
-                                {
-                                    switch (p.AnimName)
+                                    string y1 = p.Position.Split("Y:")[1];
+                                    
+                                    string y2 = y1.Split("}")[0];
+                                    //y2.Replace(",", ".");
+                                    y2 = y2.Trim();
+                                    string x1 = p.Position.Split("X:")[1];
+                                    string x2 = x1.Split("Y")[0];
+                                    // x2.Replace(",", ".");
+                                    x2 = x2.Trim();
+                                    if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
                                     {
-                                        case "idle_down":
-                                            texturePlayer = Game1.hunterAM.idleDown[frame];
-                                            break;
+                                        y2 = y2.Replace(".", ",");
+                                        x2 = x2.Replace(".", ",");
 
-                                        case "idle_up":
-                                            texturePlayer = Game1.hunterAM.idleUp[frame];
-                                            break;
-
-                                        case "idle_right":
-                                            texturePlayer = Game1.hunterAM.idleRight[frame];
-                                            break;
-
-                                        case "idle_left":
-                                            texturePlayer = Game1.hunterAM.idleLeft[frame];
-                                            break;
-
-                                        case "walking_down":
-                                            texturePlayer = Game1.hunterAM.walkingDown[frame];
-                                            break;
-
-                                        case "walking_up":
-                                            texturePlayer = Game1.hunterAM.walkingUp[frame];
-                                            break;
-
-                                        case "walking_right":
-                                            texturePlayer = Game1.hunterAM.walkingRight[frame];
-                                            break;
-
-                                        case "walking_left":
-                                            texturePlayer = Game1.hunterAM.walkingLeft[frame];
-                                            break;
                                     }
-                                }
-                                else
-                                {
-                                        switch (p.AnimName)
+                                    else
+                                    {
+                                        y2 = y2.Replace(",", ".");
+                                        x2 = x2.Replace(",", ".");
+                                    }
+                                    float Y = float.Parse(y2);
+
+                                    float X = float.Parse(x2);
+                                    PositionPlayer.Y = Y;
+                                    PositionPlayer.X = X;
+
+                                    // TODO changer 
+
+                                    string[] textureNameSplit = p.TextureName.Split('/', '\\');
+                                    string animName = textureNameSplit[textureNameSplit.Length - 2];
+                                    if (p.PlayerType == typeof(Hunter).ToString())
+                                    {
+                                        switch (animName)
+                                        {
+                                            case "idle_down":
+                                                texturePlayer = Game1.hunterAM.idleDown[Game1.hunterAM.idleDown.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "idle_up":
+                                                texturePlayer = Game1.hunterAM.idleUp[Game1.hunterAM.idleUp.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "idle_right":
+                                                texturePlayer = Game1.hunterAM.idleRight[Game1.hunterAM.idleRight.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "idle_left":
+                                                texturePlayer = Game1.hunterAM.idleLeft[Game1.hunterAM.idleLeft.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "walking_down":
+                                                texturePlayer = Game1.hunterAM.walkingDown[Game1.hunterAM.walkingDown.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "walking_up":
+                                                texturePlayer = Game1.hunterAM.walkingUp[Game1.hunterAM.walkingUp.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "walking_right":
+                                                texturePlayer = Game1.hunterAM.walkingRight[Game1.hunterAM.walkingRight.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "walking_left":
+                                                texturePlayer = Game1.hunterAM.walkingLeft[Game1.hunterAM.walkingLeft.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        switch (animName)
                                         {
                                             case "left":
-                                                texturePlayer = Game1.ghostAM.animationLeft[frame];
+                                                texturePlayer = Game1.ghostAM.animationLeft[Game1.ghostAM.animationLeft.FindIndex(index => index.Name == p.TextureName)];
                                                 break;
 
                                             case "right":
-                                                texturePlayer = Game1.ghostAM.animationRight[frame];
+                                                texturePlayer = Game1.ghostAM.animationRight[Game1.ghostAM.animationRight.FindIndex(index => index.Name == p.TextureName)];
+                                                break;
+
+                                            case "Furniture":
+                                                texturePlayer = Game1.ghostAM.furniture[Game1.ghostAM.furniture.FindIndex(index => index.Name == p.TextureName)];
                                                 break;
                                         }
-                                }
-                                //texturePlayer = Game1.player.texture;
-                                //}
-                                /*if (p.Texture == "sprite/Ghost2")
-                                {
-                                    listTextureOfPlayers[count] = Game1.player2;
-                                }*/
-                                listVectorOfPlayers[count] = PositionPlayer;
-                                // On regarde chaque joueur qu'il y a dans la list 
-                                //  listOtherPlayer = new List<foreignPlayer>();
-                                foreach (foreignPlayer fp in listOtherPlayer)
-                                {
-                                    //On regarde is l'id qu'on vient de recevoir et la même que l'une des idées qu'on a dans la liste.
-                                    //Si c'est juste on lui met a jour ses valeurs et on dit qu'il existe
-                                    if (p.Id == fp._id)
-                                    {
-                                        fp._Texture = texturePlayer;
-                                        fp._Position = PositionPlayer;
-                                        fp.playerType = p.PlayerType;
-                                        objetJoueurExistant = true;
-                                        break;
                                     }
-                                }
-                                //Si l'id n'existe pas dans la liste on le crée et ensuite on le rajoute dans la liste
-                                if (objetJoueurExistant == false)
-                                {
-                                    foreignPlayer externPlayer = new foreignPlayer(PositionPlayer, texturePlayer, p.PlayerType);
-                                    externPlayer._id = p.Id;
-                                    listOtherPlayer.Add(externPlayer);
-                                }
-                                objetJoueurExistant = false;
-                                #region useless
+                                
+                                    /*if (p.Texture == "sprite/Ghost2")
+                                    {
+                                        listTextureOfPlayers[count] = Game1.player2;
+                                    }*/
+                                    listVectorOfPlayers[count] = PositionPlayer;
+                                    // On regarde chaque joueur qu'il y a dans la list 
+                                    //  listOtherPlayer = new List<foreignPlayer>();
+                                    foreach (foreignPlayer fp in listOtherPlayer)
+                                    {
+                                        //On regarde is l'id qu'on vient de recevoir et la même que l'une des idées qu'on a dans la liste.
+                                        //Si c'est juste on lui met a jour ses valeurs et on dit qu'il existe
+                                        if (p.Id == fp._id)
+                                        {
+                                            fp._Position = PositionPlayer;
+                                            fp._Texture = texturePlayer;
+                                            fp.playerType = p.PlayerType;
+                                            fp.currentScene = p.CurrentScene;
+                                            fp.IsObject = p.IsObject;
+                                            fp.IsLightOn = p.IsLightOn;
+                                            fp.radius = p.Radius;
+                                            fp.ToolIsFlashlight = p.ToolIsFlashlight;
+                                            objetJoueurExistant = true;
+                                            break;
+                                        }
+                                    }
+                                    //Si l'id n'existe pas dans la liste on le crée et ensuite on le rajoute dans la liste
+                                    if (objetJoueurExistant == false)
+                                    {
+                                        foreignPlayer externPlayer = new foreignPlayer(PositionPlayer, texturePlayer, p.PlayerType);
+                                        externPlayer._id = p.Id;
+                                        listOtherPlayer.Add(externPlayer);
+                                    }
+                                    objetJoueurExistant = false;
+                                    #region useless
 
-                                // mettre le code avec les commentaires en-dessous au-dessus
-                                // avec le for parcours la listVectorOfPlayers et si l'id n'est pas dans la liste crée un objet
-                                /*  int newId;
-                                   for (int i = 0; i < listVectorOfPlayers.Count; i++)
-                                   {
-                                       foreach (foreignPlayer fp in listOtherPlayer)
-                                       {
-                                           if (fp._id == i)
-                                           {
-                                               fp._Texture = listTextureOfPlayers[count];
-                                               fp._Position = listVectorOfPlayers[count];
-                                               objetJoueurExistant = true;
-                                           }
-                                         //  newId = fp._id;
+                                    // mettre le code avec les commentaires en-dessous au-dessus
+                                    // avec le for parcours la listVectorOfPlayers et si l'id n'est pas dans la liste crée un objet
+                                    /*  int newId;
+                                        for (int i = 0; i < listVectorOfPlayers.Count; i++)
+                                        {
+                                            foreach (foreignPlayer fp in listOtherPlayer)
+                                            {
+                                                if (fp._id == i)
+                                                {
+                                                    fp._Texture = listTextureOfPlayers[count];
+                                                    fp._Position = listVectorOfPlayers[count];
+                                                    objetJoueurExistant = true;
+                                                }
+                                                //  newId = fp._id;
 
-                                       }
-                                       if (objetJoueurExistant == false)
-                                       {
-                                           foreignPlayer externPlayer = new foreignPlayer(listVectorOfPlayers[i], listTextureOfPlayers[i]);
-                                           externPlayer._id = i;
-                                           listOtherPlayer.Add(externPlayer);
-                                       }
-                                   } 
-                               */
-                                #endregion
-                                count = count + 1;
+                                            }
+                                            if (objetJoueurExistant == false)
+                                            {
+                                                foreignPlayer externPlayer = new foreignPlayer(listVectorOfPlayers[i], listTextureOfPlayers[i]);
+                                                externPlayer._id = i;
+                                                listOtherPlayer.Add(externPlayer);
+                                            }
+                                        } 
+                                    */
+                                    #endregion
+                                    count = count + 1;
                                 }
                             }
                             count = 0;
@@ -344,7 +359,7 @@ namespace _13thHauntedStreet
         public Client()// TODO add bool is leader or not
         {
             //IPAddress ipAddress = Dns.GetHostEntry("Dns du serveur").AddressList[0];
-            this.client = new TcpClient("10.5.42.41", 5732);
+            this.client = new TcpClient("10.5.42.35", 5732);
 
             //   clientLeader = new Client();
             networkStream = client.GetStream();

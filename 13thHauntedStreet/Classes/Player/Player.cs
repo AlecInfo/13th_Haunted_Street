@@ -1,5 +1,5 @@
 ﻿/*
- * Author  : Marco Rodrigues
+ * Author  : Marco Rodrigues, Alec Piette
  * Project : 13th Haunted Street
  * Details : Player abstract class
  */
@@ -18,6 +18,8 @@ namespace _13thHauntedStreet
     {
         // Properties
         public int id;
+
+        public bool isObject = false;
 
         protected GameTime _gameTime;
         public Scene currentScene;
