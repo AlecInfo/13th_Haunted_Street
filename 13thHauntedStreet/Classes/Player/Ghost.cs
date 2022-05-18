@@ -20,6 +20,7 @@ namespace _13thHauntedStreet
 
         private const float MOVEMENTSPEED_GHOST = 0.4f;
         private const float MOVEMENTSPEED_OBJECT = 0.2f;
+        private const float MOVEMENTSPEED_STUN = 0.1f;
 
         private float movementSpeed = MOVEMENTSPEED_GHOST;
 
@@ -40,10 +41,11 @@ namespace _13thHauntedStreet
         private bool _currentMouse;
 
         // For detrasform the ghost
-        private bool _isDetrasform = false;
+        private bool _isDetransform = false;
         private bool _isStun = false;
-        private float _countDuration = 2f; //every  2s.
+        private const float _COUNTDURATION = 800f; //every 0.8s.
         private float _currentTime = 0f;
+        private Color _stunColor = Color.Gray;
 
         // Ctor
         public Ghost(Vector2 initialPos, GhostAnimationManager animationManager)
@@ -71,13 +73,17 @@ namespace _13thHauntedStreet
 
                 Action<int, GameTime> callback = (indexButton, gameTime) => 
                 {
-                    if (!isObject || this.texture != item.texture)
+                    if (!_isDetransform)
                     {
-                        Transform(indexButton, item);
-                    }
-                    else
-                    {
-                        Detransform(_gameTime);
+                        if ((!isObject || this.texture != item.texture))
+                        {
+                            Transform(indexButton, item);
+                        }
+                        else
+                        {
+                            Detransform(_gameTime);
+                        }
+
                     }
                 };
                 this._listButton.Add(NewButton(Game1.self.font, new Vector2(posX, this._objectBar_yPosition), item.texture, callback, indexCount));
@@ -116,13 +122,28 @@ namespace _13thHauntedStreet
                     Detransform(gameTime);
                 }
 
-                if (!this._isStun && this._isDetrasform)
-                {
-                    //Stun();
-                }
             }
             else
             {
+                if (!this._isStun && this._isDetransform)
+                {
+                    this.movementSpeed = MOVEMENTSPEED_STUN;
+                    color = this._stunColor;
+
+                    _currentTime += (float)_gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                    if (_currentTime >= _COUNTDURATION)
+                    {
+                        _currentTime -= _COUNTDURATION;
+
+                        this._isStun = true;
+                        this._isDetransform = false;
+
+                        this.movementSpeed = MOVEMENTSPEED_GHOST;
+                        color = Color.White;
+                    }
+                }
+
                 // Ghost collision box
                 collisionBox = new Rectangle((int)this.position.X - this.texture.Width / 2, (int)(this.position.Y), (int)this.texture.Width, (int)(this.texture.Height / 2));
 
@@ -186,8 +207,8 @@ namespace _13thHauntedStreet
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.position + this._floatOffset, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), this.scale, SpriteEffects.None, 0f);
-            this.DrawCollisionBox(spriteBatch);
+            spriteBatch.Draw(this.texture, this.position + this._floatOffset, null, color, 0f, this.texture.Bounds.Center.ToVector2(), this.scale, SpriteEffects.None, 0f);
+            //this.DrawCollisionBox(spriteBatch);
         }
 
         public override void DrawUI(SpriteBatch spriteBatch)
@@ -221,6 +242,8 @@ namespace _13thHauntedStreet
                 this.movementSpeed = MOVEMENTSPEED_OBJECT;
                 this.scale = furniture.scale;
 
+                this._isStun = false;
+
                 isObject = true;
             }
         }
@@ -238,21 +261,7 @@ namespace _13thHauntedStreet
             this.scale = DEFAULTSCALE;
 
             isObject = false;
-            isObject = false;
-            this._isDetrasform = true;
-        }
-
-        private void Stun()
-        {
-            _currentTime += (float)_gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (_currentTime >= _countDuration)
-            {
-                _currentTime = 0;
-                this._isStun = true;
-                this._isDetrasform = false;
-                this.movementSpeed = MOVEMENTSPEED_GHOST;
-            }
+            this._isDetransform = true;
         }
 
         static ItemButton NewButton(SpriteFont font, Vector2 position, Texture2D texture, Action<int, GameTime> callback, int parameterCallback, bool DrawImageText = true)

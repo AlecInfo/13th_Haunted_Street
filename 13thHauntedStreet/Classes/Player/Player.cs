@@ -21,6 +21,8 @@ namespace _13thHauntedStreet
 
         public bool isObject = false;
 
+        public Color color = Color.White;
+
         protected GameTime _gameTime;
         public Scene currentScene;
         public Light light;
