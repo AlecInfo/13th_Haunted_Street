@@ -48,7 +48,7 @@ namespace _13thHauntedStreet
             // Button of the menu
             // Action of new game
             callback = (i, gameTime) => {
-                //Game1.client = new Client();
+                Game1.client = new Client();
                 Game1.self.displayMainMenu = false;  
             };
             // Create the button new game

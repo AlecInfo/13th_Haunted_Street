@@ -37,7 +37,7 @@ namespace _13thHauntedStreet
         private int millisecondsPerFrame = 100;
 
         public Rectangle rectangle
-        { 
+        {
             get
             {
                 return new Rectangle(

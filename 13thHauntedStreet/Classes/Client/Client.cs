@@ -55,12 +55,22 @@ namespace _13thHauntedStreet
             {
 
                 byte[] data = new byte[600];
-                String responseData = string.Empty;
+                string responseData = string.Empty;
+                StringBuilder messageComplete = new StringBuilder();
+                int numberOfBytesRead = 0;
                 if (networkStream.DataAvailable == true)
                 {
-                    Int32 bytes = networkStream.Read(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    //       Int32 bytes = networkStream.Read(data, 0, data.Length);
+                    //     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+                    do
+                    {
+                        numberOfBytesRead = networkStream.Read(data, 0, data.Length);
+                        messageComplete.AppendFormat("{0}", Encoding.ASCII.GetString(data, 0, data.Length));
+                    }
+                    while (networkStream.DataAvailable);
+                    responseData = messageComplete.ToString();
+                    responseData = responseData.Split("|")[0];
 
                     string test = responseData.Split(":")[0].Trim();
                     // permet de donner l'id au joueur ou sinon rajouter un espace vide dans la liste
@@ -129,7 +139,7 @@ namespace _13thHauntedStreet
                             {
                                 if (!(p is null)) { 
                                     string y1 = p.Position.Split("Y:")[1];
-
+                                    
                                     string y2 = y1.Split("}")[0];
                                     //y2.Replace(",", ".");
                                     y2 = y2.Trim();
@@ -226,10 +236,15 @@ namespace _13thHauntedStreet
                                         //Si c'est juste on lui met a jour ses valeurs et on dit qu'il existe
                                         if (p.Id == fp._id)
                                         {
-                                            fp._Texture = texturePlayer;
                                             fp._Position = PositionPlayer;
+                                            fp._Texture = texturePlayer;
                                             fp.playerType = p.PlayerType;
+                                            fp.currentScene = p.CurrentScene;
                                             fp.IsObject = p.IsObject;
+                                            fp.IsLightOn = p.IsLightOn;
+                                            fp.radius = p.Radius;
+                                            fp.ToolIsFlashlight = p.ToolIsFlashlight;
+
                                             objetJoueurExistant = true;
                                             break;
                                         }
@@ -363,8 +378,6 @@ namespace _13thHauntedStreet
 
             // ReceiveMessage();
             // connectionServeur = true;
-
-
         }
 
 

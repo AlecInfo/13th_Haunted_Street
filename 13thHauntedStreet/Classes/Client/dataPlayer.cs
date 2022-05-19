@@ -21,7 +21,14 @@ namespace _13thHauntedStreet
         private int id;
         private string playerType;
         private string _textureName;
+        private int currentScene;
+
         private bool _isObject;
+
+        // light
+        private bool isLightOn;
+        private float radius;
+        private bool toolIsFlashlight;
 
         #endregion
 
@@ -52,10 +59,40 @@ namespace _13thHauntedStreet
         }
 
         [XmlElement]
+        public int CurrentScene
+        {
+            get { return currentScene; }
+            set { currentScene = value; }
+        }
+
+        // Ghost
+        [XmlElement]
         public bool IsObject
         {
             get { return _isObject; }
             set { _isObject = value; }
+        }
+
+        // Light
+        [XmlElement]
+        public bool IsLightOn
+        {
+            get { return isLightOn; }
+            set { isLightOn = value; }
+        }
+
+        [XmlElement]
+        public float Radius
+        {
+            get { return radius; }
+            set { radius = value; }
+        }
+
+        [XmlElement]
+        public bool ToolIsFlashlight
+        {
+            get { return toolIsFlashlight; }
+            set { toolIsFlashlight = value; }
         }
         #endregion
 

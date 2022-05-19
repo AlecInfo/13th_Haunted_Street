@@ -17,6 +17,8 @@ namespace _13thHauntedStreet
     public class Scene
     {
         // Properties
+        public int id;
+
         private Texture2D _ground;
         public Texture2D walls;
         public Vector2 backgroundScale;
@@ -29,10 +31,11 @@ namespace _13thHauntedStreet
 
 
         // Ctor
-        public Scene(Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList) : this(ground, walls, Vector2.One, groundArea, player, furnitureList, lanternList) { }
+        public Scene(int id, Texture2D ground, Texture2D walls, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList) : this(id, ground, walls, Vector2.One, groundArea, player, furnitureList, lanternList) { }
 
-        public Scene(Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList)
+        public Scene(int id, Texture2D ground, Texture2D walls, Vector2 backgroundScale, Rectangle groundArea, Player player, List<Furniture> furnitureList, List<Lantern> lanternList)
         {
+            this.id = id;
             this._ground = ground;
             this.walls = walls;
             this.backgroundScale = backgroundScale;
@@ -53,14 +56,38 @@ namespace _13thHauntedStreet
 
             // lights
             Game1.penumbra.Lights.AddRange(player.lights);
+            foreach (foreignPlayer otherPlayer in Client.listOtherPlayer) 
+            {
+                if (otherPlayer._id != player.id && otherPlayer.currentScene == this.id)
+                {
+                    if (otherPlayer.light.Enabled)
+                    {
+                        Game1.penumbra.Lights.Add(otherPlayer.light);
+                    }
+
+                    if (otherPlayer.toolLight.Enabled)
+                    {
+                        Game1.penumbra.Lights.Add(otherPlayer.toolLight);
+                    }
+                }
+            }
 
             foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
             {
                 if (otherPlayer.IsObject)
                 {
-                    Furniture ghostObject = new Furniture(otherPlayer.position, otherPlayer.texture, 1);
+                    Hull newHull = new Hull(new Vector2(0.49f), new Vector2(-0.49f, 0.49f), new Vector2(-0.49f), new Vector2(0.49f, -0.49f))
+                    {
+                        Position = otherPlayer.position,
+                        Scale = otherPlayer.texture.Bounds.Size.ToVector2() * otherPlayer.scale,
+                        Origin = new Vector2(-0.5f)
+                    };
 
-                    this.furnitureList.Add(ghostObject);
+                    Game1.penumbra.Hulls.Add(newHull);
+
+                    // Update furniture hulls (hunter only)
+                    HunterIgnoreHulls(newHull);
+
                 }
             }
 
@@ -70,7 +97,7 @@ namespace _13thHauntedStreet
                 Game1.penumbra.Hulls.Add(furniture.hull);
 
                 // Update furniture hulls (hunter only)
-                HunterIgnoreHulls(furniture);
+                HunterIgnoreHulls(furniture.hull);
 
             }
 
@@ -92,9 +119,9 @@ namespace _13thHauntedStreet
         /// <param name="furniture"></param>
         /// <param name="player"></param>
         /// <returns>true if it's inside, else false</returns>
-        private bool isInside(Furniture furniture, Player player)
+        private bool isInside(Hull hull, Player player)
         {
-            Rectangle furnitureRect = new Rectangle(furniture.position.ToPoint(), furniture.texture.Bounds.Size);
+            Rectangle furnitureRect = new Rectangle(hull.Position.ToPoint(), hull.Scale.ToPoint());
             
             if (player.rectangle.Right+5 >= furnitureRect.Left-5 &&
                 player.rectangle.Left-5 <= furnitureRect.Right+5 &&
@@ -112,33 +139,33 @@ namespace _13thHauntedStreet
         ///     add the furniture hull to the players IgnoredHulls list, else remove it from the list
         /// </summary>
         /// <param name="furniture"></param>
-        private void HunterIgnoreHulls(Furniture furniture)
+        private void HunterIgnoreHulls(Hull hull)
         {
-            if (isInside(furniture, player))
+            if (isInside(hull, player))
             {
                 if (player.GetType() == typeof(Hunter))
                 {
                     Hunter hunter = player as Hunter;
-                    if (!hunter.currentTool.light.IgnoredHulls.Contains(furniture.hull))
+                    if (!hunter.currentTool.light.IgnoredHulls.Contains(hull))
                     {
-                        hunter.currentTool.light.IgnoredHulls.Add(furniture.hull);
+                        hunter.currentTool.light.IgnoredHulls.Add(hull);
                     }
                 }
                 else
                 {
                     Ghost ghost = player as Ghost;
-                    if (!ghost.light.IgnoredHulls.Contains(furniture.hull))
+                    if (!ghost.light.IgnoredHulls.Contains(hull))
                     {
-                        ghost.light.IgnoredHulls.Add(furniture.hull);
+                        ghost.light.IgnoredHulls.Add(hull);
                     }
                 }
             }
             else
             {
                 if (player.GetType() == typeof(Hunter))
-                    (player as Hunter).currentTool.light.IgnoredHulls.Remove(furniture.hull);
+                    (player as Hunter).currentTool.light.IgnoredHulls.Remove(hull);
                 else
-                    (player as Ghost).light.IgnoredHulls.Remove(furniture.hull);
+                    (player as Ghost).light.IgnoredHulls.Remove(hull);
             }
         }
 
@@ -156,7 +183,7 @@ namespace _13thHauntedStreet
             List<foreignPlayer> otherPlayersToDraw = new List<foreignPlayer>();
             foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
             {
-                if (otherPlayer._id != player.id)
+                if (otherPlayer._id != player.id && otherPlayer.currentScene == this.id)
                 {
                     otherPlayersToDraw.Add(otherPlayer);
                 }

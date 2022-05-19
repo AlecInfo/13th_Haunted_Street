@@ -240,12 +240,13 @@ namespace _13thHauntedStreet
                 this._listButton[indexButton].IsOn = true;
 
                 this.movementSpeed = MOVEMENTSPEED_OBJECT;
-                this.scale = furniture.scale;
+                this.scale = Furniture.SCALE;
 
                 this._isStun = false;
 
                 isObject = true;
             }
+
         }
 
         private void Detransform(GameTime gameTime)

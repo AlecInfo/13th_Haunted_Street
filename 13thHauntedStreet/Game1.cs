@@ -160,8 +160,8 @@ namespace _13thHauntedStreet
             // Furniture
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
             drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
-            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture, 1));
-            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture, 1));
+            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
+            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
 
             // Ghost
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/left/ghostLeft", 3);
@@ -216,8 +216,8 @@ namespace _13thHauntedStreet
 
             testMap = new Map(player,
                 new List<Scene>() {
-                    new Scene(bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
-                    new Scene(bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
+                    new Scene(1, bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
+                    new Scene(2, bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
                 }
             );
 
@@ -277,20 +277,76 @@ namespace _13thHauntedStreet
                 TimeSpan ts = DateTime.Now - clientLastUpdate;
                 if (ts.Milliseconds >= 62)
                 {
-                    if (player.movement.X != 0 || player.movement.Y != 0 || dataPlayer.TextureName != player.texture.Name)
+                    // Test if changed, Hunter only
+                    bool hasChangedHunter = false;
+                    do
+                    {
+
+                        if (player.GetType() == typeof(Hunter))
+                        {
+                            Hunter hunter = (player as Hunter);
+                            if (hunter.currentTool.GetType() == typeof(Flashlight))
+                            {
+                                if ((hunter.currentTool as Flashlight).isLit != dataPlayer.IsLightOn)
+                                {
+                                    hasChangedHunter = true;
+                                    break;
+                                }
+                            }
+
+                            if (hunter.currentTool.light.Radius != dataPlayer.Radius)
+                            {
+                                hasChangedHunter = true;
+                                break;
+                            }
+
+                            bool isFlashlight = hunter.currentTool.GetType() == typeof(Flashlight) ? true : false;
+                            if (isFlashlight != dataPlayer.ToolIsFlashlight)
+                            {
+                                hasChangedHunter = true;
+                                break;
+                            }
+                        }
+
+                        break;
+                    } while (false);
+
+                    if (player.movement.X != 0 || player.movement.Y != 0 || dataPlayer.TextureName != player.texture.Name || hasChangedHunter)
                     {
                         dataPlayer.Id = player.id;
                         dataPlayer.Position = player.position.ToString();
 
                         dataPlayer.PlayerType = player.GetType().ToString();
+                        dataPlayer.CurrentScene = testMap.currentScene.id;
+
                         dataPlayer.IsObject = player.isObject;
 
                         dataPlayer.TextureName = player.texture.Name;   
 
+                        if (player.GetType() == typeof(Hunter))
+                        {
+                            Hunter hunter = player as Hunter;
+                            if (hunter.currentTool.GetType() == typeof(Flashlight))
+                            {
+                                dataPlayer.IsLightOn = (hunter.currentTool as Flashlight).isLit;
+                            }
+                            else
+                                dataPlayer.IsLightOn = true;
+
+                            dataPlayer.Radius = hunter.currentTool.angle;
+                            dataPlayer.ToolIsFlashlight = hunter.currentTool.GetType() == typeof(Flashlight) ? true : false;
+                        }
+                        else
+                        {
+                            dataPlayer.IsLightOn = false;
+                            dataPlayer.Radius = 0;
+                            dataPlayer.ToolIsFlashlight = false;
+                        }
+
                         string serializeToStringPlayer;
                         serializeToStringPlayer = SerializeObject();
-                        System.Diagnostics.Debug.WriteLine(serializeToStringPlayer);
-                        //client.envoieMessage(serializeToStringPlayer);
+                        client.envoieMessage(serializeToStringPlayer);
+
                     }
                 }
             }

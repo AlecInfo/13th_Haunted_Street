@@ -18,14 +18,13 @@ namespace _13thHauntedStreet
         // Properties
         public Rectangle collisionBox;
         public Hull hull;
-        public float scale;
+        public const float SCALE = 1;
 
         // Ctor
-        public Furniture(Vector2 position, Texture2D texture, float scale)
+        public Furniture(Vector2 position, Texture2D texture)
         {
             this.position = position;
             this.texture = texture;
-            this.scale = scale;
 
             this.collisionBox = new Rectangle(
                 (int)this.position.X, (int)(this.position.Y + this.texture.Height / 3.5f),
@@ -43,7 +42,7 @@ namespace _13thHauntedStreet
         // Methods
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, Vector2.Zero, 1f, 0, 0f);
+            spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, Vector2.Zero, SCALE, 0, 0f);
             //spriteBatch.Draw(Game1.defaultTexture, this.collisionBox, null, Color.Black * 0.5f, 0f, Vector2.Zero, 0, 0f);
         }
     }
