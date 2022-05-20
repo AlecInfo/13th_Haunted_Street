@@ -74,13 +74,13 @@ namespace _13thHauntedStreet
 
             foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
             {
-                if (otherPlayer.IsObject)
+                if (otherPlayer.IsObject && otherPlayer._id != player.id && otherPlayer.currentScene == this.id)
                 {
                     Hull newHull = new Hull(new Vector2(0.49f), new Vector2(-0.49f, 0.49f), new Vector2(-0.49f), new Vector2(0.49f, -0.49f))
                     {
                         Position = otherPlayer.position,
                         Scale = otherPlayer.texture.Bounds.Size.ToVector2() * otherPlayer.scale,
-                        Origin = new Vector2(-0.5f)
+                        Origin = new Vector2(0f)
                     };
 
                     Game1.penumbra.Hulls.Add(newHull);
@@ -121,14 +121,28 @@ namespace _13thHauntedStreet
         /// <returns>true if it's inside, else false</returns>
         private bool isInside(Hull hull, Player player)
         {
-            Rectangle furnitureRect = new Rectangle(hull.Position.ToPoint(), hull.Scale.ToPoint());
-            
-            if (player.rectangle.Right+5 >= furnitureRect.Left-5 &&
-                player.rectangle.Left-5 <= furnitureRect.Right+5 &&
-                player.rectangle.Bottom >= furnitureRect.Top &&
-                player.rectangle.Top <= furnitureRect.Bottom)
+            Rectangle hullRectangle = new Rectangle(hull.Position.ToPoint(), hull.Scale.ToPoint());
+
+            if (hull.Origin == new Vector2(0))
             {
-                return true;
+                if (player.rectangle.Right + 5 >= hullRectangle.Left - 5 - hullRectangle.Width / 2 &&
+                    player.rectangle.Left - 5 <= hullRectangle.Right + 5 - hullRectangle.Width / 2 &&
+                    player.rectangle.Bottom >= hullRectangle.Top - hullRectangle.Height / 2 &&
+                    player.rectangle.Top <= hullRectangle.Bottom - hullRectangle.Height / 2)
+                {
+                    return true;
+                }
+            }
+
+            if (hull.Origin == new Vector2(-0.5f))
+            {
+                if (player.rectangle.Right+5 >= hullRectangle.Left-5  &&
+                    player.rectangle.Left-5 <= hullRectangle.Right+5 &&
+                    player.rectangle.Bottom >= hullRectangle.Top &&
+                    player.rectangle.Top <= hullRectangle.Bottom)
+                {
+                    return true;
+                }
             }
 
             return false;

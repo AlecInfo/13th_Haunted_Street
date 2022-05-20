@@ -30,6 +30,7 @@ namespace _13thHauntedStreet
         public Vector2 movement;
         public float scale;
         public static Rectangle collisionBox;
+        private Rectangle _otherPlayerCollisionBox;
 
         protected List<Furniture> _furnitureList;
 
@@ -45,6 +46,7 @@ namespace _13thHauntedStreet
                     (this.texture.Bounds.Size.ToVector2() * this.scale).ToPoint());
             }
         }
+
 
         public List<Light> lights
         {
@@ -150,6 +152,37 @@ namespace _13thHauntedStreet
         /// <param name="distance"></param>
         protected void ObjectCollision(ref Vector2 distance)
         {
+            // player to player collision
+            foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
+            {
+                this._otherPlayerCollisionBox = new Rectangle((int)(otherPlayer.position.X - (otherPlayer.texture.Width * otherPlayer.scale) / 2), (int)(otherPlayer.position.Y - (otherPlayer.texture.Height * otherPlayer.scale) / 2), (int)(otherPlayer.texture.Width * otherPlayer.scale), (int)(otherPlayer.texture.Height * otherPlayer.scale));
+
+                if (otherPlayer.IsObject && otherPlayer._id != this.id && otherPlayer.currentScene == Game1.self.testMap.currentScene.id)
+                {
+                    if (((collisionBox.Right + distance.X <= _otherPlayerCollisionBox.Right && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Left) ||
+                        (collisionBox.Left + distance.X >= _otherPlayerCollisionBox.Left && collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Right) ||
+                        (collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Left && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Right))
+                        &&
+                        ((collisionBox.Top + distance.Y >= _otherPlayerCollisionBox.Top && collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Bottom) ||
+                        (collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom && collisionBox.Bottom + distance.Y <= _otherPlayerCollisionBox.Top) ||
+                        (collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Top && collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom))) // Left - Right
+                    {
+                        distance.X = 0;
+                    }
+                    
+                    if (((collisionBox.Top + distance.Y >= _otherPlayerCollisionBox.Top && collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Bottom) || 
+                        (collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom && collisionBox.Bottom + distance.Y <= _otherPlayerCollisionBox.Top) ||
+                        (collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Top && collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom))
+                        &&
+                        ((collisionBox.Right + distance.X <= _otherPlayerCollisionBox.Right && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Left) ||
+                        (collisionBox.Left + distance.X >= _otherPlayerCollisionBox.Left && collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Right) ||
+                        (collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Left && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Right)))// Top - Bottom
+                    {
+                        distance.Y = 0;
+                    }
+                }
+            }
+
             foreach (Furniture item in this._furnitureList)
             {
                 if (collisionBox.Right + distance.X > item.collisionBox.Left &&
@@ -211,13 +244,50 @@ namespace _13thHauntedStreet
             }
         }
 
+
+        /// <summary>
+        /// If the ghost is in an object return true so that it does not transform
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <returns></returns>
         protected bool PlayerIsCollide(ref Vector2 distance)
         {
+            foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
+            {
+                this._otherPlayerCollisionBox = new Rectangle((int)(otherPlayer.position.X - (otherPlayer.texture.Width * otherPlayer.scale) / 2), (int)(otherPlayer.position.Y - (otherPlayer.texture.Height * otherPlayer.scale) / 2), (int)(otherPlayer.texture.Width * otherPlayer.scale), (int)(otherPlayer.texture.Height * otherPlayer.scale));
+
+                if (otherPlayer.IsObject && otherPlayer._id != this.id && otherPlayer.currentScene == Game1.self.testMap.currentScene.id)
+                {
+                    if (((collisionBox.Right + distance.X <= _otherPlayerCollisionBox.Right && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Left) ||
+                        (collisionBox.Left + distance.X >= _otherPlayerCollisionBox.Left && collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Right) ||
+                        (collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Left && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Right))
+                        &&
+                        ((collisionBox.Top + distance.Y >= _otherPlayerCollisionBox.Top && collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Bottom) ||
+                        (collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom && collisionBox.Bottom + distance.Y <= _otherPlayerCollisionBox.Top) ||
+                        (collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Top && collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom))) // Left - Right
+                    {
+                        return true;
+                    }
+
+                    if (((collisionBox.Top + distance.Y >= _otherPlayerCollisionBox.Top && collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Bottom) ||
+                        (collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom && collisionBox.Bottom + distance.Y <= _otherPlayerCollisionBox.Top) ||
+                        (collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Top && collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom))
+                        &&
+                        ((collisionBox.Right + distance.X <= _otherPlayerCollisionBox.Right && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Left) ||
+                        (collisionBox.Left + distance.X >= _otherPlayerCollisionBox.Left && collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Right) ||
+                        (collisionBox.Left + distance.X <= _otherPlayerCollisionBox.Left && collisionBox.Right + distance.X >= _otherPlayerCollisionBox.Right)))// Top - Bottom
+                    {
+                        return true;
+                    }
+                }
+            }
+
             foreach (Furniture item in this._furnitureList)
             {
                 if (((collisionBox.Top + distance.Y >= item.collisionBox.Top && collisionBox.Top + distance.Y <= item.collisionBox.Bottom) ||
                     (collisionBox.Bottom + distance.Y >= item.collisionBox.Top && collisionBox.Bottom + distance.Y <= item.collisionBox.Bottom) ||
-                    (collisionBox.Top + distance.Y  <= item.collisionBox.Top && collisionBox.Bottom + distance.Y >= item.collisionBox.Bottom)) && 
+                    (collisionBox.Top + distance.Y  <= item.collisionBox.Top && collisionBox.Bottom + distance.Y >= item.collisionBox.Bottom)) 
+                    && 
                     ((collisionBox.Right + distance.X <= item.collisionBox.Right && collisionBox.Right + distance.X >= item.collisionBox.Left) ||
                     (collisionBox.Left + distance.X >= item.collisionBox.Left && collisionBox.Left + distance.X <= item.collisionBox.Right) ||
                     (collisionBox.Left + distance.X <= item.collisionBox.Left && collisionBox.Right + distance.X >= item.collisionBox.Right)))

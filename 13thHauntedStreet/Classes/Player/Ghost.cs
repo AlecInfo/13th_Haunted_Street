@@ -24,14 +24,18 @@ namespace _13thHauntedStreet
 
         private float movementSpeed = MOVEMENTSPEED_GHOST;
 
+        private Color _stunColor = Color.LightGray;
+
+        private const int FLOATSPEED = 4;
+        private const float FLOATSIZE = 0.25f;
+
+
         public GhostAnimationManager animManager;
 
         private List<ItemButton> _listButton = new List<ItemButton>();
 
         private Vector2 _floatOffset = Vector2.Zero;
         private float _floatTimer;
-        private const int FLOATSPEED = 4;
-        private const float FLOATSIZE = 0.25f;
 
         private float _objectBar_xPosition = Screen.OriginalScreenSize.X / 18;
         private float _objectBar_yPosition = Screen.OriginalScreenSize.Y / 10;
@@ -45,7 +49,6 @@ namespace _13thHauntedStreet
         private bool _isStun = false;
         private const float _COUNTDURATION = 800f; //every 0.8s.
         private float _currentTime = 0f;
-        private Color _stunColor = Color.Gray;
 
         // Ctor
         public Ghost(Vector2 initialPos, GhostAnimationManager animationManager)

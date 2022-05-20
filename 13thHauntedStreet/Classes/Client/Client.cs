@@ -93,6 +93,10 @@ namespace _13thHauntedStreet
 
 
                     }
+                    if (responseData.Split(":")[0] == "renvoie Message")
+                    {
+                        envoieMessage(Game1.self.serializeToStringPlayer);
+                    }
                     if (responseData.Split(":")[0].Trim() == "Je me déconnecte")
                     {
                         Console.WriteLine("le joueur " + responseData.Split(":")[1] + " se déconnecte");
@@ -301,7 +305,18 @@ namespace _13thHauntedStreet
                             bool existant = false;
                             foreach (dataPlayer p in dataOfPlayers)
                             {
-                                if (listOtherPlayer[i - 1]._id == p.Id)
+                                if (p != null)
+                                {
+
+
+                                    if (listOtherPlayer[i - 1]._id == p.Id)
+                                    {
+                                        existant = true;
+                                    }
+
+
+                                }
+                                else
                                 {
                                     existant = true;
                                 }
@@ -365,6 +380,7 @@ namespace _13thHauntedStreet
             //   clientLeader = new Client();
             networkStream = client.GetStream();
             string text = "Je suis leader:" + Game1.player.id + "|";
+            //string text = "rejoindre lobby :" + "259" + "|";
             byte[] byteArrayASCII;
             // text += "#";
             byteArrayASCII = System.Text.Encoding.ASCII.GetBytes(text);

@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class Door
+    public class Door
     {
         // Properties
         private Game1.direction _direction;

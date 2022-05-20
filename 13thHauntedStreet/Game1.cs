@@ -93,13 +93,14 @@ namespace _13thHauntedStreet
         private Texture2D bg2;
         private Texture2D ground;
         private Texture2D walls;
-        private Map testMap;
+        public Map testMap;
 
         // Server
         private int id = 1;
         public static Client client;
         public static dataPlayer dataPlayer;
         public DateTime clientLastUpdate;
+        public string serializeToStringPlayer;
 
 
         public Game1()
@@ -343,7 +344,6 @@ namespace _13thHauntedStreet
                             dataPlayer.ToolIsFlashlight = false;
                         }
 
-                        string serializeToStringPlayer;
                         serializeToStringPlayer = SerializeObject();
                         client.envoieMessage(serializeToStringPlayer);
 
@@ -461,7 +461,7 @@ namespace _13thHauntedStreet
         {
             base.OnExiting(sender, args);
 
-            //client.envoieMessage("Je me deconnecte :" + Game1.player.id);
+            client.envoieMessage("Je me deconnecte :" + Game1.player.id);
         }
     }
 }

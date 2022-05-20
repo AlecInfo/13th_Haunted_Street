@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _13thHauntedStreet
 {
-    class Map
+    public class Map
     {
         // Properties
         private Player player;
