@@ -86,7 +86,11 @@ namespace _13thHauntedStreet
         // Furnitures
         private Texture2D bedTexture;
         private Texture2D drawerTexture;
+        private Texture2D bigBedTexture;
+        private Texture2D smallTableTexture;
+
         public List<Furniture> furnitureList = new List<Furniture>();
+        public List<Furniture> drawabledFurnitureList = new List<Furniture>();
 
         // remove later
         private Texture2D bg;
@@ -160,9 +164,21 @@ namespace _13thHauntedStreet
 
             // Furniture
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
+            bigBedTexture = Content.Load<Texture2D>("TempFiles/Furniture/big_bed");
             drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
-            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
-            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
+            smallTableTexture = Content.Load<Texture2D>("TempFiles/Furniture/small_table");
+
+            furnitureList.Add(new Furniture(Vector2.Zero, bedTexture));
+            furnitureList.Add(new Furniture(Vector2.Zero, bigBedTexture));
+            furnitureList.Add(new Furniture(Vector2.Zero, drawerTexture));
+            furnitureList.Add(new Furniture(Vector2.Zero, smallTableTexture));
+
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(500, 200), bigBedTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1200, 400), smallTableTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(370, 600), drawerTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1350, 350), bigBedTexture));
 
             // Ghost
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/left/ghostLeft", 3);
@@ -217,7 +233,7 @@ namespace _13thHauntedStreet
 
             testMap = new Map(player,
                 new List<Scene>() {
-                    new Scene(1, bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
+                    new Scene(1, bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, drawabledFurnitureList, new List<Lantern>()),
                     new Scene(2, bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
                 }
             );
@@ -261,6 +277,7 @@ namespace _13thHauntedStreet
 
             if (displayMainMenu)
             {
+                // Display the main menu
                 Vector2 posOri = Vector2.Zero;
                 _mainMenu.Update(gameTime, screen, ref posOri);
                 if (settingsMenu != null)
@@ -270,6 +287,7 @@ namespace _13thHauntedStreet
             }
             else
             {
+                // Display the game
                 penumbra.Hulls.Clear();
                 penumbra.Lights.Clear();
 
@@ -282,7 +300,6 @@ namespace _13thHauntedStreet
                     bool hasChangedHunter = false;
                     do
                     {
-
                         if (player.GetType() == typeof(Hunter))
                         {
                             Hunter hunter = (player as Hunter);
@@ -396,6 +413,7 @@ namespace _13thHauntedStreet
 
             if (showFps)
             {
+                // Display the FPS
                 _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));

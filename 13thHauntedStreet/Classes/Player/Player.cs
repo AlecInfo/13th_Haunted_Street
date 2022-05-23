@@ -152,7 +152,7 @@ namespace _13thHauntedStreet
         /// <param name="distance"></param>
         protected void ObjectCollision(ref Vector2 distance)
         {
-            // player to player collision
+            // player to players collision
             foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
             {
                 this._otherPlayerCollisionBox = new Rectangle((int)(otherPlayer.position.X - (otherPlayer.texture.Width * otherPlayer.scale) / 2), (int)(otherPlayer.position.Y - (otherPlayer.texture.Height * otherPlayer.scale) / 2), (int)(otherPlayer.texture.Width * otherPlayer.scale), (int)(otherPlayer.texture.Height * otherPlayer.scale));
@@ -183,6 +183,7 @@ namespace _13thHauntedStreet
                 }
             }
 
+            // Player to furnitures collision
             foreach (Furniture item in this._furnitureList)
             {
                 if (collisionBox.Right + distance.X > item.collisionBox.Left &&
@@ -220,7 +221,7 @@ namespace _13thHauntedStreet
         }
 
         /// <summary>
-        /// collision between the current scene walls and the player
+        /// Collision between the current scene walls and the player
         /// </summary>
         /// <param name="distance"></param>
         protected void WallCollision(ref Vector2 distance)
@@ -252,6 +253,7 @@ namespace _13thHauntedStreet
         /// <returns></returns>
         protected bool PlayerIsCollide(ref Vector2 distance)
         {
+            // If the ghost is inside the players return true 
             foreach (foreignPlayer otherPlayer in Client.listOtherPlayer)
             {
                 this._otherPlayerCollisionBox = new Rectangle((int)(otherPlayer.position.X - (otherPlayer.texture.Width * otherPlayer.scale) / 2), (int)(otherPlayer.position.Y - (otherPlayer.texture.Height * otherPlayer.scale) / 2), (int)(otherPlayer.texture.Width * otherPlayer.scale), (int)(otherPlayer.texture.Height * otherPlayer.scale));
@@ -282,6 +284,7 @@ namespace _13thHauntedStreet
                 }
             }
 
+            // If the ghost is inside the furnitures return true 
             foreach (Furniture item in this._furnitureList)
             {
                 if (((collisionBox.Top + distance.Y >= item.collisionBox.Top && collisionBox.Top + distance.Y <= item.collisionBox.Bottom) ||
@@ -296,6 +299,7 @@ namespace _13thHauntedStreet
                 }
             }
 
+            // If the ghost is inside the walls return true 
             if (collisionBox.Left + distance.X < this.currentScene.groundArea.Left) // Left
             {
                 return true;
@@ -314,6 +318,7 @@ namespace _13thHauntedStreet
                 return true;
             }
 
+            // Else return false
             return false;
         }
     }
