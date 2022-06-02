@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/HunterSprites/walking_right/walking_right04.png</SourceFile>
-  <SourceTime>2022-03-24T15:50:18.114548+01:00</SourceTime>
-  <DestFile>C:/Users/Marco.Rdrgs2/source/repos/13thHauntedStreet/13thHauntedStreet/Content/bin/Windows/Content/TempFiles/HunterSprites/walking_right/walking_right04.xnb</DestFile>
-  <DestTime>2022-05-18T07:58:20.2022438+02:00</DestTime>
+  <SourceFile>C:/Users/Marco.Rdrgs2/Desktop/13thHauntedStreet (6)/13thHauntedStreet/13thHauntedStreet/Content/TempFiles/HunterSprites/walking_right/walking_right04.png</SourceFile>
+  <SourceTime>2022-05-30T08:05:14.6983072+02:00</SourceTime>
+  <DestFile>C:/Users/Marco.Rdrgs2/Desktop/13thHauntedStreet (6)/13thHauntedStreet/13thHauntedStreet/Content/bin/Windows/Content/TempFiles/HunterSprites/walking_right/walking_right04.xnb</DestFile>
+  <DestTime>2022-05-30T08:06:47.5463439+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

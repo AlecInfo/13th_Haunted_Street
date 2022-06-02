@@ -28,7 +28,7 @@ namespace _13thHauntedStreet
 
         private bool _dispalyImageAndText;
 
-        public Action<int> Click;
+        public Action<int, GameTime> Click;
 
         public int ParameterClick { get; set; }
 
@@ -50,7 +50,7 @@ namespace _13thHauntedStreet
         #endregion
 
         // Ctor
-        public ItemButton(Texture2D texture, SpriteFont font, Action<int> eventButton, bool imageText)
+        public ItemButton(Texture2D texture, SpriteFont font, Action<int, GameTime> eventButton, bool imageText)
         {
             // Create a rectangle texture 1 per 1 pixels, color white
             this._defaultTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
@@ -115,7 +115,7 @@ namespace _13thHauntedStreet
                 if (this._currentMouse.LeftButton == ButtonState.Released && this._previusMouse.LeftButton == ButtonState.Pressed)
                 {
                     // Call click 
-                    this.Click(this.ParameterClick);
+                    this.Click(this.ParameterClick, gameTime);
                 }
             }
 

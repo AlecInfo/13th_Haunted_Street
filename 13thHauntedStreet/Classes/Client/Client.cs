@@ -54,7 +54,7 @@ namespace _13thHauntedStreet
             while (true)
             {
 
-                byte[] data = new byte[600];
+                byte[] data = new byte[2000];
                 string responseData = string.Empty;
                 StringBuilder messageComplete = new StringBuilder();
                 int numberOfBytesRead = 0;
@@ -62,15 +62,16 @@ namespace _13thHauntedStreet
                 {
                     //       Int32 bytes = networkStream.Read(data, 0, data.Length);
                     //     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-
-                    do
-                    {
-                        numberOfBytesRead = networkStream.Read(data, 0, data.Length);
-                        messageComplete.AppendFormat("{0}", Encoding.ASCII.GetString(data, 0, data.Length));
-                    }
-                    while (networkStream.DataAvailable);
-                    responseData = messageComplete.ToString();
-                    responseData = responseData.Split("|")[0];
+                    int sr = networkStream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, data.Length);
+                    /*   do
+                       {
+                           numberOfBytesRead = networkStream.Read(data, 0, data.Length);
+                           messageComplete.AppendFormat("{0}", Encoding.ASCII.GetString(data, 0, data.Length));
+                       }
+                       while (networkStream.DataAvailable);
+                       responseData = messageComplete.ToString();
+                       responseData = responseData.Split("|")[0];*/
 
                     string test = responseData.Split(":")[0].Trim();
                     // permet de donner l'id au joueur ou sinon rajouter un espace vide dans la liste
@@ -78,6 +79,7 @@ namespace _13thHauntedStreet
                     {
                         _id = responseData.Split(":")[1].Trim();
                     }
+
                     if (responseData.Split(":")[0].Trim() == "Nombre de joueur")
                     {
                         nbJoueurPartie1 = responseData.Split(":")[1].Trim();
@@ -90,9 +92,28 @@ namespace _13thHauntedStreet
                         defaultPostion.X = 10;
                         defaultPostion.Y = 10;
                         dataPlayers.Add(player);
-
-
                     }
+
+                    if (responseData.Split(":")[0] == "tu te fais aspirer")
+                    {
+                        if (Game1.player.GetType() == typeof(Ghost))
+                        {
+                            (Game1.player as Ghost).isBeingVacuumed = true;
+                        }
+                    }
+                    if (responseData.Split(":")[0] == "tu es capturer")
+                    {
+                        if (Game1.player.GetType() == typeof(Ghost))
+                        {
+                            Game1.captured = true;
+                        }
+                    }
+
+                    if (responseData.Split(":")[0].Trim() == "renvoie Message" )
+                    {
+                        envoieMessage(Game1.self.serializeToStringPlayer);
+                    }
+
                     if (responseData.Split(":")[0].Trim() == "Je me déconnecte")
                     {
                         Console.WriteLine("le joueur " + responseData.Split(":")[1] + " se déconnecte");
@@ -137,9 +158,9 @@ namespace _13thHauntedStreet
                             ci.NumberFormat.CurrencyDecimalSeparator = ",";
                             foreach (dataPlayer p in dataOfPlayers)
                             {
-                                if (!(p is null)) { 
+                                if (!(p is null)) {
                                     string y1 = p.Position.Split("Y:")[1];
-                                    
+
                                     string y2 = y1.Split("}")[0];
                                     //y2.Replace(",", ".");
                                     y2 = y2.Trim();
@@ -222,7 +243,7 @@ namespace _13thHauntedStreet
                                                 break;
                                         }
                                     }
-                                
+
                                     /*if (p.Texture == "sprite/Ghost2")
                                     {
                                         listTextureOfPlayers[count] = Game1.player2;
@@ -244,6 +265,8 @@ namespace _13thHauntedStreet
                                             fp.IsLightOn = p.IsLightOn;
                                             fp.radius = p.Radius;
                                             fp.ToolIsFlashlight = p.ToolIsFlashlight;
+                                            fp.Captured = p.Captured;
+
                                             objetJoueurExistant = true;
                                             break;
                                         }
@@ -326,9 +349,6 @@ namespace _13thHauntedStreet
         {
             while (true)
             {
-
-
-
                 byte[] data = new byte[300];
                 String responseData = string.Empty;
                 if (networkStream.DataAvailable == true)
@@ -340,6 +360,7 @@ namespace _13thHauntedStreet
                 }
             }
         }
+
         public void envoieMessage(string donneJoueur)
         {
             string message = donneJoueur.ToString();
@@ -353,17 +374,18 @@ namespace _13thHauntedStreet
             stream = client.GetStream();
             //     stream.WriteTimeout = 0;
             Debug.WriteLine(byteArrayASCII.Length);
-            stream.Write(byteArrayASCII, 0, byteArrayASCII.Length);
-
+             stream.Write(byteArrayASCII, 0, byteArrayASCII.Length);
         }
+        
         public Client()// TODO add bool is leader or not
         {
             //IPAddress ipAddress = Dns.GetHostEntry("Dns du serveur").AddressList[0];
-            this.client = new TcpClient("10.5.42.35", 5732);
+            this.client = new TcpClient("10.5.42.70", 5732);
 
             //   clientLeader = new Client();
             networkStream = client.GetStream();
-            string text = "Je suis leader:" + Game1.player.id + "|";
+            //string text = "Je suis leader:" + Game1.player.id + "|";
+            string text = "rejoindre lobby :" + "5265" + "|";
             byte[] byteArrayASCII;
             // text += "#";
             byteArrayASCII = System.Text.Encoding.ASCII.GetBytes(text);

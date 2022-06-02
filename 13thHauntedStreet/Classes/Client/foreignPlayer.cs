@@ -20,6 +20,8 @@ namespace _13thHauntedStreet
         public int _id;
         public string playerType;
         public int currentScene;
+        public float scale = 1f;
+        private bool captured = false;
 
         // Hunter
         public Light light;
@@ -29,7 +31,8 @@ namespace _13thHauntedStreet
         public Vector2 _Position
         {
             get { return position; }
-            set {
+            set
+            {
                 if (!(this.light is null))
                 {
                     this.light.Position = value;
@@ -40,7 +43,7 @@ namespace _13thHauntedStreet
                     this.toolLight.Position = value;
                 }
 
-                position = value; 
+                position = value;
             }
         }
         public bool IsObject { get; set; }
@@ -50,19 +53,23 @@ namespace _13thHauntedStreet
             get { return texture; }   // get method
             set { texture = value; }
         }
-
-        public bool IsLightOn 
+        public bool IsLightOn
         {
-            set 
+            set
             {
                 this.light.Enabled = value;
                 this.toolLight.Enabled = value;
             }
         }
+        public bool Captured
+        {
+            get { return captured; }
+            set { captured = value; }
+        }
 
         public float radius
         {
-            set 
+            set
             {
                 /*Vector2 offset = Vector2.Normalize(Mouse.GetState().Position.ToVector2() - _Position) * Flashlight.POSITIONOFFSET;
                 this.toolLight.Position += offset;*/
@@ -70,11 +77,11 @@ namespace _13thHauntedStreet
             }
         }
 
-        public bool ToolIsFlashlight 
+        public bool ToolIsFlashlight
         {
-            set 
+            set
             {
-                this.toolLight.Scale = new Vector2(this.toolLight.Scale.X, value? Flashlight.LIGHTGHEIGHT : Vacuum.LIGHTGHEIGHT);
+                this.toolLight.Scale = new Vector2(this.toolLight.Scale.X, value ? Flashlight.LIGHTGHEIGHT : Vacuum.LIGHTGHEIGHT);
             }
         }
 
@@ -108,17 +115,20 @@ namespace _13thHauntedStreet
         {
             if (!(this.texture is null))
             {
-                float scale = 1f;
+                this.scale = 1f;
                 if (this.playerType == typeof(Hunter).ToString())
                 {
-                    scale = 3;
+                    this.scale = 3;
                 }
                 else
                 {
-                    scale = this.IsObject? Furniture.SCALE : 1.5f;
+                    this.scale = this.IsObject ? Furniture.SCALE : 1.5f;
+                }
+                if (this.Captured == false)
+                {
+                    spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), scale, 0, 0);
                 }
 
-                spriteBatch.Draw(this.texture, this.position, null, Color.White, 0f, this.texture.Bounds.Center.ToVector2(), scale, 0, 0);
             }
         }
     }

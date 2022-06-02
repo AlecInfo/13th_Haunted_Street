@@ -73,6 +73,7 @@ namespace _13thHauntedStreet
         public static GhostAnimationManager ghostAM = new GhostAnimationManager();
         public static HunterAnimationManager hunterAM = new HunterAnimationManager();
         public static Player player;
+        public static bool captured = false;
 
         public Texture2D crosshair;
         public static Texture2D flashlightIcon;
@@ -86,20 +87,25 @@ namespace _13thHauntedStreet
         // Furnitures
         private Texture2D bedTexture;
         private Texture2D drawerTexture;
+        private Texture2D bigBedTexture;
+        private Texture2D smallTableTexture;
+
         public List<Furniture> furnitureList = new List<Furniture>();
+        public List<Furniture> drawabledFurnitureList = new List<Furniture>();
 
         // remove later
         private Texture2D bg;
         private Texture2D bg2;
         private Texture2D ground;
         private Texture2D walls;
-        private Map testMap;
+        public Map testMap;
 
         // Server
         private int id = 1;
         public static Client client;
         public static dataPlayer dataPlayer;
         public DateTime clientLastUpdate;
+        public string serializeToStringPlayer;
 
 
         public Game1()
@@ -158,10 +164,24 @@ namespace _13thHauntedStreet
             defaultTexture.SetData(new Color[] { Color.White });
 
             // Furniture
+
             bedTexture = Content.Load<Texture2D>("TempFiles/Furniture/bed");
+            bigBedTexture = Content.Load<Texture2D>("TempFiles/Furniture/big_bed");
             drawerTexture = Content.Load<Texture2D>("TempFiles/Furniture/drawer");
-            furnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
-            furnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
+            smallTableTexture = Content.Load<Texture2D>("TempFiles/Furniture/small_table");
+
+            furnitureList.Add(new Furniture(Vector2.Zero, bedTexture));
+            furnitureList.Add(new Furniture(Vector2.Zero, bigBedTexture));
+            furnitureList.Add(new Furniture(Vector2.Zero, drawerTexture));
+            furnitureList.Add(new Furniture(Vector2.Zero, smallTableTexture));
+
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1000, 500), bedTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1400, 750), drawerTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(500, 200), bigBedTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1200, 400), smallTableTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(370, 600), drawerTexture));
+            drawabledFurnitureList.Add(new Furniture(new Vector2(1350, 350), bigBedTexture));
+            
 
             // Ghost
             ghostAM.animationLeft = multipleTextureLoader("TempFiles/GhostSprites/left/ghostLeft", 3);
@@ -216,7 +236,7 @@ namespace _13thHauntedStreet
 
             testMap = new Map(player,
                 new List<Scene>() {
-                    new Scene(1, bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, furnitureList, new List<Lantern>()),
+                    new Scene(1, bg, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, drawabledFurnitureList, new List<Lantern>()),
                     new Scene(2, bg2, walls, Vector2.One / 1.125f, new Rectangle(360, 215, 1200, 650), player, new List<Furniture>(), new List<Lantern>())
                 }
             );
@@ -265,12 +285,13 @@ namespace _13thHauntedStreet
                 if (settingsMenu != null)
                 {
                     settingsMenu.Update(gameTime, screen, ref posOri);
-                 }
+                }
             }
             else
             {
                 penumbra.Hulls.Clear();
                 penumbra.Lights.Clear();
+                penumbra.Visible = true; // remove later
 
                 testMap.Update(gameTime);
 
@@ -322,7 +343,7 @@ namespace _13thHauntedStreet
                         dataPlayer.IsObject = player.isObject;
 
                         dataPlayer.TextureName = player.texture.Name;
-
+                        dataPlayer.Captured = captured;
                         if (player.GetType() == typeof(Hunter))
                         {
                             Hunter hunter = player as Hunter;
@@ -343,7 +364,6 @@ namespace _13thHauntedStreet
                             dataPlayer.ToolIsFlashlight = false;
                         }
 
-                        string serializeToStringPlayer;
                         serializeToStringPlayer = SerializeObject();
                         client.envoieMessage(serializeToStringPlayer);
                     }
@@ -456,11 +476,31 @@ namespace _13thHauntedStreet
             return xmlStr;
         }
 
-        protected override void OnExiting(object sender, EventArgs args)
-        {
-            base.OnExiting(sender, args);
+        // Draw line
+        private static Texture2D _texture;
 
-            client.envoieMessage("Je me deconnecte :" + Game1.player.id);
+        private static Texture2D GetTexture(SpriteBatch spriteBatch)
+        {
+            if (_texture == null)
+            {
+                _texture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                _texture.SetData(new[] { Color.White });
+            }
+
+            return _texture;
+        }
+        public static void DrawLine(SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness = 1f)
+        {
+            var distance = Vector2.Distance(point1, point2);
+            var angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            DrawLine(spriteBatch, point1, distance, angle, color, thickness);
+        }
+
+        public static void DrawLine(SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1f)
+        {
+            var origin = new Vector2(0f, 0.5f);
+            var scale = new Vector2(length, thickness);
+            spriteBatch.Draw(GetTexture(spriteBatch), point, null, color, angle, origin, scale, SpriteEffects.None, 0);
         }
     }
 }

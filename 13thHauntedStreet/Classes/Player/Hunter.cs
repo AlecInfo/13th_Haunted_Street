@@ -41,7 +41,7 @@ namespace _13thHauntedStreet
             this.texture = this.animManager.currentAnim[0];
 
             // Collision box
-            this.collisionBox = new Rectangle(
+            collisionBox = new Rectangle(
                 (int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y,
                 (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
 
@@ -91,8 +91,8 @@ namespace _13thHauntedStreet
 
             this.position += distance;
 
-            this.collisionBox = new Rectangle((int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y, (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
-            this.light.Position = new Vector2(this.collisionBox.Center.X, this.collisionBox.Top);
+            collisionBox = new Rectangle((int)(this.position.X - this.texture.Width * this.scale / 2), (int)this.position.Y, (int)(this.texture.Width * this.scale), (int)(this.texture.Height / 2 * this.scale));
+            this.light.Position = new Vector2(collisionBox.Center.X, collisionBox.Top);
         }
 
         /// <summary>

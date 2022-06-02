@@ -24,6 +24,7 @@ namespace _13thHauntedStreet
         private int currentScene;
 
         private bool _isObject;
+        private bool captured;
 
         // light
         private bool isLightOn;
@@ -71,6 +72,13 @@ namespace _13thHauntedStreet
         {
             get { return _isObject; }
             set { _isObject = value; }
+        }
+
+        [XmlElement]
+        public bool Captured
+        {
+            get { return captured; }
+            set { captured = value; }
         }
 
         // Light

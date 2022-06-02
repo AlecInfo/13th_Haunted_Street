@@ -33,7 +33,7 @@ namespace _13thHauntedStreet
 
         private ItemsMenu _listPageElements = new ItemsMenu();
 
-        Action<int> callback;
+        Action<int, GameTime> callback;
         #endregion
 
         // Ctor
@@ -48,7 +48,7 @@ namespace _13thHauntedStreet
             // Button of the global menu settings
             // Action of the gameplay button,
             // which displays all gameplay parameters
-            callback = (i) => { 
+            callback = (i, gameTime) => { 
                 _displayMenuGameplay = true;
                 var y = listItems[i].GetValue();
             };
@@ -58,14 +58,14 @@ namespace _13thHauntedStreet
 
             // Action of the control button,
             // which display all gameplay parameters
-            callback = (i) => { 
+            callback = (i, gameTime) => { 
                 _displayMenuGameplay = false; 
             };
             // Create the button control
             Add(SettingsMenu.NewButton("Control", _font, new Vector2(Screen.OriginalScreenSize.X / 0.98f, Screen.OriginalScreenSize.Y / 1.53f), buttonTextureDefault, Color.White, 0.65f, SpriteEffects.None, callback, func, false, 0.65f));
 
             // Action of the Back button,
-            callback = (i) =>
+            callback = (i, gameTime) =>
             {
                 // Which replay the animation and going back to the main menu
                 MainMenu.animationStarted = true;
@@ -204,7 +204,7 @@ namespace _13thHauntedStreet
 
             // Left button 
             // The action of this
-            Action<int> callback = (i) => { 
+            callback = (i, gameTime) => { 
                 typeScreen.Left(); 
                 Settings.ButtonAction(titleOption, typeScreen.GetValue()); 
             };
@@ -224,7 +224,7 @@ namespace _13thHauntedStreet
 
             // Right button
             // The action of this
-            callback = (i) => { 
+            callback = (i, gameTime) => { 
                 typeScreen.Right(); 
                 Settings.ButtonAction(titleOption, typeScreen.GetValue()); 
             };
@@ -257,7 +257,7 @@ namespace _13thHauntedStreet
 
             // The button
             // The action of this
-            Action<int> callback = (i) => { buttonAction.Catch(); };
+            Action<int, GameTime> callback = (i, gameTime) => { buttonAction.Catch(); };
             Func<bool> enabledButton = () => false;
             addingOption.Add(SettingsMenu.NewButton(defaultValue, _font, new Vector2(posX, positionY), buttonTexture, Color.Black, scaleButton, SpriteEffects.None, callback, enabledButton, true, scaleText));
 
@@ -322,7 +322,7 @@ namespace _13thHauntedStreet
         /// <param name="callback"></param>
         /// <param name="enabledButton"></param>
         /// <returns> itemButtonOption </returns>
-        static ItemButtonOption NewButton(string text, SpriteFont font, Vector2 position, Texture2D texture, Color color, float scale, SpriteEffects spriteEffect, Action<int> callback, Func<bool> enabledButton, bool DrawImageText, float ScaleText)
+        static ItemButtonOption NewButton(string text, SpriteFont font, Vector2 position, Texture2D texture, Color color, float scale, SpriteEffects spriteEffect, Action<int, GameTime> callback, Func<bool> enabledButton, bool DrawImageText, float ScaleText)
         {
             return new ItemButtonOption(texture, font, callback, enabledButton, DrawImageText)
             {
