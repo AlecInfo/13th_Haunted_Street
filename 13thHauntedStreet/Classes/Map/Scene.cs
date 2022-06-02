@@ -124,11 +124,30 @@ namespace _13thHauntedStreet
             Rectangle hullRectangle = new Rectangle(hull.Position.ToPoint(), hull.Scale.ToPoint());
 
             if (hull.Origin == new Vector2(0))
+<<<<<<< HEAD
             {
                 if (player.rectangle.Right + 5 >= hullRectangle.Left - 5 - hullRectangle.Width / 2 &&
                     player.rectangle.Left - 5 <= hullRectangle.Right + 5 - hullRectangle.Width / 2 &&
                     player.rectangle.Bottom >= hullRectangle.Top - hullRectangle.Height / 2 &&
                     player.rectangle.Top <= hullRectangle.Bottom - hullRectangle.Height / 2)
+=======
+            {
+                if (player.rectangle.Right + 5 >= hullRectangle.Left - 5 - hullRectangle.Width / 2 &&
+                    player.rectangle.Left - 5 <= hullRectangle.Right + 5 - hullRectangle.Width / 2 &&
+                    player.rectangle.Bottom >= hullRectangle.Top - hullRectangle.Height / 2 &&
+                    player.rectangle.Top <= hullRectangle.Bottom - hullRectangle.Height / 2)
+                {
+                    return true;
+                }
+            }
+
+            if (hull.Origin == new Vector2(-0.5f))
+            {
+                if (player.rectangle.Right+5 >= hullRectangle.Left-5  &&
+                    player.rectangle.Left-5 <= hullRectangle.Right+5 &&
+                    player.rectangle.Bottom >= hullRectangle.Top &&
+                    player.rectangle.Top <= hullRectangle.Bottom)
+>>>>>>> 6e6f0ed1ca4db218f365ee488ce15cdd414c8462
                 {
                     return true;
                 }

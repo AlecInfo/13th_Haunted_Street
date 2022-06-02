@@ -24,14 +24,18 @@ namespace _13thHauntedStreet
 
         private float movementSpeed = MOVEMENTSPEED_GHOST;
 
+        private Color _stunColor = Color.LightGray;
+
+        private const int FLOATSPEED = 4;
+        private const float FLOATSIZE = 0.25f;
+
+
         public GhostAnimationManager animManager;
 
         private List<ItemButton> _listButton = new List<ItemButton>();
 
         private Vector2 _floatOffset = Vector2.Zero;
         private float _floatTimer;
-        private const int FLOATSPEED = 4;
-        private const float FLOATSIZE = 0.25f;
 
         private float _objectBar_xPosition = Screen.OriginalScreenSize.X / 18;
         private float _objectBar_yPosition = Screen.OriginalScreenSize.Y / 10;
@@ -45,7 +49,6 @@ namespace _13thHauntedStreet
         private bool _isStun = false;
         private const float _COUNTDURATION = 800f; //every 0.8s.
         private float _currentTime = 0f;
-        private Color _stunColor = Color.Gray;
 
         public bool isBeingVacuumed = false;
 
@@ -69,15 +72,23 @@ namespace _13thHauntedStreet
                 Intensity = 1f
             };
 
+            // Creation of the ghost transformation buttons
             int indexCount = 0;
+            // According to the all furnitures
             foreach (Furniture item in Game1.self.furnitureList)
             {
                 float posX = this._objectBar_xPosition - item.texture.Width / 2;
 
+<<<<<<< HEAD
                 Action<int, GameTime> callback = (indexButton, gameTime) =>
+=======
+                // The Action of the buttons
+                Action<int, GameTime> callback = (indexButton, gameTime) => 
+>>>>>>> 6e6f0ed1ca4db218f365ee488ce15cdd414c8462
                 {
                     if (!_isDetransform)
                     {
+                        // Transform or detransform
                         if ((!isObject || this.texture != item.texture))
                         {
                             Transform(indexButton, item);
@@ -89,6 +100,8 @@ namespace _13thHauntedStreet
 
                     }
                 };
+                
+                // Add the transform button to the buttons list
                 this._listButton.Add(NewButton(Game1.self.font, new Vector2(posX, this._objectBar_yPosition), item.texture, callback, indexCount));
                 this._objectBar_yPosition += item.texture.Height + _SPACING_OBJECTBAR;
 
@@ -130,8 +143,10 @@ namespace _13thHauntedStreet
             }
             else
             {
+                // Ghost Stun
                 if (!this._isStun && this._isDetransform)
                 {
+                    // Stun timer
                     this.movementSpeed = MOVEMENTSPEED_STUN;
                     color = this._stunColor;
 
@@ -139,6 +154,7 @@ namespace _13thHauntedStreet
 
                     if (_currentTime >= _COUNTDURATION)
                     {
+                        // After the stun
                         _currentTime -= _COUNTDURATION;
 
                         this._isStun = true;
@@ -187,7 +203,12 @@ namespace _13thHauntedStreet
         {
             Vector2 distance = this.movement * this.movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
+<<<<<<< HEAD
             if (isObject)
+=======
+            // When the ghost is an furniture collide to the other object and player
+            if (isObject) 
+>>>>>>> 6e6f0ed1ca4db218f365ee488ce15cdd414c8462
             {
                 this.ObjectCollision(ref distance);
             }
@@ -234,6 +255,12 @@ namespace _13thHauntedStreet
             }
         }
 
+
+        /// <summary>
+        /// According to transform the ghost
+        /// </summary>
+        /// <param name="indexButton"></param>
+        /// <param name="furniture"></param>
         private void Transform(int indexButton, Furniture furniture)
         {
             // Object collision box
@@ -241,17 +268,20 @@ namespace _13thHauntedStreet
                 this.position.X - furniture.texture.Width / 2), (int)(this.position.Y - furniture.texture.Height / 2 + furniture.texture.Height / 3.5f),
                 (int)furniture.texture.Width, (int)(furniture.texture.Height - furniture.texture.Height / 3.5f));
 
-
+            // If the player is not in to the furniture or other transform player(ghost)
             Vector2 distance = this.movement * movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
             if (!PlayerIsCollide(ref distance))
             {
+                // Get the ghost texture
                 this.animManager.currentAnim = this.animManager.furniture;
                 this.texture = this.animManager.furniture[indexButton];
 
+                // Disabled all tranform button
                 foreach (ItemButton item in this._listButton)
                 {
                     item.IsOn = false;
                 }
+                // Enabled the selected button
                 this._listButton[indexButton].IsOn = true;
 
                 this.movementSpeed = MOVEMENTSPEED_OBJECT;
@@ -264,11 +294,17 @@ namespace _13thHauntedStreet
 
         }
 
+        /// <summary>
+        /// According to detransform the ghost
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void Detransform(GameTime gameTime)
         {
+            // Get the texture
             this.animManager.currentAnim = this.animManager.animationRight;
             this.texture = this.animManager.currentAnim[0];
 
+            // Disabled the transform button
             foreach (ItemButton item in this._listButton)
             {
                 item.IsOn = false;
@@ -280,6 +316,16 @@ namespace _13thHauntedStreet
             this._isDetransform = true;
         }
 
+        /// <summary>
+        ///  According to create button
+        /// </summary>
+        /// <param name="font"></param>
+        /// <param name="position"></param>
+        /// <param name="texture"></param>
+        /// <param name="callback"></param>
+        /// <param name="parameterCallback"></param>
+        /// <param name="DrawImageText"></param>
+        /// <returns></returns>
         static ItemButton NewButton(SpriteFont font, Vector2 position, Texture2D texture, Action<int, GameTime> callback, int parameterCallback, bool DrawImageText = true)
         {
             return new ItemButton(texture, font, callback, DrawImageText)

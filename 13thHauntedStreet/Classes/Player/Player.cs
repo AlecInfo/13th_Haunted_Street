@@ -170,8 +170,8 @@ namespace _13thHauntedStreet
                     {
                         distance.X = 0;
                     }
-
-                    if (((collisionBox.Top + distance.Y >= _otherPlayerCollisionBox.Top && collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Bottom) ||
+                    
+                    if (((collisionBox.Top + distance.Y >= _otherPlayerCollisionBox.Top && collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Bottom) || 
                         (collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom && collisionBox.Bottom + distance.Y <= _otherPlayerCollisionBox.Top) ||
                         (collisionBox.Top + distance.Y <= _otherPlayerCollisionBox.Top && collisionBox.Bottom + distance.Y >= _otherPlayerCollisionBox.Bottom))
                         &&
@@ -224,7 +224,6 @@ namespace _13thHauntedStreet
 
         /// <summary>
         /// Collision between the current scene walls and the player
-        /// collision between the current scene walls and the player
         /// </summary>
         /// <param name="distance"></param>
         protected void WallCollision(ref Vector2 distance)
@@ -249,7 +248,10 @@ namespace _13thHauntedStreet
         }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6e6f0ed1ca4db218f365ee488ce15cdd414c8462
         /// <summary>
         /// If the ghost is in an object return true so that it does not transform
         /// </summary>
@@ -293,11 +295,11 @@ namespace _13thHauntedStreet
             {
                 if (((collisionBox.Top + distance.Y >= item.collisionBox.Top && collisionBox.Top + distance.Y <= item.collisionBox.Bottom) ||
                     (collisionBox.Bottom + distance.Y >= item.collisionBox.Top && collisionBox.Bottom + distance.Y <= item.collisionBox.Bottom) ||
-                    (collisionBox.Top + distance.Y <= item.collisionBox.Top && collisionBox.Bottom + distance.Y >= item.collisionBox.Bottom))
-                    &&
-                   ((collisionBox.Right + distance.X <= item.collisionBox.Right && collisionBox.Right + distance.X >= item.collisionBox.Left) ||
-                   (collisionBox.Left + distance.X >= item.collisionBox.Left && collisionBox.Left + distance.X <= item.collisionBox.Right) ||
-                   (collisionBox.Left + distance.X <= item.collisionBox.Left && collisionBox.Right + distance.X >= item.collisionBox.Right)))
+                    (collisionBox.Top + distance.Y  <= item.collisionBox.Top && collisionBox.Bottom + distance.Y >= item.collisionBox.Bottom)) 
+                    && 
+                    ((collisionBox.Right + distance.X <= item.collisionBox.Right && collisionBox.Right + distance.X >= item.collisionBox.Left) ||
+                    (collisionBox.Left + distance.X >= item.collisionBox.Left && collisionBox.Left + distance.X <= item.collisionBox.Right) ||
+                    (collisionBox.Left + distance.X <= item.collisionBox.Left && collisionBox.Right + distance.X >= item.collisionBox.Right)))
                 {
                     return true;
                 }

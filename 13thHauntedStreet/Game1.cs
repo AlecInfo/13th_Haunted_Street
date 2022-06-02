@@ -280,6 +280,7 @@ namespace _13thHauntedStreet
 
             if (displayMainMenu)
             {
+                // Display the main menu
                 Vector2 posOri = Vector2.Zero;
                 _mainMenu.Update(gameTime, screen, ref posOri);
                 if (settingsMenu != null)
@@ -289,6 +290,7 @@ namespace _13thHauntedStreet
             }
             else
             {
+                // Display the game
                 penumbra.Hulls.Clear();
                 penumbra.Lights.Clear();
                 penumbra.Visible = true; // remove later
@@ -302,7 +304,6 @@ namespace _13thHauntedStreet
                     bool hasChangedHunter = false;
                     do
                     {
-
                         if (player.GetType() == typeof(Hunter))
                         {
                             Hunter hunter = (player as Hunter);
@@ -415,6 +416,7 @@ namespace _13thHauntedStreet
 
             if (showFps)
             {
+                // Display the FPS
                 _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 var fps = string.Format("fps: {0}", (int)Decimal.Truncate((decimal)_frameCounter.AverageFramesPerSecond));
@@ -475,6 +477,14 @@ namespace _13thHauntedStreet
 
             return xmlStr;
         }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+
+            client.envoieMessage("Je me deconnecte :" + Game1.player.id);
+        }
+
 
         // Draw line
         private static Texture2D _texture;

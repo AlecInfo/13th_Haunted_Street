@@ -35,9 +35,6 @@ namespace _13thHauntedStreet
             if (!enabledButton())
             {
                 this.ButtonColor = Color.White;
-
-                //zzz
-                // Faire en sorte que quand on passe la souris par dessu le bouton selui si change de couleur
             }
             else
             {
