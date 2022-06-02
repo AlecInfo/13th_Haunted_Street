@@ -79,12 +79,8 @@ namespace _13thHauntedStreet
             {
                 float posX = this._objectBar_xPosition - item.texture.Width / 2;
 
-<<<<<<< HEAD
-                Action<int, GameTime> callback = (indexButton, gameTime) =>
-=======
                 // The Action of the buttons
                 Action<int, GameTime> callback = (indexButton, gameTime) => 
->>>>>>> 6e6f0ed1ca4db218f365ee488ce15cdd414c8462
                 {
                     if (!_isDetransform)
                     {
@@ -203,12 +199,8 @@ namespace _13thHauntedStreet
         {
             Vector2 distance = this.movement * this.movementSpeed * (float)this._gameTime.ElapsedGameTime.TotalMilliseconds;
 
-<<<<<<< HEAD
-            if (isObject)
-=======
             // When the ghost is an furniture collide to the other object and player
             if (isObject) 
->>>>>>> 6e6f0ed1ca4db218f365ee488ce15cdd414c8462
             {
                 this.ObjectCollision(ref distance);
             }
