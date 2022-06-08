@@ -1,7 +1,5 @@
 
-<p align="center">
 # 13th Haunted Street
-</p>
 
 
 <p align="center">
