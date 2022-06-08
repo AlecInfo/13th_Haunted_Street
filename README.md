@@ -1,4 +1,8 @@
+
+<p align="center">
 # 13th Haunted Street
+</p>
+
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/AlecInfo/13th_Haunted_Street/master/13thHauntedStreet/Content/TempFiles/BackgroundMenu.png" alt="Menu" width="750"/>
